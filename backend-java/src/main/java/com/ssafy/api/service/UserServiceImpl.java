@@ -9,6 +9,8 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
+import java.util.Optional;
+
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
  */
@@ -31,7 +33,9 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 		return userRepository.save(user);
 	}
-
+	public Optional<User> findByUserNo(Long no){
+		return userRepository.findById(no);
+	}
 	@Override
 	public User getUserByUserId(String userId) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).

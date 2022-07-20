@@ -21,8 +21,8 @@
         </div>
         <div class="col-auto my-auto">
           <div class="h-100">
-            <h5 class="mb-1">Richard Davis</h5>
-            <p class="mb-0 font-weight-normal text-sm">CEO / Co-Founder</p>
+            <h5 class="mb-1">{{ userNickname }}</h5>
+            <p class="mb-0 font-weight-normal text-sm">{{ userComment }}</p>
           </div>
         </div>
         <div
@@ -195,240 +195,28 @@
           <div class="col-12 col-md-6 col-xl-4 position-relative">
             <div class="card card-plain h-100">
               <div class="p-3 pb-0 card-header">
-                <h6 class="mb-0">Platform Settings</h6>
+                <h6 class="mb-0">Intro</h6>
               </div>
               <div class="p-3 card-body">
                 <h6 class="text-xs text-uppercase text-body font-weight-bolder">
-                  Account
+                  E-mail
                 </h6>
-                <ul class="list-group">
-                  <li class="px-0 border-0 list-group-item">
-                    <material-switch
-                      id="flexSwitchCheckDefault"
-                      class="ps-0 ms-0"
-                      name="flexSwitchCheckDefault"
-                      label-class="mb-0 text-body text-truncate w-80"
-                      checked
-                      >Email me when someone follows me</material-switch
-                    >
-                  </li>
-                  <li class="px-0 border-0 list-group-item">
-                    <material-switch
-                      id="flexSwitchCheckDefault1"
-                      class="ps-0 ms-0"
-                      name="flexSwitchCheckDefault1"
-                      label-class="mb-0 text-body text-truncate w-80"
-                      >Email me when someone answers on my post</material-switch
-                    >
-                  </li>
-
-                  <li class="px-0 border-0 list-group-item">
-                    <material-switch
-                      id="flexSwitchCheckDefault2"
-                      class="ps-0 ms-0"
-                      name="flexSwitchCheckDefault2"
-                      label-class="mb-0 text-body text-truncate w-80"
-                      checked
-                      >Email me when someone mentions me</material-switch
-                    >
-                  </li>
-                </ul>
+                <p class="mb-0 font-weight-normal text-sm">{{ userEmail }}</p>
                 <h6
                   class="mt-4 text-xs text-uppercase text-body font-weight-bolder"
                 >
-                  Application
+                  User Description
                 </h6>
-                <ul class="list-group">
-                  <li class="px-0 border-0 list-group-item">
-                    <material-switch
-                      id="flexSwitchCheckDefault3"
-                      class="ps-0 ms-0"
-                      name="flexSwitchCheckDefault3"
-                      label-class="mb-0 text-body text-truncate w-80"
-                      >New launches and projects</material-switch
-                    >
-                  </li>
-                  <li class="px-0 border-0 list-group-item">
-                    <material-switch
-                      id="flexSwitchCheckDefault4"
-                      class="ps-0 ms-0"
-                      name="flexSwitchCheckDefault4"
-                      label-class="mb-0 text-body text-truncate w-80"
-                      checked
-                      >Monthly product updates</material-switch
-                    >
-                  </li>
-                  <li class="px-0 pb-0 border-0 list-group-item">
-                    <material-switch
-                      id="flexSwitchCheckDefault5"
-                      class="ps-0 ms-0"
-                      name="flexSwitchCheckDefault5"
-                      label-class="mb-0 text-body text-truncate w-80"
-                      >Subscribe to newsletter</material-switch
-                    >
-                  </li>
-                </ul>
+                <p class="mb-0 font-weight-normal text-sm">{{ userDesc }}</p>
               </div>
             </div>
             <hr class="vertical dark" />
-          </div>
-          <div class="col-12 col-md-6 col-xl-4 mt-md-0 mt-4 position-relative">
-            <profile-info-card
-              title="Profile Information"
-              description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
-              :info="{
-                fullName: 'Alec M. Thompson',
-                mobile: '(44) 123 1234 123',
-                email: 'alecthompson@mail.com',
-                location: 'USA',
-              }"
-              :social="[
-                {
-                  link: 'https://www.facebook.com/CreativeTim/',
-                  icon: 'fa-facebook',
-                },
-                {
-                  link: 'https://twitter.com/creativetim',
-                  icon: 'fa-twitter',
-                },
-                {
-                  link: 'https://www.instagram.com/creativetimofficial/',
-                  icon: 'fa-instagram',
-                },
-              ]"
-              :action="{
-                route: 'javascript:;',
-                tooltip: 'Edit Profile',
-              }"
-            />
-            <hr class="vertical dark" />
-          </div>
-          <div class="mt-4 col-12 col-xl-4 mt-xl-0">
-            <div class="card card-plain h-100">
-              <div class="p-3 pb-0 card-header">
-                <h6 class="mb-0">Conversations</h6>
-              </div>
-              <div class="p-3 card-body">
-                <ul class="list-group">
-                  <li
-                    class="px-0 mb-2 border-0 list-group-item d-flex align-items-center"
-                  >
-                    <material-avatar
-                      class="me-3"
-                      :img="sophie"
-                      alt="kal"
-                      border-radius="lg"
-                      shadow="regular"
-                    />
-                    <div
-                      class="d-flex align-items-start flex-column justify-content-center"
-                    >
-                      <h6 class="mb-0 text-sm">Sophie B.</h6>
-                      <p class="mb-0 text-xs">Hi! I need more information..</p>
-                    </div>
-                    <a
-                      class="mb-0 btn btn-link pe-3 ps-0 ms-auto"
-                      href="javascript:;"
-                      >Reply</a
-                    >
-                  </li>
-                  <li
-                    class="px-0 mb-2 border-0 list-group-item d-flex align-items-center"
-                  >
-                    <material-avatar
-                      class="me-3"
-                      :img="marie"
-                      alt="kal"
-                      border-radius="lg"
-                      shadow="regular"
-                    />
-                    <div
-                      class="d-flex align-items-start flex-column justify-content-center"
-                    >
-                      <h6 class="mb-0 text-sm">Anne Marie</h6>
-                      <p class="mb-0 text-xs">Awesome work, can you..</p>
-                    </div>
-                    <a
-                      class="mb-0 btn btn-link pe-3 ps-0 ms-auto"
-                      href="javascript:;"
-                      >Reply</a
-                    >
-                  </li>
-                  <li
-                    class="px-0 mb-2 border-0 list-group-item d-flex align-items-center"
-                  >
-                    <material-avatar
-                      class="me-3"
-                      :img="ivana"
-                      alt="kal"
-                      border-radius="lg"
-                      shadow="regular"
-                    />
-                    <div
-                      class="d-flex align-items-start flex-column justify-content-center"
-                    >
-                      <h6 class="mb-0 text-sm">Ivanna</h6>
-                      <p class="mb-0 text-xs">About files I can..</p>
-                    </div>
-                    <a
-                      class="mb-0 btn btn-link pe-3 ps-0 ms-auto"
-                      href="javascript:;"
-                      >Reply</a
-                    >
-                  </li>
-                  <li
-                    class="px-0 mb-2 border-0 list-group-item d-flex align-items-center"
-                  >
-                    <material-avatar
-                      class="me-3"
-                      :img="peterson"
-                      alt="kal"
-                      border-radius="lg"
-                      shadow="regular"
-                    />
-                    <div
-                      class="d-flex align-items-start flex-column justify-content-center"
-                    >
-                      <h6 class="mb-0 text-sm">Peterson</h6>
-                      <p class="mb-0 text-xs">Have a great afternoon..</p>
-                    </div>
-                    <a
-                      class="mb-0 btn btn-link pe-3 ps-0 ms-auto"
-                      href="javascript:;"
-                      >Reply</a
-                    >
-                  </li>
-                  <li
-                    class="px-0 border-0 list-group-item d-flex align-items-center"
-                  >
-                    <material-avatar
-                      class="me-3"
-                      :img="nick"
-                      alt="kal"
-                      border-radius="lg"
-                      shadow="regular"
-                    />
-                    <div
-                      class="d-flex align-items-start flex-column justify-content-center"
-                    >
-                      <h6 class="mb-0 text-sm">Nick Daniel</h6>
-                      <p class="mb-0 text-xs">Hi! I need more information..</p>
-                    </div>
-                    <a
-                      class="mb-0 btn btn-link pe-3 ps-0 ms-auto"
-                      href="javascript:;"
-                      >Reply</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
         <div class="row mt-4">
           <div class="col-12">
             <div class="mb-5 ps-3">
-              <h6 class="mb-1">Projects</h6>
+              <h6 class="mb-1">Transaction History</h6>
               <p class="text-sm">Architects design houses</p>
             </div>
             <div class="row">
@@ -559,10 +347,7 @@
 </template>
 
 <script>
-import ProfileInfoCard from "./components/ProfileInfoCard.vue";
 import DefaultProjectCard from "./components/DefaultProjectCard.vue";
-import MaterialSwitch from "@/components/MaterialSwitch.vue";
-import MaterialAvatar from "@/components/MaterialAvatar.vue";
 import sophie from "@/assets/img/kal-visuals-square.jpg";
 import marie from "@/assets/img/marie.jpg";
 import ivana from "@/assets/img/ivana-square.jpg";
@@ -578,6 +363,8 @@ import team4 from "@/assets/img/team-4.jpg";
 
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
+
+import axios from "axios";
 
 export default {
   name: "profile-overview",
@@ -596,19 +383,24 @@ export default {
       team4,
       img2,
       img3,
+      userNickname: "jung gi yeon",
+      userEmail: "giyeon3145@gmail.com",
+      userComment: "test",
+      userDesc: "test page",
     };
   },
   components: {
-    ProfileInfoCard,
     DefaultProjectCard,
-    MaterialSwitch,
-    MaterialAvatar,
   },
 
   mounted() {
     this.$store.state.isAbsolute = true;
     setNavPills();
     setTooltip();
+    console.log("profile post");
+    axios.post("test", null, { params: { id: "1" } }).then(({ data }) => {
+      console.log(data);
+    });
   },
   beforeUnmount() {
     this.$store.state.isAbsolute = false;
