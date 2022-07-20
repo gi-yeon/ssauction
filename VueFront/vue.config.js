@@ -17,5 +17,5 @@ module.exports = {
   // },
   transpileDependencies: ["element-plus"],
   lintOnSave: false,
-  outputDir: "../backend/src/main/resources/dist",
+  outputDir: "../backend-java/src/main/resources/dist",
 };
