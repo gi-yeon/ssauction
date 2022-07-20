@@ -12,7 +12,7 @@ public class TestController {
     @PostMapping("/test")
     public String getMsg(HttpServletRequest req, HttpServletResponse res, HttpSession session){
         System.out.println(req.getPathInfo());
-        System.out.println(req.getParameter("title"));
+        System.out.println(req.getParameter("Test"));
         return "ok";
     }
 }
