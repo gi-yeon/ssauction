@@ -18,15 +18,12 @@ public class UsersSaveRequestDto {
 
     private String userNickname;
 
-    private Timestamp userRegDate;
-
     @Builder
     public UsersSaveRequestDto(String userEmail, String userPwd, String userPhoneNo, String userNickname) {
         this.userEmail = userEmail;
         this.userPwd = userPwd;
         this.userPhoneNo = userPhoneNo;
         this.userNickname = userNickname;
-        this.userRegDate = new Timestamp(System.currentTimeMillis());
     }
 
 
@@ -37,11 +34,7 @@ public class UsersSaveRequestDto {
                 .userPwd(userPwd)
                 .userPhoneNo(userPhoneNo)
                 .userNickname(userNickname)
-                .userComment(null)
-                .userDesc(null)
                 .userGrade(4)
-                .userRegDate(userRegDate)
-                .userUpdateDate(null)
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.web.controller;
 
+import com.ssafy.ssauction.service.userImages.UserImgsService;
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UsersController {
     private final UsersService usersService;
-
     @GetMapping("/users/{userNo}")
     public UsersResponseDto findById(@PathVariable Long userNo){
         return usersService.findById(userNo);
