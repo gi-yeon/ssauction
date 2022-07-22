@@ -8,7 +8,8 @@ import Notifications from "../views/Notifications.vue";
 import Profile from "../views/Profile.vue";
 import SignIn from "../views/SignIn.vue";
 import SignUp from "../views/SignUp.vue";
-
+import ProfileView from "../views/components/ProfileView.vue";
+import ProfileUpdate from "../views/components/ProfileUpdate.vue";
 const routes = [
   {
     path: "/",
@@ -49,6 +50,18 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+    children: [
+      {
+        name: "ProfileView",
+        path: "over-view",
+        component: ProfileView,
+      },
+      {
+        name: "ProfileUpdate",
+        path: "profile-update",
+        component: ProfileUpdate,
+      },
+    ],
   },
   {
     path: "/sign-in",
