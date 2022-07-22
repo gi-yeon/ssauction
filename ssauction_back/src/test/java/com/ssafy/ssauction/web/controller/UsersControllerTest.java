@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ class UsersControllerTest {
 
     @Autowired
     private UsersRepository usersRepository;
+    @Order(1)
     @Test
     public void UsersRegist() throws Exception {
         //given data
@@ -57,6 +59,7 @@ class UsersControllerTest {
         Assertions.assertThat(all.get(0).getUserPhoneNo()).isEqualTo(phoneNo);
     }
 
+    @Order(2)
     @Test
     public void UsersUpdate() throws Exception{
         //init data

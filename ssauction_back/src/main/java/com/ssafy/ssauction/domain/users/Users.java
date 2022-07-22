@@ -49,7 +49,7 @@ public class Users {
     private Timestamp userUpdateDate;
 
     @Builder
-    public Users(String userEmail, String userPwd, String userPhoneNo, String userNickname, String userDesc, String userComment, int userGrade, Timestamp userRegDate, Timestamp userUpdateDate) {
+    public Users(String userEmail, String userPwd, String userPhoneNo, String userNickname, String userDesc, String userComment, int userGrade, Timestamp userUpdateDate) {
         this.userEmail = userEmail;
         this.userPwd = userPwd;
         this.userPhoneNo = userPhoneNo;
@@ -57,7 +57,7 @@ public class Users {
         this.userDesc = userDesc;
         this.userComment = userComment;
         this.userGrade = userGrade;
-        this.userRegDate = userRegDate;
+        this.userRegDate = new Timestamp(System.currentTimeMillis());
         this.userUpdateDate = userUpdateDate;
     }
 
