@@ -40,7 +40,7 @@ public class Users {
     private String userComment;
 
     @Column(name = "user_grade")
-    private int userGrade;
+    private Integer userGrade;
 
     @Column(name = "user_reg_date", nullable = false)
     private Timestamp userRegDate;

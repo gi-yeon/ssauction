@@ -17,7 +17,7 @@ public class UsersResponseDto {
 
     private String userComment;
 
-    private int userGrade;
+    private Integer userGrade;
 
     @Override
     public String toString() {

@@ -2,6 +2,7 @@ package com.ssafy.ssauction.service.users;
 
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
+import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
@@ -30,9 +31,16 @@ public class UsersService {
         Users entity=usersRepository.findById(userNo).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다."));
         return new UsersResponseDto(entity);
     }
+
     @Transactional
     public Long delete(Long userNo) {
         usersRepository.deleteById(userNo);
         return userNo;
     }
+
+    public UsersFindIdDto findByPhoneNo(String userPhoneNo) {
+        Users entity=usersRepository.findByUserPhoneNo(userPhoneNo).orElseThrow(()->new IllegalArgumentException("해당 번호가 없습니다."));
+        return new UsersFindIdDto(entity);
+    }
+
 }

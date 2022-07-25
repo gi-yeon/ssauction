@@ -4,8 +4,10 @@ import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
+import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,6 +18,7 @@ public class UsersController {
     public UsersResponseDto findById(@PathVariable Long userNo){
         return usersService.findById(userNo);
     }
+
     @PostMapping("/users/")
     public Long save(@RequestBody UsersSaveRequestDto requestDto){
         return usersService.save(requestDto);
@@ -30,4 +33,11 @@ public class UsersController {
     public Long delete(@PathVariable Long userNo){
         return usersService.delete(userNo);
     }
+
+    // 아이디 찾기
+    @GetMapping("/users/findId/{userPhoneNo}")
+    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
+        return usersService.findByPhoneNo(userPhoneNo);
+    }
+
 }
