@@ -5,7 +5,7 @@ import com.ssafy.ssauction.domain.userImages.UserImgsRepository;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsSaveRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
+import org.apache.catalina.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserImgsTestControllerTest {
@@ -31,6 +32,11 @@ class UserImgsTestControllerTest {
     @Autowired
     private UserImgsRepository userImgsRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    EntityManager em;
     @Order(1)
     @Test
     public void UserImgsRegist() throws Exception {
@@ -41,9 +47,6 @@ class UserImgsTestControllerTest {
         Long userNo = 5L;
 
         UserImgsSaveRequestDto requestDto = UserImgsSaveRequestDto.builder()
-                .userImgName(userImgName)
-                .userImgUri(userImgUri)
-                .userNo(userNo)
                 .build();
         String url = "http://localhost:" + port + "/users/imgs";
 
@@ -57,6 +60,24 @@ class UserImgsTestControllerTest {
         List<UserImgs> all = userImgsRepository.findAll();
         Assertions.assertThat(all.get(0).getUserImgName()).isEqualTo(userImgName);
         Assertions.assertThat(all.get(0).getUserImgUri()).isEqualTo(userImgUri);
-        Assertions.assertThat(all.get(0).getUserNo()).isEqualTo(userNo);
     }
+
+//    @Test
+//    @Transactional
+//    @Rollback(value = false)
+//    public void save_user_images(){
+//        Users user=Users.builder()
+//                .userEmail("a")
+//                .userPwd("b")
+//                .userNickname("c")
+//                .userPhoneNo("d")
+//                .build();
+//        usersRepository.save(user);
+//        UserImgs userImgs = new UserImgs();
+//        userImgs.setUser(user);
+//        userImgsRepository.save(userImgs);
+//        System.out.println(user.toString());
+//        System.out.println(userImgs.toString());
+//        System.out.println("finish");
+//    }
 }
