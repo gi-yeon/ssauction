@@ -65,4 +65,9 @@ public class Users {
         this.userComment=userComment;
         this.userDesc=userDesc;
     }
+
+    // 비밀번호 재설정
+    public void updatePwd(String userPwd){
+        this.userPwd=userPwd;
+    }
 }

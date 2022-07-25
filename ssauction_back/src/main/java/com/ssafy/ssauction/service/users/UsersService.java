@@ -6,6 +6,8 @@ import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
+import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +40,18 @@ public class UsersService {
         return userNo;
     }
 
+    // 아이디 찾기
     public UsersFindIdDto findByPhoneNo(String userPhoneNo) {
         Users entity=usersRepository.findByUserPhoneNo(userPhoneNo).orElseThrow(()->new IllegalArgumentException("해당 번호가 없습니다."));
         return new UsersFindIdDto(entity);
+    }
+
+    // 비밀번호 재설정
+    @Transactional
+    public String updatePwd(String userPhoneNo, String userId, UsersUpdatePwdDto resetPwdDto){
+        Users users=usersRepository.findByUserPhoneNo(userPhoneNo).orElseThrow(()->new IllegalArgumentException("해당 계정이 없습니다."));
+        users.updatePwd(resetPwdDto.getUserPwd());
+        return userId + "님의 비밀번호가 변경되었습니다.";
     }
 
 }
