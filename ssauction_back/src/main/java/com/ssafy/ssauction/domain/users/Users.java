@@ -2,12 +2,18 @@ package com.ssafy.ssauction.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
+import com.ssafy.ssauction.domain.userImages.UserImgs;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -48,8 +54,31 @@ public class Users {
     @Column(name = "user_update_date")
     private Timestamp userUpdateDate;
 
+    @Setter
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private UserImgs userImgs;
+
+    @Setter
+    @JsonIgnore
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Items> sellItems = new ArrayList<>();
+
+    @Setter
+    @JsonIgnore
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Items> purchaseItems = new ArrayList<>();
+
+    @Setter
+    @JsonIgnore
+    @OneToMany(mappedBy = "bidder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ResultOrders> results = new ArrayList<>();
+
     @Builder
-    public Users(String userEmail, String userPwd, String userPhoneNo, String userNickname, String userDesc, String userComment, int userGrade, Timestamp userUpdateDate) {
+    public Users(String userEmail, String userPwd, String userPhoneNo, String userNickname, String userDesc, String userComment, int userGrade, Timestamp userUpdateDate, List<Items> sellItems, List<Items> purchaseItems, List<ResultOrders> results, String refreshToken) {
         this.userEmail = userEmail;
         this.userPwd = userPwd;
         this.userPhoneNo = userPhoneNo;
@@ -59,10 +88,15 @@ public class Users {
         this.userGrade = userGrade;
         this.userRegDate = new Timestamp(System.currentTimeMillis());
         this.userUpdateDate = userUpdateDate;
+        this.sellItems = sellItems;
+        this.purchaseItems = purchaseItems;
+        this.results = results;
+        this.refreshToken = refreshToken;
     }
 
-    public void updateProfile(String userComment,String userDesc){
-        this.userComment=userComment;
-        this.userDesc=userDesc;
+    public void updateProfile(String userComment, String userDesc) {
+        this.userComment = userComment;
+        this.userDesc = userDesc;
+        this.userUpdateDate = new Timestamp(System.currentTimeMillis());
     }
 }

@@ -1,8 +1,11 @@
 package com.ssafy.ssauction.domain.userImages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,36 +13,52 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="user_images")
+@Table(name = "user_images")
 public class UserImgs {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_img_no")
-    private Long userImgNo;
-
-    @Column(name="user_img_name", nullable = false,length = 50)
-    private String userImgName;
-
-    @Column(name = "user_img_uri", nullable = false,length = 200)
-    private String userImgUri;
-
-    @Column(name="user_no",nullable = false)
+    @Column(name="user_no")
     private Long userNo;
 
-    @Column(name="user_img_reg_date")
+    @Column(name = "user_img_name", length = 50)
+    private String userImgName;
+
+    @Column(name = "user_img_uri", length = 200)
+    private String userImgUri;
+
+    @Column(name = "user_img_reg_date")
     private Timestamp userImgRegDate;
 
-    @Column(name="user_img_update_date")
+    @Column(name = "user_img_update_date")
     private Timestamp userImgUpdateDate;
 
-    @Builder
+    @MapsId
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_no")
+    private Users user;
 
-    public UserImgs(Long userImgsNo, String userImgName, String userImgUri, Long userNo, Timestamp userImgRegDate, Timestamp userImgUpdateDate) {
-        this.userImgNo = userImgsNo;
+    @Override
+    public String toString() {
+        return "UserImgs{" +
+                "userNo=" + userNo +
+                ", userImgName='" + userImgName + '\'' +
+                ", userImgUri='" + userImgUri + '\'' +
+                ", userImgRegDate=" + userImgRegDate +
+                ", userImgUpdateDate=" + userImgUpdateDate +
+                ", user=" + user +
+                '}';
+    }
+    public void update(String userImgName, String userImgUri){
+        this.userImgName=userImgName;
+        this.userImgUri=userImgUri;
+        this.userImgUpdateDate=new Timestamp(System.currentTimeMillis());
+    }
+    @Builder
+    public UserImgs(Users user, String userImgName, String userImgUri, Timestamp userImgRegDate, Timestamp userImgUpdateDate) {
+        this.user = user;
         this.userImgName = userImgName;
         this.userImgUri = userImgUri;
-        this.userNo = userNo;
-        this.userImgRegDate = userImgRegDate;
+        this.userImgRegDate = new Timestamp(System.currentTimeMillis());
         this.userImgUpdateDate = userImgUpdateDate;
     }
 }

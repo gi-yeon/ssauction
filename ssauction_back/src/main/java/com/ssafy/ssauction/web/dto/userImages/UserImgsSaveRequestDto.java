@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.web.dto.userImages;
 
 import com.ssafy.ssauction.domain.userImages.UserImgs;
+import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,32 +9,27 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Getter
-@NoArgsConstructor
 public class UserImgsSaveRequestDto {
 
     private String userImgName;
 
     private String userImgUri;
 
-    private Long userNo;
-
     private Timestamp userImgRegDate;
 
     @Builder
-    public UserImgsSaveRequestDto(String userImgName, String userImgUri, Long userNo) {
-        this.userImgName = userImgName;
-        this.userImgUri = userImgUri;
-        this.userNo = userNo;
+    public UserImgsSaveRequestDto() {
         this.userImgRegDate = new Timestamp(System.currentTimeMillis());
     }
 
-    public UserImgs toEntity(){
-        return UserImgs.builder()
-                .userImgName(userImgName)
-                .userImgUri(userImgUri)
-                .userImgRegDate(userImgRegDate)
-                .userNo(userNo)
+    public UserImgs toEntity(Users user){
+        UserImgs temp=UserImgs.builder()
+                .userImgName(null)
+                .userImgUri(null)
+                .userImgRegDate(null)
                 .userImgUpdateDate(null)
+                .user(user)
                 .build();
+        return temp;
     }
 }

@@ -15,8 +15,8 @@ public class UsersService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public Long save(UsersSaveRequestDto requestDto){
-        return usersRepository.save(requestDto.toEntity()).getUserNo();
+    public Users save(UsersSaveRequestDto requestDto){
+        return usersRepository.save(requestDto.toEntity());
     }
 
     @Transactional
@@ -29,6 +29,9 @@ public class UsersService {
     public UsersResponseDto findById(Long userNo) {
         Users entity=usersRepository.findById(userNo).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다."));
         return new UsersResponseDto(entity);
+    }
+    public Users findEntityById(Long userNo){
+        return usersRepository.findById(userNo).get();
     }
     @Transactional
     public Long delete(Long userNo) {
