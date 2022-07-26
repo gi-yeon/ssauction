@@ -3,7 +3,7 @@ package com.ssafy.ssauction.domain.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.ssauction.domain.items.Items;
-import com.ssafy.ssauction.domain.resultOrder.ResultOrders;
+import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import com.ssafy.ssauction.domain.userImages.UserImgs;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,6 +54,7 @@ public class Users {
     @Column(name = "user_update_date")
     private Timestamp userUpdateDate;
 
+    @Setter
     @Column(name = "refresh_token")
     private String refreshToken;
 

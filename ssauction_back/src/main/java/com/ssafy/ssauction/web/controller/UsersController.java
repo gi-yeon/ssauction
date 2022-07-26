@@ -8,6 +8,7 @@ import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

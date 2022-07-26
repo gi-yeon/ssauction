@@ -3,7 +3,9 @@ package com.ssafy.ssauction.service.houses;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.houses.HousesRepoository;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
+import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,9 @@ public class HousesService {
         Houses house=requestDto.toEntity(item);
         housesRepoository.save(house);
         return house;
+    }
+
+    public Houses findEntityById(Long houseNo){
+        return housesRepoository.findById(houseNo).get();
     }
 }

@@ -2,7 +2,7 @@ package com.ssafy.ssauction.domain.houses;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssauction.domain.items.Items;
-import com.ssafy.ssauction.domain.resultOrder.ResultOrders;
+import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

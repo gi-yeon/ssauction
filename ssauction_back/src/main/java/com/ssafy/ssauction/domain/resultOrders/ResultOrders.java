@@ -1,17 +1,14 @@
-package com.ssafy.ssauction.domain.resultOrder;
+package com.ssafy.ssauction.domain.resultOrders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.users.Users;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
