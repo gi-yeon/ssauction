@@ -5,7 +5,10 @@
       <div class="jb-wrap">
         <router-link to="/">Home</router-link> &nbsp; 
         <router-link to="/login">Login</router-link> &nbsp; 
-        <router-link to="/signup">Signup</router-link> &nbsp; 
+        <router-link to="/signup">Signup</router-link> &nbsp;
+        <router-link to="/test">Test</router-link> &nbsp; 
+        <router-link to="/findid">FindId</router-link> &nbsp; 
+
       </div>
 
     </div>
