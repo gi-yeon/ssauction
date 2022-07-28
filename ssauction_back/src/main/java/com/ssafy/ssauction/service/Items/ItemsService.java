@@ -23,4 +23,8 @@ public class ItemsService {
         Items item=requestDto.toEntity(user);
         return itemsRepository.save(item);
     }
+
+    public void delete(Long itemNo) {
+        itemsRepository.deleteById(itemNo);
+    }
 }
