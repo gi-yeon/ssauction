@@ -8,6 +8,9 @@ import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
 
+import java.util.NoSuchElementException;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +46,14 @@ public class UsersService {
 
     // 아이디 찾기
     public UsersFindIdDto findByPhoneNo(String userPhoneNo) {
-        Users entity=usersRepository.findByUserPhoneNo(userPhoneNo).orElseThrow(()->new IllegalArgumentException("해당 번호가 없습니다."));
+        Users entity;
+        try {
+            entity = usersRepository.findByUserPhoneNo(userPhoneNo).get();
+            System.out.println(entity.toString());
+        }catch(NoSuchElementException e){
+            System.out.println("없음");
+            return null;
+        }
         return new UsersFindIdDto(entity);
     }
 

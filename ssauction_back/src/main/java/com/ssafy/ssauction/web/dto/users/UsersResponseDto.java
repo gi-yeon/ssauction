@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.web.dto.users;
 
 import com.ssafy.ssauction.domain.users.Users;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -32,6 +33,7 @@ public class UsersResponseDto {
                 '}';
     }
 
+    @Builder
     public UsersResponseDto(Users entity){
         this.userNo=entity.getUserNo();
         this.userEmail=entity.getUserEmail();

@@ -1,33 +1,50 @@
 <template>
-    <div id="app">
-        <h2>{{PhoneNo}}</h2>
-        <p>{{userId}}</p>
-        <input type="text" :value="phoneNo" @input="inputPhoneNo" placeholder="폰번호를 입력해 주세요."/>
-    </div>
+  <br />
+  <h1>아이디 찾기</h1>
+  <br />
+
+  <label for="user_phoneNo">전화번호: </label>
+  <input id="user_phoneNo" type="string" v-model="phoneNo" />
+  <h1>{{ phoneNo }}</h1>
+  <button @click="findId">Find ID</button>
+  <br />
+  <br />
+  <h1>{{ userEmail }}</h1>
 </template>
 
 <script>
-    import {computed} from 'vue';
-    import {useStore} from 'vuex';
+  import http from "@/utils/http";
 
-    function useUser() {
-        const store = useStore();
+  export default {
+  name: "SsauctionFindId",
 
-        const phoneNo = computed(() => store.state.user.phoneNo);
-        const userId = computed(() => store.getters['user/userId']);
+  data() {
+    return {
+      phoneNo: "",
+      userEmail: "",
+      returnValue: {},
+    };
+  },
 
-        return {
-            phoneNo,
-            userId,
+  mounted() {},
+
+  methods: {
+    findId: function () {
+      console.log("FindId start");
+      console.log(this.phoneNo);
+      console.log("start getting");
+      http.get("/users/findId/" + this.phoneNo).then(({ data }) => {
+        console.log(data.userPhoneNo);
+        console.log(data.userEmail);
+        this.returnValue = data;
+        console.log(this.returnValue);
+        if (this.returnValue !== "") {
+          alert("아이디(이메일 주소)는 다음과 같습니다.\n" + data.userEmail);
+        } else {
+          alert("해당 유저 정보가 없습니다.");
         }
-    }
-
-    export default {
-        name: 'App',
-        setup() {
-            return {
-                ...useUser()
-            }
-        },
-    }
+      });
+    },
+  },
+};
 </script>

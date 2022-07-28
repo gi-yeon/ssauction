@@ -4,7 +4,7 @@
   <button @click="clickBtn">click</button>
 </template>
 <script>
-import axios from "@/utils/axios.js";
+import http from "@/utils/http.js";
 export default {
   name: "SsauctionHome",
   data() {
@@ -15,7 +15,7 @@ export default {
     clickBtn: () => {
       console.log("click");
       const obj = { name: "giyeon", age: 26, userno: 1, desc: "hi, everyone" };
-      axios.post("hello", JSON.stringify(obj)).then(({ data }) => {
+      http.post("hello", JSON.stringify(obj)).then(({ data }) => {
         alert(data);
       });
       console.log("end");

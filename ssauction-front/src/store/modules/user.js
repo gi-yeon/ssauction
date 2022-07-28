@@ -1,24 +1,27 @@
 import { USER } from "../mutation-types";
 const state = {
-  name: "",
-  userNo: 0,
+  phoneNo: "",
+  userId: "",
 };
 const getters = {
-  userInfo: (state) => {
-    return `'이름' : ${state.name}, '유저번호' : ${state.userNo}`;
-  },
   userId: (state) => {
-    return `'전화번호' : ${state.PhoneNo}, '유저아이디' : ${state.userId}`;
+    return `'전화번호' : ${state.phoneNo}, '유저아이디' : ${state.userId}`;
   },
 };
 const actions = {
-  changeName({ commit }, value) {
-    commit(USER.SET_NAME, value);
+  getPhoneNo({ commit }, value) {
+    commit(USER.SET_PHONENO, value);
+  },
+  getUserId({ commit }, value) {
+    commit(USER.SET_USERID, value);
   },
 };
 const mutations = {
-  [USER.SET_NAME](state, value) {
-    state.name = value;
+  [USER.SET_PHONENO](state, value) {
+    state.phoneNo = value;
+  },
+  [USER.SET_USERID](state, value) {
+    state.userId = value;
   },
 };
 export default {

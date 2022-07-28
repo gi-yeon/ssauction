@@ -42,6 +42,13 @@ public class UsersController {
     public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
         return usersService.findByPhoneNo(userPhoneNo);
     }
+//    @GetMapping("/users/findId/{userPhoneNo}")
+//    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
+//        UsersFindIdDto findIdDto= usersService.findByPhoneNo(userPhoneNo);
+//        if(findIdDto==null)
+//            return null;
+//        return findIdDto;
+//    }
 
     // 비밀번호 재설정
     // 아이디(이메일) + 전화번호를 이용해 비밀번호 재설정 구현
