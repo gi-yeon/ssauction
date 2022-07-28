@@ -6,14 +6,14 @@
 
   <div>
     <!-- <label for="user_email">이메일: </label> -->
-    <input id="user_email" type="email" placeholder="이메일">
+    <input id="user_email" type="email" v-model="loginEmail" placeholder="이메일">
     <br>
     <br>
     <!-- <label for="user_pwd">비밀번호: </label> -->
-    <input id="user_pwd" type="password" label="비밀번호" placeholder="비밀번호">
+    <input id="user_pwd" type="password" v-model="loginPwd" placeholder="비밀번호">
     <br>
     <br>
-    <button width=500px class="btn_yellow" >로그인</button>
+    <button @click="login" width=500px class="btn_yellow" >로그인</button>
     <br>
     <br>
     <button class="btn_pink">아이디 찾기</button> &nbsp;
@@ -32,16 +32,53 @@
 </template>
 
 <script>
+import axios from "@/utils/axios";
+// import router from '@/router'
+
 export default {
   name: "SsauctionLogin",
 
   data() {
-    return {};
+    return {
+      loginEmail: "",
+      loginPwd: "",
+      returnValue: {},
+    };
   },
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    login: function () {
+      console.log("login start");
+      console.log(this.loginEmail);
+      console.log(this.loginPwd);
+
+      const obj = {
+        loginEmail: this.loginEmail,
+        loginPwd: this.loginPwd,
+      };
+      console.log("start posting");
+      axios.post("/users/login", JSON.stringify(obj)).then(({ data }) => {
+        console.log(data.userNo);
+        console.log(data.userNickname);
+        console.log(data.userGrade);
+        this.returnValue = data;
+        if (this.returnValue !== "") {
+          alert("로그인 되었습니다.");
+          // router.push({ name: 'Login' })
+          this.$store.dispatch("user/getUserNo", this.returnValue.userNo);
+          this.$store.dispatch(
+            "user/getNickname",
+            this.returnValue.userNickname
+          );
+          this.$store.dispatch("user/getGrade", this.returnValue.userGrade);
+        } else {
+          alert("입력 정보를 확인해주세요.");
+        }
+      });
+    },
+  },
 };
 </script>
 

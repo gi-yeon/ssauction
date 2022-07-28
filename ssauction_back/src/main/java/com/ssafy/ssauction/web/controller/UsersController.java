@@ -1,10 +1,12 @@
 package com.ssafy.ssauction.web.controller;
 
+import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.userImages.UserImgsService;
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
+import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
@@ -23,10 +25,26 @@ public class UsersController {
         return usersService.findById(userNo);
     }
 
-    @PostMapping("/users/")
-    public Long save(@RequestBody UsersSaveRequestDto requestDto) {
+    @PostMapping("/users/login")
+    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto){
+        UsersResponseDto responseDto=usersService.findUser(requestDto);
+        if (responseDto==null){
+            return null;
+        }
+        System.out.println(responseDto.toString());
+        return responseDto;
+    }
+
+    @PostMapping("/users")
+    public String save(@RequestBody UsersSaveRequestDto requestDto) {
+        Long userImgs=-1L;
         Users user = usersService.save(requestDto);
-        return userImgsService.save(user);
+        userImgs= userImgsService.save(user);
+        System.out.println(userImgs);
+        if(userImgs<0){
+            return "FAIL";
+        }
+        return "OK";
     }
 
     @PutMapping("users/img/{userNo}")
