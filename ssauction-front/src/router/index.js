@@ -5,6 +5,8 @@ import Signup from "@/views/Signup.vue";
 import Test from "@/views/Test.vue";
 import FindId from "@/views/FindId.vue";
 import ResetPwd from "@/views/ResetPwd.vue";
+import ResetPwd2 from "@/views/ResetPwd2.vue";
+
 
 const routes = [
   {
@@ -36,6 +38,12 @@ const routes = [
     path: "/resetpwd",
     name: "ResetPwd",
     component: ResetPwd,
+  },
+  {
+    path: "/resetpwd2",
+    name: "ResetPwd2",
+    component: ResetPwd2,
+    props: true,
   },
 ];
 const router = createRouter({
