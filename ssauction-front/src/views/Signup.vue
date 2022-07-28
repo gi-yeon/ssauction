@@ -1,28 +1,29 @@
 <template>
-
+<br>
 <br>
 <h1>회원가입</h1>
 <br>
 
 <div>
-  <form>
-    <label for="user_email">이메일: </label>
-    <input id="user_email" type="email">
+  <div>
+    <input id="user_email" type="email" placeholder="이메일">
     <br>
     <br>
-    <label for="user_pwd">비밀번호: </label>
-    <input id="user_pwd" type="password">
+    <input id="user_pwd" type="password" placeholder="비밀번호">
     <br>
     <br>
-    <label for="user_pwd2">비밀번호 확인: </label>
-    <input id="user_pwd2" type="password">
+    <input type="password" placeholder="비밀번호 확인">
     <br>
     <br>
-
-    <button>구글로 회원가입</button> &nbsp;
-    <button>네이버로 회원가입</button> &nbsp;
-    <button>회원가입</button>
-  </form>
+    <input id="user_" type="text" placeholder="전화번호">
+    <br>
+    <br>
+    <button width=500px class="btn_yellow" >회원가입</button> 
+    <br>
+    <br>
+    <a href=""><img src="@\assets\imgs\google.png" alt="구글 로그인" class="logo_resize"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href=""><img src="@\assets\imgs\naver.png" alt="네이버 로그인" class="logo_resize"></a>
+  </div>
 </div>
 </template>
 
@@ -40,4 +41,47 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* h1 {
+  margin-left:110px
+} */
+
+input {
+  width: 500px;
+  height: 50px;
+  border:0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left:30px
+}
+
+input:focus {
+  outline: 3px rgb(94, 94, 94)
+}
+
+.btn_pink {
+  width:245px;
+  height: 50px;
+  border: 0;
+  background-color:rgb(255, 170, 165);
+  border-radius: 20px;
+  color:rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow {
+  width:500px;
+  height: 50px;
+  border: 0;
+  background-color:rgb(255, 211, 182);
+  border-radius: 20px;
+  color:rgb(94, 94, 94);
+  text-align: center;
+}
+
+.logo_resize {
+  width:60px;
+  height:60px;
+}
+</style>
