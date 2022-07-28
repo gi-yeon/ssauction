@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.web.dto.users;
 
+import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,12 @@ public class UsersUpdatePwdDto {
 
     @Builder
     UsersUpdatePwdDto(String userPwd){
-        this.userPwd=userPwd;
+        this.userPwd = userPwd;
+    }
+
+    public Users toEntity(){
+        return Users.builder()
+                .userPwd(userPwd)
+                .build();
     }
 }

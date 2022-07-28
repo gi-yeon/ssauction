@@ -60,9 +60,14 @@ public class UsersService {
     // 비밀번호 재설정
     @Transactional
     public String updatePwd(String userPhoneNo, String userId, UsersUpdatePwdDto resetPwdDto){
-        Users users=usersRepository.findByUserPhoneNo(userPhoneNo).orElseThrow(()->new IllegalArgumentException("해당 계정이 없습니다."));
-        users.updatePwd(resetPwdDto.getUserPwd());
+        Users users;
+        try {
+            users = usersRepository.findByUserPhoneNo(userPhoneNo).get();
+            users.updatePwd(resetPwdDto.getUserPwd());
+        }catch(NoSuchElementException e){
+            System.out.println("없음");
+            return null;
+        }
         return userId + "님의 비밀번호가 변경되었습니다.";
     }
-
 }

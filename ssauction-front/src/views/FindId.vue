@@ -7,9 +7,6 @@
   <input id="user_phoneNo" type="string" v-model="phoneNo" />
   <h1>{{ phoneNo }}</h1>
   <button @click="findId">Find ID</button>
-  <br />
-  <br />
-  <h1>{{ userEmail }}</h1>
 </template>
 
 <script>

@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import Signup from "@/views/Signup.vue";
 import Test from "@/views/Test.vue";
 import FindId from "@/views/FindId.vue";
+import ResetPwd from "@/views/ResetPwd.vue";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/findid",
     name: "FindId",
     component: FindId,
+  },
+  {
+    path: "/resetpwd",
+    name: "ResetPwd",
+    component: ResetPwd,
   },
 ];
 const router = createRouter({

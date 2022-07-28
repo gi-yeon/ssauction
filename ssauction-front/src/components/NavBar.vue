@@ -8,7 +8,7 @@
         <router-link to="/signup">Signup</router-link> &nbsp;
         <router-link to="/test">Test</router-link> &nbsp; 
         <router-link to="/findid">FindId</router-link> &nbsp; 
-
+        <router-link to="/resetpwd">ResetPwd</router-link> &nbsp; 
       </div>
 
     </div>
