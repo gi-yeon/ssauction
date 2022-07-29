@@ -91,6 +91,7 @@ public class UsersController {
         HttpStatus status = null;
 
         if (newAccessToken != null) {
+            result.put("accessToken", newAccessToken);
             result.put("message", SUCCESS);
             status = HttpStatus.ACCEPTED;
         } else {
