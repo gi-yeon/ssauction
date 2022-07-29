@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.auth;
 
 import com.ssafy.ssauction.service.users.UsersService;
+import com.ssafy.ssauction.web.dto.users.UsersAuthResponseDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -49,25 +48,24 @@ public class JwtTokenProvider {
 
 
     //JWT 토큰 생성
-    public String createAccessToken(List<String[]> lst) {
-
+    public String createAccessToken(Map<String, Object> userMap) {
         return Jwts.builder().setHeaderParam("typ", "JWT")
-                .claim(lst.get(0)[0], lst.get(0)[1]).claim(lst.get(1)[0], lst.get(1)[1])
+                .claim("userEmail", userMap.get("userEmail")).claim("userNickname", userMap.get("userNickname")).claim("roles", userMap.get("authority"))
                 .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
                 .signWith(keyForAccessToken).compact();
 
     }
 
-    //refreshToken으로 accessToken 재생성
-    public String recreateAccessToken(String claimId, String data) {
-
-        return Jwts.builder().setHeaderParam("typ", "JWT").claim(claimId, data).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime)).signWith(keyForAccessToken).compact();
-
-    }
+//    //refreshToken으로 accessToken 재생성
+//    public String recreateAccessToken(String claimId, String data) {
+//
+//        return Jwts.builder().setHeaderParam("typ", "JWT").claim(claimId, data).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime)).signWith(keyForAccessToken).compact();
+//
+//    }
 
     //refresh token 생성 (유효시간 3일)
     public String createRefreshToken(String userEmail) {
-        return Jwts.builder().claim("userEmail", userEmail).setSubject(userEmail).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime * 48 * 3)).signWith(keyForAccessToken).compact();
+        return Jwts.builder().setHeaderParam("typ", "JWT").claim("userEmail", userEmail).setSubject(userEmail).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime * 48 * 3)).signWith(keyForAccessToken).compact();
     }
 
     //토큰에서의 인증 정보 조회
@@ -114,7 +112,7 @@ public class JwtTokenProvider {
         }
     }
 
-    //refreshToken의 유효성 검증 ->유효하다면 새로운 accessToken 생성, 유효하지
+    //refreshToken의 유효성 검증 ->유효하다면 새로운 accessToken 생성, 유효하지 않다면 null 반환
     public String validateRefreshToken(String userEmail) {
         String refreshToken = usersService.findByUserEmail(userEmail).getUserRefreshToken();
 
@@ -122,12 +120,20 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(keyForAccessToken).build().parseClaimsJws(refreshToken);
             if (!claims.getBody().getExpiration().before(new Date())) {
-                String newAccessToken = recreateAccessToken("userEmail", claims.getBody().get("userEmail", String.class));
+
+                UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
+
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("userEmail", user.getUserEmail());
+                userMap.put("userNickname", user.getUserNickname());
+                userMap.put("authority", user.getAuthority());
+
+                String newAccessToken = createAccessToken(userMap);
                 return newAccessToken;
             } else {
                 return null;
             }
-        } catch (SignatureException e) {
+        } catch (JwtException e) {
             return null;
         }
     }

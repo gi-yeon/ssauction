@@ -52,6 +52,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh").permitAll()
+                .antMatchers("/users").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)//그 외 모두 인증된 사용자만 허용
