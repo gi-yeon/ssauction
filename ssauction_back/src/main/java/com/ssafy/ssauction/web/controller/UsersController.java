@@ -22,9 +22,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UsersController {
-    private static final String SUCCESS = "success";
-
-    private static final String FAIL = "fail";
+    private static final String SUCCESS = "success"; //성공 시 메시지
+    private static final String FAIL = "fail"; //실패 시 메시지
     private final UsersService usersService;
     private final UserImgsService userImgsService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -55,27 +54,33 @@ public class UsersController {
         return usersService.delete(userNo);
     }
 
+    //로그인
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo) {
         String userEmail = loginInfo.getUserEmail();
         String userPwd = loginInfo.getUserPwd();
         HttpStatus status = null;
 
-
         HashMap<String, Object> result = new HashMap<>();
 
+        //userEmail로 DB에 저장된 user정보 불러옴
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
-//        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+        //비밀번호가 올바르게 입력됐다면면
+//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
         if (userPwd.equals(user.getUserPwd())) {
-            List<String[]> lst = new LinkedList<>();
-            lst.add(new String[] {"userEmail", user.getUserEmail()});
-            lst.add(new String[] {"userNickname", user.getUserNickname()});
 
+            //리스트에 유저정보 담아준다.
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("userEmail", user.getUserEmail());
+            userMap.put("userNickname", user.getUserNickname());
+            userMap.put("authority", user.getAuthority());
+
+
+            //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
             String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
-            result.put("accessToken", jwtTokenProvider.createAccessToken(lst));
+            result.put("accessToken", jwtTokenProvider.createAccessToken(userMap));
             result.put("refreshToken", refreshToken);
-            //refresh token 저장
             usersService.updateRefreshToken(user.getUserNo(), refreshToken);
 
             result.put("message", SUCCESS);
@@ -90,6 +95,7 @@ public class UsersController {
 
     }
 
+    //refresh token으로 access token 재발급
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, Object>> validateRefreshToken(@RequestBody String userEmail) {
         HashMap<String, Object> result = new HashMap<>();
