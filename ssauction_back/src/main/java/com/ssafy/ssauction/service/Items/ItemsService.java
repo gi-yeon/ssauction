@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ItemsService {
@@ -18,6 +20,7 @@ public class ItemsService {
     public Items findEntityById(Long itemNo){
         return itemsRepository.findById(itemNo).get();
     }
+    public List<Items> findItemsBySeller(Users seller) {return itemsRepository.findBySeller(seller);}
     @Transactional
     public Items save(Users user, ItemsSaveRequestDto requestDto) {
         Items item=requestDto.toEntity(user);

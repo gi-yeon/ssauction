@@ -21,7 +21,7 @@ public class ItemsController {
     private final ItemsService itemsService;
     private final UsersService usersService;
 
-    @PostMapping("/items/")
+    @PostMapping("/items")
     public Long save(@RequestBody ItemsSaveRequestDto requestDto) {
         Users user = usersService.findEntityById(requestDto.getUserNo());
         Items item = itemsService.save(user, requestDto);

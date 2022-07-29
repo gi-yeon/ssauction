@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/houses")
-public class HousesController {
+public class HousesController_new {
     private final HousesService housesService;
     private final ItemsService itemsService;
     private final UsersService usersService;
