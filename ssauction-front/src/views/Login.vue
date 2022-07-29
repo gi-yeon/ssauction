@@ -21,7 +21,7 @@
     <br>
     <br>
     <br>
-    <a href=""><img src="@\assets\imgs\google.png" alt="구글 로그인" class="logo_resize"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/oauth2/authorization/google"><img src="@\assets\imgs\google.png" alt="구글 로그인" class="logo_resize"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href=""><img src="@\assets\imgs\naver.png" alt="네이버 로그인" class="logo_resize"></a>
     <!-- <br>
     <button class="btn_pink">구글로 회원가입</button> &nbsp;
