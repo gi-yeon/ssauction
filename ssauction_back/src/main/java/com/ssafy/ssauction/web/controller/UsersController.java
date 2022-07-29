@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -66,8 +68,12 @@ public class UsersController {
 
 //        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
         if (userPwd.equals(user.getUserPwd())) {
+            List<String[]> lst = new LinkedList<>();
+            lst.add(new String[] {"userEmail", user.getUserEmail()});
+            lst.add(new String[] {"userNickname", user.getUserNickname()});
+
             String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
-            result.put("accessToken", jwtTokenProvider.createAccessToken("userEmail", user.getUserEmail()));
+            result.put("accessToken", jwtTokenProvider.createAccessToken(lst));
             result.put("refreshToken", refreshToken);
             //refresh token 저장
             usersService.updateRefreshToken(user.getUserNo(), refreshToken);

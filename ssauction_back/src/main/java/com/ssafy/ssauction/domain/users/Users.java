@@ -65,6 +65,9 @@ public class Users implements UserDetails {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private UserImgs userImgs;
 
+    @Column(name = "user_role")
+    private Authority authority;
+
     @Setter
     @JsonIgnore
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -48,9 +49,12 @@ public class JwtTokenProvider {
 
 
     //JWT 토큰 생성
-    public String createAccessToken(String claimId, String data) {
+    public String createAccessToken(List<String[]> lst) {
 
-        return Jwts.builder().setHeaderParam("typ", "JWT").claim(claimId, data).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime)).signWith(keyForAccessToken).compact();
+        return Jwts.builder().setHeaderParam("typ", "JWT")
+                .claim(lst.get(0)[0], lst.get(0)[1]).claim(lst.get(1)[0], lst.get(1)[1])
+                .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
+                .signWith(keyForAccessToken).compact();
 
     }
 
