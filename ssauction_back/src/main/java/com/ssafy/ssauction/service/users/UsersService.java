@@ -39,7 +39,6 @@ public class UsersService {
     }
 
     public UsersAuthResponseDto findByUserEmail(String userEmail) {
-        System.out.println(userEmail + " here");
         Users entity = usersRepository.findByUserEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         return new UsersAuthResponseDto(entity);
