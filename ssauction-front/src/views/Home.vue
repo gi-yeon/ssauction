@@ -27,7 +27,6 @@ export default {
   },
 
   mounted() {},
-
   methods: {
     clickBtn: () => {
       console.log("click");

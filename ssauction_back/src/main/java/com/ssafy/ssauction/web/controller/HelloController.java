@@ -1,5 +1,4 @@
 package com.ssafy.ssauction.web.controller;
-
 import com.ssafy.ssauction.web.dto.HelloResponseDto;
 import com.ssafy.ssauction.web.dto.Hello.HelloPostRequestDto;
 import org.springframework.web.bind.annotation.*;
@@ -17,3 +16,4 @@ public class HelloController {
         return requestDto.toString();
     }
 }
+

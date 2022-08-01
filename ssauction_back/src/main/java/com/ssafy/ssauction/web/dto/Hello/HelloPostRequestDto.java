@@ -12,6 +12,7 @@ public class HelloPostRequestDto {
     int userno;
 
 
+
     String desc;
 
     @Builder
@@ -31,4 +32,6 @@ public class HelloPostRequestDto {
                 '}';
     }
 
+
 }
+

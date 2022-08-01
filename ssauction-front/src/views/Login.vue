@@ -32,7 +32,6 @@
 import axios from "@/utils/axios";
 // import router from '@/router'
 
-
 export default {
   name: "SsauctionLogin",
 

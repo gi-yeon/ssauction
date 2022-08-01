@@ -3,6 +3,9 @@
       <div class="brand fw-bold">SSAUCTION</div>
       
       <div class="wrap">
+        <router-link to="/test">Test</router-link> &nbsp; 
+        <router-link to="/findid">FindId</router-link> &nbsp; 
+        <router-link to="/resetpwd">ResetPwd</router-link> &nbsp; 
         <router-link to="/login"><img src="@\assets\imgs\login.png" alt="Login" class="icon2"></router-link> &nbsp; &nbsp;
         <router-link to="/signup"><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"></router-link> &nbsp; &nbsp;
       </div>

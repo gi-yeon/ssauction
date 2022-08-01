@@ -13,7 +13,12 @@ public class UsersResponseDto {
 
     private String userNickname;
 
-    private int userGrade;
+    private String userDesc;
+
+    private String userComment;
+
+    private Integer userGrade;
+
     private Authority authority;
     @Override
     public String toString() {

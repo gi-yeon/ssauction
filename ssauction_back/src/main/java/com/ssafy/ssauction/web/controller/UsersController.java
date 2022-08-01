@@ -21,10 +21,14 @@ import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
 import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
+import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
+import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 
 import java.util.HashMap;
@@ -45,7 +49,6 @@ public class UsersController {
     private final UserImgsService userImgsService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final JwtTokenProvider jwtTokenProvider;
 
 //    @GetMapping("/{userNo}")
 
@@ -90,6 +93,27 @@ public class UsersController {
     @PutMapping("/img/{userNo}")
     public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
         return userImgsService.update(userNo, requestDto);
+    }
+
+    // 아이디 찾기
+    // 전화번호를 이용해 아이디(이메일) 찾기 구현
+    @GetMapping("/users/findId/{userPhoneNo}")
+    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
+        return usersService.findByPhoneNo(userPhoneNo);
+    }
+//    @GetMapping("/users/findId/{userPhoneNo}")
+//    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
+//        UsersFindIdDto findIdDto= usersService.findByPhoneNo(userPhoneNo);
+//        if(findIdDto==null)
+//            return null;
+//        return findIdDto;
+//    }
+
+    // 비밀번호 재설정
+    // 아이디(이메일) + 전화번호를 이용해 비밀번호 재설정 구현
+    @PutMapping("/users/resetPwd/{userPhoneNo}/{userId}")
+    public String update(@PathVariable String userPhoneNo, @PathVariable String userId, @RequestBody UsersUpdatePwdDto resetPwdDto){
+        return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
 
     @PutMapping("/profile/{userNo}")
@@ -195,5 +219,4 @@ public class UsersController {
 
 //    @DeleteMapping("/users/likes")
 //    public ResponseEntity<String>
-
 }

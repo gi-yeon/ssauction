@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Secret ###
-application-oauth.properties
+*.properties

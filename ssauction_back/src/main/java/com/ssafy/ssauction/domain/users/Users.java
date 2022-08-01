@@ -56,7 +56,7 @@ public class Users implements UserDetails {
     private String userComment;
 
     @Column(name = "user_grade")
-    private int userGrade;
+    private Integer userGrade;
 
     @Column(name = "user_reg_date", nullable = false)
     private Timestamp userRegDate;
@@ -73,9 +73,6 @@ public class Users implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = LAZY, cascade = CascadeType.ALL)
     private UserImgs userImgs;
-
-    @Column(name = "user_role")
-    private Authority authority;
 
     @Setter
     @JsonIgnore
@@ -137,6 +134,12 @@ public class Users implements UserDetails {
         this.userComment = userComment;
         this.userDesc = userDesc;
         this.userUpdateDate = new Timestamp(System.currentTimeMillis());
+    }
+
+
+    // 비밀번호 재설정
+    public void updatePwd(String userPwd){
+        this.userPwd=userPwd;
     }
 
     @Override
