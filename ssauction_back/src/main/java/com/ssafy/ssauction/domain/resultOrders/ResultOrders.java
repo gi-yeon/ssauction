@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -26,14 +28,14 @@ public class ResultOrders {
     private Timestamp orderRegTime;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "house")
     private Houses house;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bidder")
-    private Users bidder;
+    private Users bidder ;
 
     @Builder
     public ResultOrders(int orderPrice, Houses house, Users bidder) {
