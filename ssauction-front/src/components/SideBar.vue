@@ -1,5 +1,5 @@
 <template>
-  <div id="App" class="side">
+  <div id="App" class="side target">
     <div>
       <br /><br />
       <router-link to="/"
@@ -17,7 +17,7 @@
       <router-link to="house"
         ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
       /></router-link>
-      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       <router-link to="settings"
         ><img src="@\assets\imgs\settings.png" alt="Settings" class="icon"
       /></router-link>
@@ -40,5 +40,12 @@
 .icon {
   height: 40px;
   width: 40px;
+}
+.target {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.target::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
 }
 </style>
