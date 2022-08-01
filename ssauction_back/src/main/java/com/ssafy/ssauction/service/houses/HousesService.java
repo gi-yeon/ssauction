@@ -7,6 +7,8 @@ import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class HousesService {

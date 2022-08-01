@@ -1,5 +1,7 @@
 <template>
   <br />
+  <br />
+
   <h1>메인 페이지</h1>
   <button @click="clickBtn">click</button>
   <h1>{{ userInfo }}</h1>
@@ -39,5 +41,4 @@ export default {
   },
 };
 </script>
-
 <style></style>

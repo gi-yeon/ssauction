@@ -6,6 +6,11 @@ import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
 import com.ssafy.ssauction.service.houses.HousesService;
+import com.ssafy.ssauction.service.users.UsersService;
+import com.ssafy.ssauction.web.dto.Houses.HousesItemsSaveRequestDto;
+import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
+import com.ssafy.ssauction.web.dto.Houses.HousesSearchAllResponseDto;
+import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
 import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.Houses.HousesItemsSaveRequestDto;
@@ -14,12 +19,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/houses")
 public class HousesController {
     private final UsersService usersService;
     private final HousesService housesService;
     private final ItemsService itemsService;
+
 
     private final ItemImgsService itemImgsService;
     @PostMapping("/houses")
