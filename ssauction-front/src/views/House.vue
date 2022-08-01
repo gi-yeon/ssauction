@@ -17,26 +17,24 @@
   </div>
   <div class="row house-input">
     <div class="col-4 label">
-      <h3>경매 날짜</h3>
+      <h3>경매 일시</h3>
     </div>
     <div class="col-2 data">
-      <input
-        v-model="this.houseDate"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-    <div class="col-2 label">
-      <h3>경매 시간</h3>
-    </div>
-    <div class="col-2 data">
-      <input
-        v-model="this.houseTime"
-        class="form-control"
-        type="text"
-        required
-      />
+      <v-date-picker
+        v-model="houseDate"
+        mode="dateTime"
+        locale="ko-KR"
+        :model-config="modelConfig"
+        is24hr
+      >
+        <template v-slot="{ inputValue, inputEvents }">
+          <input
+            class="bg-white border px-2 py-1 rounded"
+            :value="inputValue"
+            v-on="inputEvents"
+          />
+        </template>
+      </v-date-picker>
     </div>
   </div>
   <div class="row house-input">
@@ -116,7 +114,14 @@
       <h3>사진</h3>
     </div>
     <div class="col-8 data">
-      <input class="form-control" type="text" />
+      <div class="mb-3">
+        <input
+          class="form-control"
+          type="file"
+          id="formFileMultiple"
+          multiple
+        />
+      </div>
     </div>
   </div>
   <div class="row house-input">
@@ -147,14 +152,12 @@ export default {
         houseAucTime: null,
         houseStatus: null,
       },
-      houseTime: null,
-      houseDate: null,
+      houseDate: new Date(),
+      modelConfig: {
+        type: "string",
+        mask: "YYYY-MM-DDThh:mm",
+      },
     };
-  },
-  computed: {
-    houseAucTime() {
-      return this.houseDate + "T" + this.houseTime;
-    },
   },
 
   mounted() {},
