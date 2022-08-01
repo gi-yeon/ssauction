@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.boot.model.convert.spi.ConverterAutoApplyHandler;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -138,13 +139,16 @@ public class Users implements UserDetails {
 
 
     // 비밀번호 재설정
-    public void updatePwd(String userPwd){
-        this.userPwd=userPwd;
+    public void updatePwd(String userPwd) {
+        this.userPwd = userPwd;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(String.valueOf(this.authority)));
+        return authorities;
     }
 
     @Override
