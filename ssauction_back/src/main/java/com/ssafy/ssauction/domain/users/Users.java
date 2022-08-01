@@ -6,16 +6,19 @@ import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import com.ssafy.ssauction.domain.userImages.UserImgs;
+import com.ssafy.ssauction.service.users.UsersService;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -70,6 +73,9 @@ public class Users implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = LAZY, cascade = CascadeType.ALL)
     private UserImgs userImgs;
+
+    @Column(name = "user_role")
+    private Authority authority;
 
     @Setter
     @JsonIgnore

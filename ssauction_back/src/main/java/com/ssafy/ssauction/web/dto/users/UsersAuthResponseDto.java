@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.web.dto.users;
 
+import com.ssafy.ssauction.domain.users.Authority;
 import com.ssafy.ssauction.domain.users.Users;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,8 @@ public class UsersAuthResponseDto {
 
     private String userRefreshToken;
 
+    private Authority authority;
+
     public UsersAuthResponseDto(Users entity) {
         this.userNo=entity.getUserNo();
         this.userEmail = entity.getUserEmail();
@@ -34,6 +37,7 @@ public class UsersAuthResponseDto {
         this.userComment=entity.getUserComment();
         this.userGrade=entity.getUserGrade();
         this.userRefreshToken = entity.getRefreshToken();
+        this.authority = entity.getAuthority();
     }
 
 }

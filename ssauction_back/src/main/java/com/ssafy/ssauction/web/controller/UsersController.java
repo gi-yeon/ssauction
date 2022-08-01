@@ -43,6 +43,7 @@ public class UsersController {
     private static final String FAIL = "fail";
     private final UsersService usersService;
     private final UserImgsService userImgsService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -107,24 +108,33 @@ public class UsersController {
         return 1L;
     }
 
-
+    //로그인
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo) {
         String userEmail = loginInfo.getUserEmail();
         String userPwd = loginInfo.getUserPwd();
         HttpStatus status = null;
 
-
         HashMap<String, Object> result = new HashMap<>();
 
+        //userEmail로 DB에 저장된 user정보 불러옴
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
-//        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+        //비밀번호가 올바르게 입력됐다면면
+//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
         if (userPwd.equals(user.getUserPwd())) {
+
+            //리스트에 유저정보 담아준다.
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("userEmail", user.getUserEmail());
+            userMap.put("userNickname", user.getUserNickname());
+            userMap.put("authority", user.getAuthority());
+
+
+            //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
             String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
-            result.put("accessToken", jwtTokenProvider.createAccessToken("userEmail", user.getUserEmail()));
+            result.put("accessToken", jwtTokenProvider.createAccessToken(userMap));
             result.put("refreshToken", refreshToken);
-            //refresh token 저장
             usersService.updateRefreshToken(user.getUserNo(), refreshToken);
 
             result.put("message", SUCCESS);
@@ -139,6 +149,7 @@ public class UsersController {
 
     }
 
+    //refresh token으로 access token 재발급
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, Object>> validateRefreshToken(@RequestBody String userEmail) {
         HashMap<String, Object> result = new HashMap<>();
@@ -146,6 +157,7 @@ public class UsersController {
         HttpStatus status = null;
 
         if (newAccessToken != null) {
+            result.put("accessToken", newAccessToken);
             result.put("message", SUCCESS);
             status = HttpStatus.ACCEPTED;
         } else {

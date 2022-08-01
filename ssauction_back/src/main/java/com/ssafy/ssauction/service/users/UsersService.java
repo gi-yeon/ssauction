@@ -37,6 +37,12 @@ public class UsersService {
         users.setRefreshToken(refreshToken);
         return userNo;
     }
+    @Transactional
+    public Long updateRefreshToken(Long userNo, String refreshToken) {
+        Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        users.setRefreshToken(refreshToken);
+        return userNo;
+    }
 
     public UsersResponseDto findById(Long userNo) {
         Users entity = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
