@@ -1,16 +1,26 @@
 <template>
   <div id="App" class="side">
     <div>
-      <br><br>
-      <router-link to="/"><img src="@\assets\imgs\home.png" alt="Home" class="icon"></router-link>
-      <br><br><br><br>
-      <router-link to="profile"><img src="@\assets\imgs\profile.png" alt="Profile" class="icon"></router-link>
-      <br><br><br><br>
-      <router-link to="zzim"><img src="@\assets\imgs\zzim.png" alt="Zzim" class="icon"></router-link>
-      <br><br><br><br>
-      <router-link to="house"><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"></router-link>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-      <router-link to="settings"><img src="@\assets\imgs\settings.png" alt="Settings" class="icon"></router-link>
+      <br /><br />
+      <router-link to="/"
+        ><img src="@\assets\imgs\home.png" alt="Home" class="icon"
+      /></router-link>
+      <br /><br /><br /><br />
+      <router-link to="profile"
+        ><img src="@\assets\imgs\profile.png" alt="Profile" class="icon"
+      /></router-link>
+      <br /><br /><br /><br />
+      <router-link to="zzim"
+        ><img src="@\assets\imgs\zzim.png" alt="Zzim" class="icon"
+      /></router-link>
+      <br /><br /><br /><br />
+      <router-link to="house"
+        ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
+      /></router-link>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <router-link to="settings"
+        ><img src="@\assets\imgs\settings.png" alt="Settings" class="icon"
+      /></router-link>
     </div>
   </div>
 </template>

@@ -10,7 +10,8 @@ public class UsersUpdateProfileRequestDto {
     private String userComment;
     private String userDesc;
 
-    @Builder UsersUpdateProfileRequestDto(String userComment, String userDesc){
+    @Builder
+    UsersUpdateProfileRequestDto(String userComment, String userDesc){
         this.userComment=userComment;
         this.userDesc=userDesc;
     }

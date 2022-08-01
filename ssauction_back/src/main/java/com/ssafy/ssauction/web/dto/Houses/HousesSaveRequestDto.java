@@ -5,6 +5,7 @@ import com.ssafy.ssauction.domain.items.Items;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
 

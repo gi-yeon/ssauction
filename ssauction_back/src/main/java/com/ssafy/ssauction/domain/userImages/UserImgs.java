@@ -10,15 +10,16 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "user_images")
 public class UserImgs {
     @Id
-    @Column(name="user_no")
-    private Long userNo;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long img_no;
     @Column(name = "user_img_name", length = 50)
     private String userImgName;
 
@@ -30,17 +31,16 @@ public class UserImgs {
 
     @Column(name = "user_img_update_date")
     private Timestamp userImgUpdateDate;
-
-    @MapsId
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
     private Users user;
+
 
     @Override
     public String toString() {
         return "UserImgs{" +
-                "userNo=" + userNo +
+                "userNo=" +
                 ", userImgName='" + userImgName + '\'' +
                 ", userImgUri='" + userImgUri + '\'' +
                 ", userImgRegDate=" + userImgRegDate +
