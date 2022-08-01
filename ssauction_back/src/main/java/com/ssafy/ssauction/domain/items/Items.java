@@ -1,5 +1,10 @@
 package com.ssafy.ssauction.domain.items;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.ssauction.domain.categories.Categories;
+import com.ssafy.ssauction.domain.houses.Houses;
+import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,12 +13,17 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @NoArgsConstructor
 @Entity
 public class Items {
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_no")
     private Long itemNo;
@@ -45,13 +55,29 @@ public class Items {
     @Column(name = "item_update_time")
     private Timestamp itemUpdateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "item_seller_no")
     private Users seller;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
+    @JsonIgnore
     @JoinColumn(name = "item_buyer_no")
     private Users buyer;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "item", fetch = LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @Setter
+    private Houses house;
+    @JsonIgnore
+    @OneToMany(mappedBy = "item", fetch = LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @Setter
+    private List<ItemImgs> images = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "item", fetch = LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @Setter
+    private List<Categories> categories = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -68,11 +94,14 @@ public class Items {
                 ", itemUpdateTime=" + itemUpdateTime +
                 ", seller=" + seller +
                 ", buyer=" + buyer +
+                ", house=" + house +
+                ", images=" + images +
+                ", categories=" + categories +
                 '}';
     }
 
     @Builder
-    public Items(String itemName, String itemModelNo, int itemQuality, int itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice, Users seller, Users buyer) {
+    public Items(String itemName, String itemModelNo, int itemQuality, int itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice, Users seller, Users buyer, Houses house, List<ItemImgs> images) {
         this.itemName = itemName;
         this.itemModelNo = itemModelNo;
         this.itemQuality = itemQuality;
@@ -81,7 +110,8 @@ public class Items {
         this.itemStartPrice = itemStartPrice;
         this.itemFinalPrice = itemFinalPrice;
         this.itemRegTime = new Timestamp(System.currentTimeMillis());
-        this.seller=seller;
-        this.buyer=buyer;
+        this.seller = seller;
+        this.buyer = buyer;
+        this.house = house;
     }
 }

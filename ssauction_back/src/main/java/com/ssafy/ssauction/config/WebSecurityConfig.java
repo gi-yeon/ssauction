@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.config;
 
 import com.ssafy.ssauction.auth.AuthenticationEntryPointHandler;
+import com.ssafy.ssauction.auth.CustomOAuth2UserService;
 import com.ssafy.ssauction.auth.JwtAuthenticationFilter;
 import com.ssafy.ssauction.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     private final AccessDeniedHandler accessDeniedHandler;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -52,10 +55,16 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh").permitAll()
-                .antMatchers("/users").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)//그 외 모두 인증된 사용자만 허용
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login")
+                .and()
+                .oauth2Login()
+//                .userInfoEndpoint()
+//                .userService(customOAuth2UserService)
                 .and()
                 .build();
     }
