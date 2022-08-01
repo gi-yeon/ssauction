@@ -56,12 +56,6 @@
             console.log(smsData);
             this.randCode = smsData.data;
             console.log(`randCode: ${this.randCode}`);
-            // if (인증번호 === 사용자입력값) { 아이디 정보 반환 }
-            // if (this.smsCode === this.randCode) {
-            //   alert("아이디(이메일 주소)는 다음과 같습니다.\n" + data.userEmail);
-            //   } else {
-            //     alert("인증번호가 올바르지 않습니다.");
-            //   }
             });
           } else {
           alert("해당 유저 정보가 없습니다.");
