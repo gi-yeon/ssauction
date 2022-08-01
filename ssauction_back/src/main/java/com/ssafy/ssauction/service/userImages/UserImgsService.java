@@ -20,7 +20,7 @@ public class UserImgsService {
     @Transactional
     public Long save(Users user) {
         UserImgsSaveRequestDto requestDto = UserImgsSaveRequestDto.builder().build();
-        return userImgsRepository.save(requestDto.toEntity(user)).getUserNo();
+        return userImgsRepository.save(requestDto.toEntity(user)).getUser().getUserNo();
     }
 
     @Transactional

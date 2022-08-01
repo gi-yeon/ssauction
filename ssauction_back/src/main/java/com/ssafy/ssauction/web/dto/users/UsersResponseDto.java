@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.web.dto.users;
 
+import com.ssafy.ssauction.domain.users.Authority;
 import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class UsersResponseDto {
     private String userNickname;
 
     private int userGrade;
-
+    private Authority authority;
     @Override
     public String toString() {
         return "UsersResponseDto{" +
@@ -28,5 +29,6 @@ public class UsersResponseDto {
         this.userNo=entity.getUserNo();
         this.userNickname=entity.getUserNickname();
         this.userGrade=entity.getUserGrade();
+        this.authority=entity.getAuthority();
     }
 }

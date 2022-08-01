@@ -2,6 +2,7 @@ package com.ssafy.ssauction.domain.houses;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @NoArgsConstructor
@@ -40,15 +43,20 @@ public class Houses {
     @Column(name = "house_status",nullable = false)
     private int houseStatus;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY,cascade = CascadeType.ALL)
     @Setter
     @JoinColumn(name = "house_item_no")
     private Items item;
 
     @Setter
     @JsonIgnore
-    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     private List<ResultOrders>  results=new ArrayList<>();
+
+    @Setter
+    @JsonIgnore
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
+    private List<Likes>  likes=new ArrayList<>();
 
     @Builder
     public Houses(String houseTitle, Timestamp houseAucTime, String houseDesc, int houseStatus, Items item) {

@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.service.users;
 
+import com.ssafy.ssauction.domain.users.Authority;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
@@ -46,16 +47,22 @@ public class UsersService {
 
     public UsersResponseDto findUser(UsersLoginDto requestDto) {
         System.out.println(requestDto.toString());
-        Users user;
-        try{
-            user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd()).get();
-        }catch(NoSuchElementException e){
+        Users user = null;
+        try {
+            if (requestDto.getAuthority() == Authority.ROLE_USER) {
+                user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd()).get();
+            }
+        } catch (NoSuchElementException e) {
             System.out.println("없음");
-            return null;
+            e.getMessage();
         }
-        UsersResponseDto responseDto = UsersResponseDto.builder()
-                .entity(user)
-                .build();
+        UsersResponseDto responseDto = null;
+
+        if (user != null) {
+            responseDto=UsersResponseDto.builder()
+                    .entity(user)
+                    .build();
+        }
         return responseDto;
     }
 }
