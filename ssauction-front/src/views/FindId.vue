@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import http from "@/utils/http";
+  import axios from "@/utils/axios";
 
   export default {
   name: "SsauctionFindId",
@@ -30,7 +30,7 @@
       console.log("FindId start");
       console.log(this.phoneNo);
       console.log("start getting");
-      http.get("/users/findId/" + this.phoneNo).then(({ data }) => {
+      axios.get("/users/findId/" + this.phoneNo).then(({ data }) => {
         console.log(data.userPhoneNo);
         console.log(data.userEmail);
         this.returnValue = data;

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import http from "@/utils/http";
+  import axios from "@/utils/axios";
 
   export default {
   name: "ResetPwd2",
@@ -51,7 +51,7 @@
           userPwd: this.password,
         };
         console.log("start putting");
-        http.put("/users/resetPwd/" + this.phoneNo + "/" + this.email, JSON.stringify(obj),).then(({ data }) => {
+        axios.put("/users/resetPwd/" + this.phoneNo + "/" + this.email, JSON.stringify(obj),).then(({ data }) => {
         console.log(data.userPhoneNo);
         console.log(data.userEmail);
         this.returnValue = data;

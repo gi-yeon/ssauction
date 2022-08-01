@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import http from "@/utils/http";
+  import axios from "@/utils/axios";
   export default {
   name: "SsauctionResetPwd",
 
@@ -36,7 +36,7 @@
       
       console.log("start putting");
       // 전화번호 & 아이디 검사하여 일치하는 유저정보를 ResetPwd2로 router 이용하여 보내기
-      http.get("/users/findId/" + this.phoneNo).then(({ data }) => {
+      axios.get("/users/findId/" + this.phoneNo).then(({ data }) => {
         console.log(data.userPhoneNo);
         console.log(data.userEmail);
         this.returnValue = data;

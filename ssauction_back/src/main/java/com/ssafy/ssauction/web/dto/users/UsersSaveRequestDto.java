@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.web.dto.users;
 
+import com.ssafy.ssauction.domain.users.Authority;
 import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,8 +18,7 @@ public class UsersSaveRequestDto {
     private String userPhoneNo;
 
     private String userNickname;
-
-    private Timestamp userRegDate;
+    private Authority authority;
 
     @Builder
     public UsersSaveRequestDto(String userEmail, String userPwd, String userPhoneNo, String userNickname) {
@@ -26,7 +26,7 @@ public class UsersSaveRequestDto {
         this.userPwd = userPwd;
         this.userPhoneNo = userPhoneNo;
         this.userNickname = userNickname;
-        this.userRegDate = new Timestamp(System.currentTimeMillis());
+        this.authority=Authority.ROLE_USER;
     }
 
 
@@ -37,11 +37,8 @@ public class UsersSaveRequestDto {
                 .userPwd(userPwd)
                 .userPhoneNo(userPhoneNo)
                 .userNickname(userNickname)
-                .userComment(null)
-                .userDesc(null)
+                .authority(authority)
                 .userGrade(4)
-                .userRegDate(userRegDate)
-                .userUpdateDate(null)
                 .build();
     }
 }

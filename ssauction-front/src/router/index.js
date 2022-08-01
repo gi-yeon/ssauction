@@ -6,7 +6,10 @@ import Test from "@/views/Test.vue";
 import FindId from "@/views/FindId.vue";
 import ResetPwd from "@/views/ResetPwd.vue";
 import ResetPwd2 from "@/views/ResetPwd2.vue";
-
+import House from "@/views/House.vue";
+import Profile from "@/views/Profile.vue";
+import Zzim from "@/views/Zzim.vue";
+import Settings from "@/views/Settings.vue";
 
 const routes = [
   {
@@ -44,6 +47,26 @@ const routes = [
     name: "ResetPwd2",
     component: ResetPwd2,
     props: true,
+  },
+  {
+    path: "/house",
+    name: "House",
+    component: House,
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+  },
+  {
+    path: "/zzim",
+    name: "Zzim",
+    component: Zzim,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
   },
 ];
 const router = createRouter({
