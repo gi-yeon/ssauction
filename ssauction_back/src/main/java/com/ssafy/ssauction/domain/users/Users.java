@@ -2,6 +2,7 @@ package com.ssafy.ssauction.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.ssauction.domain.board.Board;
 import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
@@ -98,6 +99,9 @@ public class Users implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     private List<Likes> likes = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
+    @JoinColumn(name="user_no")
+    private List<Board> boards = new ArrayList<>();
 
     @Builder
     public Users(String userEmail, String userPwd,
