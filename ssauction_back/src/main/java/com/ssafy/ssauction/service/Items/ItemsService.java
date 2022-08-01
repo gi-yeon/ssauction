@@ -20,7 +20,6 @@ public class ItemsService {
     public Items findEntityById(Long itemNo){
         return itemsRepository.findById(itemNo).get();
     }
-    public List<Items> findItemsBySeller(Users seller) {return itemsRepository.findBySeller(seller);}
     @Transactional
     public Items save(Users user, ItemsSaveRequestDto requestDto) {
         Items item=requestDto.toEntity(user);

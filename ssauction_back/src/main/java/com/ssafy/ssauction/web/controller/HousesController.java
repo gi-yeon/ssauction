@@ -35,16 +35,4 @@ public class HousesController {
         Houses house = housesService.save(item, housesSaveRequestDto);
         return house.getHouseNo();
     }
-
-    @GetMapping("{sellerNo}")
-    public ResponseEntity<HousesSearchAllResponseDto> searchAll(@PathVariable Long sellerNo) {
-        Users user = usersService.findEntityById(sellerNo);
-        List<Items> itemList=user.getSellItems();
-
-        List<Houses> housesList = new ArrayList<>();
-        for (Items i : itemList) {
-            housesList.add(i.);
-        }
-        return new ResponseEntity<HousesSearchAllResponseDto>(housesList, HttpStatus.OK);
-    }
 }
