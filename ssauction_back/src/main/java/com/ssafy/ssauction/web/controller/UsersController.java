@@ -50,12 +50,11 @@ public class UsersController {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-//    @GetMapping("/{userNo}")
 
 
     private final HousesService housesService;
     private final LikesService likesService;
-    @GetMapping("/users/{userNo}")
+    @GetMapping("/{userNo}")
 
     public UsersResponseDto findById(@PathVariable Long userNo) {
         return usersService.findById(userNo);
@@ -68,17 +67,17 @@ public class UsersController {
 //    }
 //
 
-    @PostMapping("/users/login")
-    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto){
-        UsersResponseDto responseDto=usersService.findUser(requestDto);
-        if (responseDto==null){
-            return null;
-        }
-        System.out.println(responseDto.toString());
-        return responseDto;
-    }
+//    @PostMapping("/login")
+//    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto){
+//        UsersResponseDto responseDto=usersService.findUser(requestDto);
+//        if (responseDto==null){
+//            return null;
+//        }
+//        System.out.println(responseDto.toString());
+//        return responseDto;
+//    }
 
-    @PostMapping("/users")
+    @PostMapping("/join")
     public String save(@RequestBody UsersSaveRequestDto requestDto) {
 
         Users user = usersService.save(requestDto);
@@ -97,7 +96,7 @@ public class UsersController {
 
     // 아이디 찾기
     // 전화번호를 이용해 아이디(이메일) 찾기 구현
-    @GetMapping("/users/findId/{userPhoneNo}")
+    @GetMapping("/findId/{userPhoneNo}")
     public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
         return usersService.findByPhoneNo(userPhoneNo);
     }
@@ -111,7 +110,7 @@ public class UsersController {
 
     // 비밀번호 재설정
     // 아이디(이메일) + 전화번호를 이용해 비밀번호 재설정 구현
-    @PutMapping("/users/resetPwd/{userPhoneNo}/{userId}")
+    @PutMapping("/resetPwd/{userPhoneNo}/{userId}")
     public String update(@PathVariable String userPhoneNo, @PathVariable String userId, @RequestBody UsersUpdatePwdDto resetPwdDto){
         return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
@@ -193,7 +192,7 @@ public class UsersController {
 
     }
 
-    @PostMapping("/users/likes")
+    @PostMapping("/likes")
     public ResponseEntity<String> createLikes(@RequestBody LikesSaveDto saveDto){
         Users user=usersService.findEntityById(saveDto.getUserNo());
         Houses house=housesService.findEntityById(saveDto.getHouseNo());;
@@ -203,7 +202,7 @@ public class UsersController {
         return new ResponseEntity<>("created", HttpStatus.OK);
     }
 
-    @GetMapping("/users/likes/{userNo}")
+    @GetMapping("/likes/{userNo}")
     public ResponseEntity<List<HousesResponseDto>> getLikeHouse(@PathVariable Long userNo){
         Users user=usersService.findEntityById(userNo);
         System.out.println(user.toString());
