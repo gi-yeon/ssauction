@@ -17,7 +17,6 @@ public class ResultOrdersService {
 
     @Transactional
     public ResultOrders save(Users user, Houses house,ResultOrdersSaveDto saveDto){
-        ResultOrders resultOrders=saveDto.toEntity(user,house);
         return resultOrdersRepository.save(saveDto.toEntity(user,house));
     }
 }

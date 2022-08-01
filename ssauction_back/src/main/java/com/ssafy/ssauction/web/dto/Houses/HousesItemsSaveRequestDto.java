@@ -1,6 +1,8 @@
 package com.ssafy.ssauction.web.dto.Houses;
 
 import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
+
+import com.ssafy.ssauction.web.dto.itemImg.ItemImgsSaveRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HousesItemsSaveRequestDto {
-    HousesSaveRequestDto house;
-    ItemsSaveRequestDto item;
+
+    private HousesSaveRequestDto houseDto;
+    private ItemsSaveRequestDto itemDto;
+    private ItemImgsSaveRequestDto imgDto;
 }

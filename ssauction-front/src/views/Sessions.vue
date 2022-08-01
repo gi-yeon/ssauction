@@ -114,7 +114,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-  name: "Sessions",
+  name: "SessionsView",
   components: {
     MainVideo,
     ParticipantVideo,

@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import http from "@/utils/http";
+import axios from "@/utils/axios";
 
 export default {
   name: "SsauctionHouse",
@@ -163,7 +163,7 @@ export default {
     createHouse() {
       this.house.houseAucTime = this.houseAucTime;
       console.log(this.house);
-      http
+      axios
         .post(
           "/houses",
           JSON.stringify({

@@ -19,7 +19,10 @@ public class HousesService {
         housesRepository.save(house);
         return house;
     }
-
+    public Long delete(Long houseNo){
+        housesRepository.deleteById(houseNo);
+        return houseNo;
+    }
     public Houses findEntityById(Long houseNo){
         return housesRepository.findById(houseNo).get();
     }

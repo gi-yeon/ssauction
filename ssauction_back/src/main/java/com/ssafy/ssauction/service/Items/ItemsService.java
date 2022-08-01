@@ -25,4 +25,8 @@ public class ItemsService {
         Items item=requestDto.toEntity(user);
         return itemsRepository.save(item);
     }
+    @Transactional
+    public void delete(Long itemNo) {
+        itemsRepository.deleteById(itemNo);
+    }
 }
