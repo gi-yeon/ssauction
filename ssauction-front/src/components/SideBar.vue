@@ -17,7 +17,7 @@
       <router-link to="house"
         ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
       /></router-link>
-      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       <router-link to="settings"
         ><img src="@\assets\imgs\settings.png" alt="Settings" class="icon"
       /></router-link>
