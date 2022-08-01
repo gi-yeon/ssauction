@@ -1,20 +1,12 @@
 import { USER } from "../mutation-types";
 
 const state = {
-  email: "ssafy@ssafy.com",
-  phoneNo: "010-0000-0000",
   nickname: "닉네임",
   userNo: 0,
   grade: 0,
 };
 
 const getters = {
-  userEmail: (state) => {
-    return `${state.email}`;
-  },
-  userPhoneNo: (state) => {
-    return `${state.phoneNo}`;
-  },
   userNickname: (state) => {
     return `${state.nickname}`;
   },
@@ -30,12 +22,19 @@ const getters = {
 };
 
 const actions = {
-  getEmail({ commit }, value) {
-    commit(USER.SET_EMAIL, value);
-  },
-  getPhoneNo({ commit }, value) {
-    commit(USER.SET_PHONENO, value);
-  },
+//   nickname: "",
+//   userNo: 0,
+//   grade: -1,
+// };
+
+// const getters = {
+//   userInfo: (state) => {
+//     return `'닉네임' : ${state.nickname}, '유저번호' : ${state.userNo}, '등급' : ${state.grade}`;
+//   },
+// };
+
+// const actions = {
+
   getNickname({ commit }, value) {
     commit(USER.SET_NICKNAME, value);
   },
@@ -48,12 +47,7 @@ const actions = {
 };
 
 const mutations = {
-  [USER.SET_EMAIL](state, value) {
-    state.email = value;
-  },
-  [USER.SET_PHONENO](state, value) {
-    state.phoneNo = value;
-  },
+
   [USER.SET_NICKNAME](state, value) {
     state.nickname = value;
   },

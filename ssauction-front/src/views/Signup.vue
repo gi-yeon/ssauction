@@ -1,10 +1,8 @@
 <template>
-<br>
-<br>
-<h1>회원가입</h1>
-<br>
+  <br />
+  <h1>회원가입</h1>
+  <br />
 
-<div>
   <div>
     <input id="user_email" type="email" v-model="userEmail" placeholder="이메일">
     <br>
@@ -27,13 +25,11 @@
     <a href=""><img src="@\assets\imgs\google.png" alt="구글 로그인" class="logo_resize"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href=""><img src="@\assets\imgs\naver.png" alt="네이버 로그인" class="logo_resize"></a>
   </div>
-</div>
 </template>
 
 
 <script>
 import axios from "@/utils/axios";
-// import router from '@/router'
 
 export default {
   name: "SsauctionSignup",
@@ -81,47 +77,4 @@ export default {
 };
 </script>
 
-<style>
-/* h1 {
-  margin-left:110px
-} */
-
-input {
-  width: 500px;
-  height: 50px;
-  border:0;
-  background-color: rgb(230, 230, 230);
-  border-radius: 20px;
-  color: rgb(94, 94, 94);
-  padding-left:30px
-}
-
-input:focus {
-  outline: 3px rgb(94, 94, 94)
-}
-
-.btn_pink {
-  width:245px;
-  height: 50px;
-  border: 0;
-  background-color:rgb(255, 170, 165);
-  border-radius: 20px;
-  color:rgb(94, 94, 94);
-  text-align: center;
-}
-
-.btn_yellow {
-  width:500px;
-  height: 50px;
-  border: 0;
-  background-color:rgb(255, 211, 182);
-  border-radius: 20px;
-  color:rgb(94, 94, 94);
-  text-align: center;
-}
-
-.logo_resize {
-  width:60px;
-  height:60px;
-}
-</style>
+<style></style>

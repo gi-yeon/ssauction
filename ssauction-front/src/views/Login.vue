@@ -1,8 +1,7 @@
 <template>
-<br>
-<br>
-<h1>로그인</h1>
-<br>
+  <br />
+  <h1>로그인</h1>
+  <br />
 
   <div>
     <!-- <label for="user_email">이메일: </label> -->
@@ -26,14 +25,13 @@
     <!-- <br>
     <button class="btn_pink">구글로 회원가입</button> &nbsp;
     <button class="btn_pink">네이버로 회원가입</button> &nbsp; -->
-
-  </div>
-
+</div>
 </template>
 
 <script>
 import axios from "@/utils/axios";
 // import router from '@/router'
+
 
 export default {
   name: "SsauctionLogin",
@@ -59,6 +57,7 @@ export default {
         loginPwd: this.loginPwd,
       };
       console.log("start posting");
+
       axios.post("/users/login", JSON.stringify(obj)).then(({ data }) => {
         console.log(data.userNo);
         console.log(data.userNickname);
@@ -66,7 +65,6 @@ export default {
         this.returnValue = data;
         if (this.returnValue !== "") {
           alert("로그인 되었습니다.");
-          // router.push({ name: 'Login' })
           this.$store.dispatch("user/getUserNo", this.returnValue.userNo);
           this.$store.dispatch(
             "user/getNickname",

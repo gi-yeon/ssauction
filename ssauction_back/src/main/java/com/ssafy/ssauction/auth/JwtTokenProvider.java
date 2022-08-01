@@ -1,6 +1,6 @@
 package com.ssafy.ssauction.auth;
 
-import com.ssafy.ssauction.service.userImages.users.UsersService;
+import com.ssafy.ssauction.service.users.UsersService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
