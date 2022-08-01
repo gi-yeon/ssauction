@@ -4,6 +4,7 @@ const state = {
   nickname: "닉네임",
   userNo: 0,
   grade: 0,
+  isLogin:false
 };
 
 const getters = {
@@ -16,6 +17,9 @@ const getters = {
   userGrade: (state) => {
     return `${state.grade}`;
   },
+  userLogin:(state)=>{
+    return `${state.isLogin}`;
+  }
   // userInfo: (state) => {
   //   return `'닉네임' : ${state.nickname}, '유저번호' : ${state.userNo}, '등급' : ${state.grade}`;
   // },
@@ -44,6 +48,9 @@ const actions = {
   getUserNo({ commit }, value) {
     commit(USER.SET_USERNO, value);
   },
+  getIsLogin({commit},value){
+    commit(USER.SET_ISLOGIN,value);
+  }
 };
 
 const mutations = {
@@ -57,6 +64,9 @@ const mutations = {
   [USER.SET_USERNO](state, value) {
     state.userNo = value;
   },
+  [USER.SET_ISLOGIN](state,value){
+    state.isLogin=value;
+  }
 };
 
 export default {

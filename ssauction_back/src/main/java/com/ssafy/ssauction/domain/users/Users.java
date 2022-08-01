@@ -65,6 +65,7 @@ public class Users implements UserDetails {
     private Timestamp userUpdateDate;
 
     @Column(name = "user_role")
+    @Setter
     private Authority authority;
     @Setter
     @Column(name = "refresh_token")
@@ -125,9 +126,9 @@ public class Users implements UserDetails {
         this.refreshToken = refreshToken;
 
 //        this.roles = roles;
-
-        this.authority = authority;
-
+        // 토큰 완성 되면 지우기
+        // 원본
+        this.authority=authority;
     }
 
     public void updateProfile(String userComment, String userDesc) {

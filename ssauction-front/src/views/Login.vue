@@ -76,7 +76,8 @@ export default {
       };
       console.log("start posting");
 
-      axios.post("/users/login", JSON.stringify(obj)).then(({ data }) => {
+      axios.post("/users/login", JSON.stringify(obj)).then(( {data} ) => {
+        console.log(data);
         console.log(data.userNo);
         console.log(data.userNickname);
         console.log(data.userGrade);
@@ -89,6 +90,7 @@ export default {
             this.returnValue.userNickname
           );
           this.$store.dispatch("user/getGrade", this.returnValue.userGrade);
+          this.$store.dispatch("user/getIsLogin",true);
         } else {
           alert("입력 정보를 확인해주세요.");
         }

@@ -13,22 +13,15 @@ import com.ssafy.ssauction.service.userImages.UserImgsService;
 
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
-import com.ssafy.ssauction.web.dto.users.*;
 
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
 import com.ssafy.ssauction.web.dto.likes.LikesSaveDto;
-import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
-import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
-import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
+import com.ssafy.ssauction.web.dto.users.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 
 import java.util.HashMap;
@@ -55,9 +48,8 @@ public class UsersController {
     private final HousesService housesService;
     private final LikesService likesService;
     @GetMapping("/{userNo}")
-
-    public UsersResponseDto findById(@PathVariable Long userNo) {
-        return usersService.findById(userNo);
+    public UserInfoResponseDto findById(@PathVariable Long userNo) {
+        return usersService.getInfo(userNo);
     }
 
 
@@ -67,19 +59,20 @@ public class UsersController {
 //    }
 //
 
-//    @PostMapping("/login")
-//    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto){
-//        UsersResponseDto responseDto=usersService.findUser(requestDto);
-//        if (responseDto==null){
-//            return null;
-//        }
-//        System.out.println(responseDto.toString());
-//        return responseDto;
-//    }
+    @PostMapping("/login")
+    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto){
+        UsersResponseDto responseDto=usersService.findUser(requestDto);
+        System.out.println(responseDto.toString());
+        if (responseDto==null){
+            return null;
+        }
+        System.out.println(responseDto.toString());
+        return responseDto;
+    }
 
     @PostMapping("/join")
     public String save(@RequestBody UsersSaveRequestDto requestDto) {
-
+        System.out.println(requestDto.toString());
         Users user = usersService.save(requestDto);
         Long userImgs= userImgsService.save(user);
         System.out.println(userImgs);
@@ -132,45 +125,46 @@ public class UsersController {
     }
 
     //로그인
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo) {
-        String userEmail = loginInfo.getUserEmail();
-        String userPwd = loginInfo.getUserPwd();
-        HttpStatus status = null;
-
-        HashMap<String, Object> result = new HashMap<>();
-
-        //userEmail로 DB에 저장된 user정보 불러옴
-        UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
-
-        //비밀번호가 올바르게 입력됐다면면
-//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
-        if (userPwd.equals(user.getUserPwd())) {
-
-            //리스트에 유저정보 담아준다.
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("userEmail", user.getUserEmail());
-            userMap.put("userNickname", user.getUserNickname());
-            userMap.put("authority", user.getAuthority());
-
-
-            //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
-            String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
-            result.put("accessToken", jwtTokenProvider.createAccessToken(userMap));
-            result.put("refreshToken", refreshToken);
-            usersService.updateRefreshToken(user.getUserNo(), refreshToken);
-
-            result.put("message", SUCCESS);
-            status = HttpStatus.ACCEPTED;
-
-        } else {
-            result.put("message", FAIL);
-            status = HttpStatus.ACCEPTED;
-
-        }
-        return new ResponseEntity<Map<String, Object>>(result, status);
-
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo) {
+//        String userEmail = loginInfo.getUserEmail();
+//        String userPwd = loginInfo.getUserPwd();
+//        System.out.println("\n\n\n-----------------------"+userEmail+"------------------\n\n\nr");
+//        HttpStatus status = null;
+//
+//        HashMap<String, Object> result = new HashMap<>();
+//
+//        //userEmail로 DB에 저장된 user정보 불러옴
+//        UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
+//
+//        //비밀번호가 올바르게 입력됐다면면
+////       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+//        if (userPwd.equals(user.getUserPwd())) {
+//
+//            //리스트에 유저정보 담아준다.
+//            Map<String, Object> userMap = new HashMap<>();
+//            userMap.put("userEmail", user.getUserEmail());
+//            userMap.put("userNickname", user.getUserNickname());
+//            userMap.put("authority", user.getAuthority());
+//
+//
+//            //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
+//            String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
+//            result.put("accessToken", jwtTokenProvider.createAccessToken(userMap));
+//            result.put("refreshToken", refreshToken);
+//            usersService.updateRefreshToken(user.getUserNo(), refreshToken);
+//
+//            result.put("message", SUCCESS);
+//            status = HttpStatus.ACCEPTED;
+//
+//        } else {
+//            result.put("message", FAIL);
+//            status = HttpStatus.ACCEPTED;
+//
+//        }
+//        return new ResponseEntity<Map<String, Object>>(result, status);
+//
+//    }
 
     //refresh token으로 access token 재발급
     @PostMapping("/refresh")

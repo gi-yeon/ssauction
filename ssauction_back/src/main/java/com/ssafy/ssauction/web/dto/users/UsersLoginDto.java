@@ -4,6 +4,7 @@ import com.ssafy.ssauction.domain.users.Authority;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -11,6 +12,7 @@ public class UsersLoginDto {
     String loginEmail;
     String loginPwd;
 
+    @Setter
     Authority authority;
 
     @Override
@@ -23,9 +25,8 @@ public class UsersLoginDto {
     }
 
     @Builder
-    public UsersLoginDto(String loginEmail, String loginPwd, Authority authority) {
+    public UsersLoginDto(String loginEmail, String loginPwd) {
         this.loginEmail = loginEmail;
         this.loginPwd = loginPwd;
-        this.authority=authority;
     }
 }
