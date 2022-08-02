@@ -1,9 +1,5 @@
 package com.ssafy.ssauction.web.controller;
 
-import com.ssafy.ssauction.domain.houses.Houses;
-import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
-import com.ssafy.ssauction.domain.items.Items;
-import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.service.Items.ItemsService;
@@ -11,19 +7,17 @@ import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.userImages.UserImgsService;
 import com.ssafy.ssauction.service.users.UsersService;
-import com.ssafy.ssauction.web.dto.Houses.HousesItemsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
+import com.ssafy.ssauction.web.dto.users.UsersInfoUpdateRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -105,13 +99,13 @@ class UsersControllerTest {
         Long updateId=savedUser.getUserNo();
         String expectedComment="hi";
         String expectedDesc="nice to meet you";
-        UsersUpdateProfileRequestDto requestDto=UsersUpdateProfileRequestDto.builder()
+        UsersInfoUpdateRequestDto requestDto= UsersInfoUpdateRequestDto.builder()
                 .userComment(expectedComment)
                 .userDesc(expectedDesc)
                 .build();
 
         String url = "http://localhost:" + port + "/users/profile/"+updateId;
-        HttpEntity<UsersUpdateProfileRequestDto> requestEntity=new HttpEntity<>(requestDto);
+        HttpEntity<UsersInfoUpdateRequestDto> requestEntity=new HttpEntity<>(requestDto);
         ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
 
         //then

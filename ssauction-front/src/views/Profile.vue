@@ -5,7 +5,10 @@
   <br />
   <br />
   <div v-show="isLogin">
+    <router-link to="/profile/update">Profile Update</router-link>
     <h3>유저번호 : {{ userNo }}</h3>
+    <br />
+    <h3>유저닉네임 : {{ userNickname }}</h3>
     <br />
     <h3>유저등급 : {{ userGrade }}</h3>
     <br />
@@ -28,12 +31,12 @@ export default {
 
   data() {
     return {
-      userNickname:"",
-      userNo:0,
-      userGrade:0,
-      userDesc:"",
-      userComment:"",
-      userImgUri:"",
+      userNickname: "",
+      userNo: 0,
+      userGrade: 0,
+      userDesc: "",
+      userComment: "",
+      userImgUri: "",
     };
   },
 
@@ -46,13 +49,21 @@ export default {
   },
 
   methods: {
-    getUserInfo: async function(){
-       await axios.get("/users/"+this.userNo).then(({data})=>{
-        this.userDesc=data.userDesc;
-        this.userComment=data.userComment;
-        this.userImgUri=data.userImgUri;
-       });
-    }
+    getUserInfo: async function () {
+      console.log(this.userNickname);
+      console.log(this.userNo);
+      console.log(this.isLogin);
+      await axios
+        .get("/users/profile/" + this.userNo)
+        .then(({ data }) => {
+          this.userDesc = data.userDesc;
+          this.userComment = data.userComment;
+          this.userImgUri = data.userImgUri;
+        })
+        .catch(({ data }) => {
+          console.log(data);
+        });
+    },
   },
 };
 </script>

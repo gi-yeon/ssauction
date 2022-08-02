@@ -6,6 +6,7 @@ import com.ssafy.ssauction.auth.JwtTokenProvider;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
 
+import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
@@ -24,11 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -43,11 +40,10 @@ public class UsersController {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-
-
     private final HousesService housesService;
     private final LikesService likesService;
-    @GetMapping("/{userNo}")
+
+    @GetMapping("/profile/{userNo}")
     public UserInfoResponseDto findById(@PathVariable Long userNo) {
         return usersService.getInfo(userNo);
     }
@@ -60,10 +56,10 @@ public class UsersController {
 //
 
     @PostMapping("/login")
-    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto){
-        UsersResponseDto responseDto=usersService.findUser(requestDto);
+    public UsersResponseDto login(@RequestBody UsersLoginDto requestDto) {
+        UsersResponseDto responseDto = usersService.findUser(requestDto);
         System.out.println(responseDto.toString());
-        if (responseDto==null){
+        if (responseDto == null) {
             return null;
         }
         System.out.println(responseDto.toString());
@@ -74,23 +70,25 @@ public class UsersController {
     public String save(@RequestBody UsersSaveRequestDto requestDto) {
         System.out.println(requestDto.toString());
         Users user = usersService.save(requestDto);
-        Long userImgs= userImgsService.save(user);
+        Long userImgs = userImgsService.save(user);
         System.out.println(userImgs);
-        if(user==null){
+        if (user == null) {
             return "FAIL";
         }
         return "OK";
     }
 
-    @PutMapping("/img/{userNo}")
+    @PutMapping("/profile/img/{userNo}")
     public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
+        System.out.println(userNo);
+        System.out.println(requestDto.toString());
         return userImgsService.update(userNo, requestDto);
     }
 
     // 아이디 찾기
     // 전화번호를 이용해 아이디(이메일) 찾기 구현
     @GetMapping("/findId/{userPhoneNo}")
-    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
+    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo) {
         return usersService.findByPhoneNo(userPhoneNo);
     }
 //    @GetMapping("/users/findId/{userPhoneNo}")
@@ -104,18 +102,32 @@ public class UsersController {
     // 비밀번호 재설정
     // 아이디(이메일) + 전화번호를 이용해 비밀번호 재설정 구현
     @PutMapping("/resetPwd/{userPhoneNo}/{userId}")
-    public String update(@PathVariable String userPhoneNo, @PathVariable String userId, @RequestBody UsersUpdatePwdDto resetPwdDto){
+    public String update(@PathVariable String userPhoneNo, @PathVariable String userId, @RequestBody UsersUpdatePwdDto resetPwdDto) {
         return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
 
-    @PutMapping("/profile/{userNo}")
-    public Long updateProfile(@PathVariable Long userNo, @RequestBody UsersUpdateProfileRequestDto requestDto) {
-        return usersService.updateProfile(userNo, requestDto);
+    @PutMapping("/profile/info/{userNo}")
+    public ResponseEntity<String> updateInfo(@PathVariable Long userNo, @RequestBody UsersInfoUpdateRequestDto requestDto) {
+        System.out.println(userNo);
+        System.out.println(requestDto.toString());
+        try {
+            usersService.updateInfo(userNo, requestDto);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+
+    @PutMapping("/profile/name/{userNo}")
+    public ResponseEntity<UsersNameResponseDto> updateNickname(@PathVariable Long userNo, @RequestBody UsersNameUpdateRequestDto requestDto) {
+        System.out.println(requestDto.getUserNickname());
+        String result = usersService.updateNickname(userNo, requestDto);
+        return new ResponseEntity<>(UsersNameResponseDto.builder().userNickname(requestDto.getUserNickname()).build(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userNo}")
     public Long delete(@PathVariable Long userNo) {
-        System.out.println("\n\n"+userNo+"\n\n");
+        System.out.println("\n\n" + userNo + "\n\n");
         try {
             Long delete = usersService.delete(userNo);
         } catch (Exception e) {
@@ -187,27 +199,28 @@ public class UsersController {
     }
 
     @PostMapping("/likes")
-    public ResponseEntity<String> createLikes(@RequestBody LikesSaveDto saveDto){
-        Users user=usersService.findEntityById(saveDto.getUserNo());
-        Houses house=housesService.findEntityById(saveDto.getHouseNo());;
-        Likes like=likesService.save(user,house,saveDto);
+    public ResponseEntity<String> createLikes(@RequestBody LikesSaveDto saveDto) {
+        Users user = usersService.findEntityById(saveDto.getUserNo());
+        Houses house = housesService.findEntityById(saveDto.getHouseNo());
+        ;
+        Likes like = likesService.save(user, house, saveDto);
         user.getLikes().add(like);
         house.getLikes().add(like);
         return new ResponseEntity<>("created", HttpStatus.OK);
     }
 
     @GetMapping("/likes/{userNo}")
-    public ResponseEntity<List<HousesResponseDto>> getLikeHouse(@PathVariable Long userNo){
-        Users user=usersService.findEntityById(userNo);
+    public ResponseEntity<List<HousesResponseDto>> getLikeHouse(@PathVariable Long userNo) {
+        Users user = usersService.findEntityById(userNo);
         System.out.println(user.toString());
-        List<Likes> likes=user.getLikes();
-        List<HousesResponseDto> list=new ArrayList<>();
+        List<Likes> likes = user.getLikes();
+        List<HousesResponseDto> list = new ArrayList<>();
         System.out.println(likes.toString());
-        for(Likes like:likes){
+        for (Likes like : likes) {
             list.add(HousesResponseDto.builder().house(like.getHouse()).build());
         }
-        System.out.println("\n\n"+list.toString()+"\n\n");
-        return new ResponseEntity<>(list,HttpStatus.OK);
+        System.out.println("\n\n" + list.toString() + "\n\n");
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
 //    @DeleteMapping("/users/likes")

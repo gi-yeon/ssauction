@@ -137,7 +137,9 @@ public class Users implements UserDetails {
         this.userUpdateDate = new Timestamp(System.currentTimeMillis());
     }
 
-
+    public void updateNickname(String userNickname){
+        this.userNickname=userNickname;
+    }
     // 비밀번호 재설정
     public void updatePwd(String userPwd){
         this.userPwd=userPwd;

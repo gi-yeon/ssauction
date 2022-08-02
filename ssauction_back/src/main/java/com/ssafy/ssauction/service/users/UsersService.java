@@ -28,11 +28,22 @@ public class UsersService {
     }
 
     @Transactional
-    public Long updateProfile(Long userNo, UsersUpdateProfileRequestDto requestDto) {
+    public void updateInfo(Long userNo, UsersInfoUpdateRequestDto requestDto) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         users.updateProfile(requestDto.getUserComment(), requestDto.getUserDesc());
-        return userNo;
     }
+    @Transactional
+    public String updateNickname(Long userNo, UsersNameUpdateRequestDto requestDto) {
+        Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        try {
+            Users others=usersRepository.findByUserEmail(requestDto.getUserNickname()).get();
+        }catch (NoSuchElementException e){
+            users.updateNickname(requestDto.getUserNickname());
+            return "success";
+        }
+        return "fail";
+    }
+
     @Transactional
     public Long updateRefreshToken(Long userNo, String refreshToken) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
