@@ -51,11 +51,16 @@ const actions = {
 
   //로그아웃
   userLogout({ commit }) {
-    commit('USER_LOGOUT')
-    //헤더 access token 없애준다.
-    axios.defaults.headers.common['Authorization'] = null;
-    alert("로그아웃되었습니다. 다음에 또 만나요 ^____^")
-    router.push('/'); //홈으로 이동
+    axios.post("/users/logout").then((res) => {
+      commit('USER_LOGOUT')
+      console.log(res.data)
+      //헤더 access token 없애준다.
+      axios.defaults.headers.common['Authorization'] = null;
+      alert("로그아웃되었습니다. 다음에 또 만나요 ^____^")
+      router.push('/'); //홈으로 이동
+
+    })
+
   },
   getNickname({ commit }, value) {
     commit(USER.SET_NICKNAME, value);

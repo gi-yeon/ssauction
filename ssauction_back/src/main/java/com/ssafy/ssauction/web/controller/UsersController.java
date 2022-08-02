@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.web.controller;
 
 
+import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.ssafy.ssauction.auth.JwtTokenProvider;
 
 import com.ssafy.ssauction.domain.houses.Houses;
@@ -31,6 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import retrofit2.http.Path;
 
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,7 +119,7 @@ public class UsersController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo, HttpServletResponse res) {
         String userEmail = loginInfo.getUserEmail();
         String userPwd = loginInfo.getUserPwd();
         HttpStatus status = null;
@@ -126,7 +130,7 @@ public class UsersController {
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
         //비밀번호가 올바르게 입력됐다면면
-//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) { 이 부분은 passwordEncorder 설정 후 교체 예정정
+//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) { 이 부분은 passwordEncorder 설정 후 교체 예정
         if (userPwd.equals(user.getUserPwd())) {
 
             //리스트에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
@@ -137,14 +141,23 @@ public class UsersController {
 
 
             //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
+            String accessToken = jwtTokenProvider.createAccessToken(userMap);
             String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
             //result에 정보 담아준다.
-            result.put("accessToken", jwtTokenProvider.createAccessToken(userMap));
+            result.put("accessToken", accessToken);
             result.put("refreshToken", refreshToken);
             result.put("userNo", user.getUserNo());
             result.put("userNickname", user.getUserNickname());
             result.put("userGrade", user.getUserGrade());
             usersService.updateRefreshToken(user.getUserNo(), refreshToken); //token db 저장
+
+
+            Cookie cookie = new Cookie("accessToken", accessToken);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            res.addCookie(cookie);
+
 
             //success 메시지 담아준다.
             result.put("message", SUCCESS);
@@ -157,6 +170,25 @@ public class UsersController {
 
         }
         return new ResponseEntity<Map<String, Object>>(result, status);
+
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse res) {
+        Cookie cookie = new Cookie("accessToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        res.addCookie(cookie);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", SUCCESS);
+
+        HttpStatus status = HttpStatus.ACCEPTED;
+
+        return new ResponseEntity<Map<String, Object>>(result, status);
+
 
     }
 

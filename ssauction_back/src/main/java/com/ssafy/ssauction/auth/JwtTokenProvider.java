@@ -14,8 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.*;
@@ -73,7 +75,13 @@ public class JwtTokenProvider {
 
     //Request의 Header에서 token 값을 가져온다.
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+
+        String token = null;
+        Cookie cookie = WebUtils.getCookie(request, "accessToken");
+        if(cookie != null) token = cookie.getValue();
+        return token;
+
+//        return request.getHeader("Authorization");
     }
 
     //accessToken의 유효성 검증
