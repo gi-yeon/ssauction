@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.web.controller;
 
 import com.ssafy.ssauction.service.board.BoardService;
+import com.ssafy.ssauction.web.dto.board.BoardDtoReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,13 @@ public class BoardController {
         HttpStatus status = HttpStatus.OK;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardNo").descending());
         resultMap.put("list", boardService.boardList(pageRequest));
+        return new ResponseEntity<>(resultMap, status);
+    }
+
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> boardRegist(@RequestBody BoardDtoReq boardDtoReq) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
         return new ResponseEntity<>(resultMap, status);
     }
 }
