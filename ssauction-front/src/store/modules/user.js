@@ -15,13 +15,13 @@ const state = {
 
 const getters = {
   userNickname: (state) => {
-    return `${state.nickname}`;
+    return `${state.loginUser.nickname}`;
   },
   userNo: (state) => {
-    return `${state.userNo}`;
+    return `${state.loginUser.userNo}`;
   },
   userGrade: (state) => {
-    return `${state.grade}`;
+    return `${state.loginUser.grade}`;
   },
   // userInfo: (state) => {
   //   return `'닉네임' : ${state.nickname}, '유저번호' : ${state.userNo}, '등급' : ${state.grade}`;
@@ -54,6 +54,7 @@ const actions = {
     commit('USER_LOGOUT')
     //헤더 access token 없애준다.
     axios.defaults.headers.common['Authorization'] = null;
+    alert("로그아웃되었습니다. 다음에 또 만나요 ^____^")
     router.push('/'); //홈으로 이동
   },
   getNickname({ commit }, value) {

@@ -9,22 +9,36 @@
       <!--권한설정 테스트용-->
       <router-link to="/authorizationTest">authorizationTest</router-link>
       &nbsp;
-      <router-link to="/login"
+      <router-link to="/login" v-if="!user.isLogin"
         ><img src="@\assets\imgs\login.png" alt="Login" class="icon2"
       /></router-link>
       &nbsp; &nbsp;
-      <router-link to="/signup"
+      <router-link to="/signup" v-if="!user.isLogin"
         ><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"
       /></router-link>
       &nbsp; &nbsp;
+      <!--로그인 한 상태-->
+      <b v-if="user.isLogin">
+        {{ user.loginUser.userNickname }}님 반갑습니다*^^*
+      </b>
+      <button v-if="user.isLogin" @click="logout">logout</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "NavBar",
-  computed: {},
+  computed: {
+    ...mapState(["user", ["isLogin"]]),
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("user/userLogout");
+    },
+  },
 };
 </script>
 
