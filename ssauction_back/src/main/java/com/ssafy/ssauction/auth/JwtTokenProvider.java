@@ -29,7 +29,6 @@ public class JwtTokenProvider {
 
     //secretkey
     private Key accessKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//    private Key refreshKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     //유효시간 30분
     private long tokenValidTime = 1000 * 60 * 30L;
@@ -38,15 +37,12 @@ public class JwtTokenProvider {
 
     //secretkey Base64 인코딩
     String encodedAccessString = Base64.getEncoder().encodeToString(accessKey.getEncoded());
-//    String encodedRefreshString = Base64.getEncoder().encodeToString(refreshKey.getEncoded());
 
     //key 변환
     //base64를 byte[]로 변환
     byte[] decodedAccessByte = Base64.getDecoder().decode(encodedAccessString.getBytes());
-//    byte[] decodedRefreshByte = Base64.getDecoder().decode(encodedRefreshString.getBytes());
 
     SecretKey keyForAccessToken = Keys.hmacShaKeyFor(decodedAccessByte);
-//    SecretKey keyForRefreshToken = Keys.hmacShaKeyFor(decodedRefreshByte);
 
 
     //JWT 토큰 생성
@@ -58,12 +54,6 @@ public class JwtTokenProvider {
 
     }
 
-//    //refreshToken으로 accessToken 재생성
-//    public String recreateAccessToken(String claimId, String data) {
-//
-//        return Jwts.builder().setHeaderParam("typ", "JWT").claim(claimId, data).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime)).signWith(keyForAccessToken).compact();
-//
-//    }
 
     //refresh token 생성 (유효시간 3일)
     public String createRefreshToken(String userEmail) {

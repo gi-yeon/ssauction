@@ -51,11 +51,13 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
+                //해당 경로는 모두 허용
                 .antMatchers("/swagger*/**", "/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh").permitAll()
-                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                //해당 경로는 ADMIN만 허용
+                .antMatchers("/users/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)
