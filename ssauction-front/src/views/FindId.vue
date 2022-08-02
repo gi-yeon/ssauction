@@ -8,7 +8,7 @@
   <h1>{{ phoneNo }}</h1>
   <button @click="findId">Find ID</button>
 
-    <div v-if="modalSmsCode == true">
+  <div v-if="modalSmsCode == true">
     <br/>
     <br/>
     <h3>인증코드 입력</h3>
@@ -40,22 +40,22 @@
 
   methods: {
     findId: function () {
-      console.log("FindId start");
-      console.log(this.phoneNo);
-      console.log("start getting");
+      // console.log("FindId start");
+      // console.log(this.phoneNo);
+      // console.log("start getting");
       axios.get("/users/findId/" + this.phoneNo).then(({ data }) => {
-        console.log(data.userPhoneNo);
-        console.log(data.userEmail);
+        // console.log(data.userPhoneNo);
+        // console.log(data.userEmail);
         this.userEmail = data.userEmail;
         this.returnValue = data;
-        console.log(this.returnValue);
+        // console.log(this.returnValue);
         if (this.returnValue !== "") {
           // 인증번호 입력창 띄워주기 + axios.post 요청으로 sms 발송
           this.modalSmsCode = true;
           axios.post("/users/sendSMS/" + this.phoneNo).then((smsData) => {
-            console.log(smsData);
+            // console.log(smsData);
             this.randCode = smsData.data;
-            console.log(`randCode: ${this.randCode}`);
+            // console.log(`randCode: ${this.randCode}`);
             });
           } else {
           alert("해당 유저 정보가 없습니다.");
@@ -63,11 +63,12 @@
       });
     },
     verifyCode: function() {
-      console.log(parseInt(this.smsCode));
-      console.log(parseInt(this.randCode));
+      // console.log(parseInt(this.smsCode));
+      // console.log(parseInt(this.randCode));
       // if (인증번호 === 사용자입력값) { 아이디 정보 반환 }
       if (parseInt(this.smsCode) === parseInt(this.randCode)) {
         alert("아이디(이메일 주소)는 다음과 같습니다.\n" + this.userEmail);
+        this.$router.push('/login')
       } else {
         alert("인증번호가 올바르지 않습니다.");
       }
