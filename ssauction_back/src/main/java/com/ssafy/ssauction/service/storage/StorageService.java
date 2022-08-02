@@ -14,13 +14,13 @@ public interface StorageService {
 
     void init();
 
-    void store(MultipartFile file);
+    void store(MultipartFile file, String type);
 
     Stream<Path> loadAll();
 
-    Path load(String filename);
+    Path load(String filename, String type);
 
-    Resource loadAsResource(String filename);
+    Resource loadAsResource(String filename, String type);
 
     void deleteAll();
 

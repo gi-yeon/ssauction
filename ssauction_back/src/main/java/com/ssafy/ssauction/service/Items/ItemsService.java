@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +27,26 @@ public class ItemsService {
         Items item=requestDto.toEntity(user);
         return itemsRepository.save(item);
     }
+//    public Items modify(Long itemNo, ItemsSaveRequestDto newItemInfo) {
+//        Optional<Items> oItemToModify = itemsRepository.findById(itemNo);
+//        if (oItemToModify.isPresent()) {
+//            Items itemToModify = oItemToModify.get();
+//
+//            itemToModify.setItemName(newItemInfo.getItemName());
+//            itemToModify.setItemModelNo(newItemInfo.getItemModelNo());
+//            itemToModify.setItemQuality(newItemInfo.getItemQuality());
+//            itemToModify.setItemDealStatus(newItemInfo.getItemDealStatus());
+//            itemToModify.setItemDesc(newItemInfo.getItemDesc());
+//            itemToModify.setItemStartPrice(newItemInfo.getItemStartPrice());
+//            itemToModify.setItemFinalPrice(newItemInfo.getItemFinalPrice());
+//            itemToModify.setItemUpdateTime(new Timestamp(System.currentTimeMillis()));
+//
+//            itemsRepository.save(itemToModify);
+//
+//            return itemToModify;
+//        }
+//        return null;
+//    }
     @Transactional
     public void delete(Long itemNo) {
         itemsRepository.deleteById(itemNo);

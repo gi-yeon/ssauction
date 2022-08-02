@@ -7,7 +7,9 @@ import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +21,7 @@ public class HousesService {
         housesRepository.save(house);
         return house;
     }
+
     public Long delete(Long houseNo){
         housesRepository.deleteById(houseNo);
         return houseNo;

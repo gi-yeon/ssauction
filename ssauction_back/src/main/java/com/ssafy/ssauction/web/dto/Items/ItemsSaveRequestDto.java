@@ -14,15 +14,20 @@ public class ItemsSaveRequestDto {
     private String itemModelNo;
     private int itemQuality;
     private int itemDealStatus;
+    private String itemDesc;
     private int itemStartPrice;
+    private int itemFinalPrice;
     private Long userNo;
+
     @Builder
-    public ItemsSaveRequestDto(Long userNo, String itemName, String itemModelNo, int itemQuality, int itemDealStatus, int itemStartPrice){
+    public ItemsSaveRequestDto(Long userNo, String itemName, String itemModelNo, int itemQuality, int itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice){
         this.itemName=itemName;
         this.itemModelNo=itemModelNo;
         this.itemQuality=itemQuality;
         this.itemDealStatus=itemDealStatus;
+        this.itemDesc=itemDesc;
         this.itemStartPrice=itemStartPrice;
+        this.itemFinalPrice=itemFinalPrice;
         this.userNo=userNo;
     }
 
