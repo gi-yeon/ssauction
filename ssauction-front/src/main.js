@@ -4,43 +4,37 @@ import router from "./router";
 import 'v-calendar/dist/style.css';
 import VCalendar from 'v-calendar';
 import store from "./store";
-// import axios from "axios";
-// import VueCookies from "vue3-cookies";
+import axios from "axios";
+import { computed } from "vue";
 
 
 const app = createApp(App);
 app.use(router).use(store).use(VCalendar).mount("#app");
 
-// axios.interceptors.request.use(async function (config) {
-//     // Do something before request is sent
-//     config.headers.token = VueCookies.get('accessToken');
-//     config.headers.refresh_token = VueCookies.get('refreshToken');
-
-//     console.log(config);
-//     return config;
-// }, function (error) {
-//     // Do something with request error
-//     return Promise.reject(error);
-// });
-
-// // Add a response interceptor
-// axios.interceptors.response.use(function (response) {
-//     // Any status code that lie within the range of 2xx cause this function to trigger
-//     // Do something with response data
-//     return response;
-// }, async function (error) {
-//     // Any status codes that falls outside the range of 2xx cause this function to trigger
-//     // Do something with response error
-//     console.log('에러일 경우', error.config);
-//     const errorAPI = error.config;
-//     // if (error.response.data.message === "fail" && errorAPI.retry === undefined) {
-//     errorAPI.retry = true;
-//     console.log('토큰이 이상한 오류일 경우');
-//     await this.$store.dispatch("user/refreshToken()");
-//     return await axios(errorAPI);
-//     // }
-//     // return Promise.reject(error);
-// });
-
-
-// export default axios;
+axios.interceptors.response.use(
+    (response) => {
+        console.log("여기는 리스펀스")
+        return response;
+    },
+    async (error) => {
+        console.log("여기는 에러")
+        const {
+            config,
+            response: { status },
+        } = error;
+        if (status === 401) {
+            console.log("여기 들어오나?")
+            console.log(error.response.data)
+            // if (error.response.data.message === "TokenExpiredError") {
+            const originalRequest = config;
+            const userNo = computed(() => store.getters["user/userNo"]);
+            console.log(userNo)
+            // token refresh 요청
+            await axios.post("/users/refresh", userNo);
+            // 401로 요청 실패했던 요청 새로운 accessToken으로 재요청
+            return axios(originalRequest);
+        }
+        // }
+        return Promise.reject(error);
+    }
+);
