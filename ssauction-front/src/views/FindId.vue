@@ -1,22 +1,31 @@
 <template>
   <br />
+  <br>
   <h1>아이디 찾기</h1>
-  <br />
+  <p>
+    휴대폰 인증을 통해 아이디(이메일)을 찾을 수 있습니다. 
+  </p>
 
-  <label for="user_phoneNo">전화번호: </label>
-  <input id="user_phoneNo" type="string" v-model="phoneNo" />
-  <h1>{{ phoneNo }}</h1>
-  <button @click="findId">Find ID</button>
+  <div class="box">
+    <div>
+    <input id="user_phoneNo" type="string" v-model="phoneNo" placeholder="전화번호 (- 제외)">
+    </div>
+    <br>
+    <br>
+    <!-- <h1>{{ phoneNo }}</h1> -->
+    <button class="btn_pink" @click="findId">인증번호 전송</button>
 
-  <div v-if="modalSmsCode == true">
-    <br/>
-    <br/>
-    <h3>인증코드 입력</h3>
-      <label for="user_smsCode">인증코드: </label>
-      <input id="user_smsCode" type="string" v-model="smsCode" />
-      <h1>{{ smsCode }}</h1>
-      <button @click="verifyCode">Verify Code</button>
+    <div v-if="modalSmsCode == true">
+      <br/>
+      <br/>
+        <div>
+          <input id="user_smsCode" type="string" v-model="smsCode" placeholder="인증번호 입력">
+        </div>
+      <br>
+        <button class="btn_pink" @click="verifyCode">아이디 찾기</button>
+    </div>
   </div>
+  
 </template>
 
 <script>
@@ -58,7 +67,7 @@
             // console.log(`randCode: ${this.randCode}`);
             });
           } else {
-          alert("해당 유저 정보가 없습니다.");
+          alert("해당 번호로 가입된 이메일이 없습니다.");
         }
       });
     },
@@ -82,3 +91,17 @@
 // 포스트 axios로 ('/users/sendSMS') 연동해서
 // 해당 휴대폰번호에 sms로 인증번호 보내고
 // 인증번호를 백에서 받아와서 입력한 번호와 일치할 경우 아이디 정보 반환
+
+
+<style>
+.box{
+  width: 800px;
+  /* border: 2.5px solid;
+  border-radius: 5px; */
+  align-content: center;
+  border-block-color: rgb(134, 133, 133);
+  padding-top: 30px;
+  padding-bottom : 50px;
+  margin: auto;
+}
+</style>

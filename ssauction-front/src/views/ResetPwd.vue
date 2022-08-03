@@ -1,25 +1,32 @@
+// 비밀번호 수정 전 (휴대폰 인증 전)
+
 <template>
   <br />
+  <br>
   <h1>비밀번호 재설정</h1>
-  <br />
+  <p>
+    휴대폰 인증을 통해 비밀번호를 변경할 수 있습니다. 
+  </p>
 
-  <label for="user_phoneNo">전화번호: </label>
-  <input id="user_phoneNo" type="string" v-model="phoneNo" />
-  <h1>{{ phoneNo }}</h1>
-  <label for="user_email">아이디(이메일): </label>
-  <input id="user_email" type="string" v-model="userEmail" />
-  <h1>{{ userEmail }}</h1>
-
-  <button @click="ResetPwd">비밀번호 재설정하기</button>
-
-  <div v-if="modalSmsCode == true">
+  <div class="box">
+    <div>
+      <input id="user_email" type="string" v-model="userEmail" placeholder="이메일">
+      <br>
+      <br>
+      <input id="user_phoneNo" type="string" v-model="phoneNo" placeholder="전화번호 (- 제외)">
+    </div>
+      <br>
+      <button class="btn_pink" @click="ResetPwd">인증번호 전송</button>
+      
+    <div v-if="modalSmsCode == true">
     <br/>
     <br/>
-    <h3>인증코드 입력</h3>
-      <label for="user_smsCode">인증코드: </label>
-      <input id="user_smsCode" type="string" v-model="smsCode" />
-      <h1>{{ smsCode }}</h1>
-      <button @click="verifyCode">Verify Code</button>
+      <div>
+        <input id="user_smsCode" type="string" v-model="smsCode" placeholder="인증번호 입력">
+      </div>
+      <br>
+        <button class="btn_pink" @click="verifyCode">비밀번호 재설정하기</button>
+    </div>
   </div>
 </template>
 

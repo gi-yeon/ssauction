@@ -40,7 +40,7 @@
       id="user_phone_no"
       type="String"
       v-model="userPhoneNo"
-      placeholder="전화번호 010-0000-0000"
+      placeholder="전화번호 ex) 01012345678"
     />
     <br />
     <br />
