@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ import java.util.List;
 @ToString
 public class ItemInfoResponseDto {
     private SellItemResponseDto item;
-    private ItemImgsGetResponseDto itemMainImg;
+    private Resource itemMainImg;
 }

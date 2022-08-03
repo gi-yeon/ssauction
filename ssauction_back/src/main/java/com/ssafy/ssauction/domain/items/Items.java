@@ -1,15 +1,11 @@
 package com.ssafy.ssauction.domain.items;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
 import com.ssafy.ssauction.domain.users.Users;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -20,6 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Items {
     @Id
@@ -36,7 +33,7 @@ public class Items {
 
     @Column(name = "item_quality", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Qualilty itemQuality;
+    private Quality itemQuality;
 
     @Column(name = "item_deal_status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -102,7 +99,7 @@ public class Items {
     }
 
     @Builder
-    public Items(String itemName, String itemModelNo, Qualilty itemQuality, DealStatus itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice, Users seller, Users buyer, Houses house, List<ItemImgs> images) {
+    public Items(String itemName, String itemModelNo, Quality itemQuality, DealStatus itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice, Users seller, Users buyer, Houses house, List<ItemImgs> images) {
         this.itemName = itemName;
         this.itemModelNo = itemModelNo;
         this.itemQuality = itemQuality;

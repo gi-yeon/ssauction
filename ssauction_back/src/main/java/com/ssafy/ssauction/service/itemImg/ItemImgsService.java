@@ -15,9 +15,16 @@ public class ItemImgsService {
     private final ItemImgsRepository itemImgsRepository;
 
     @Transactional
-    public ItemImgs save(Items item, ItemImgsSaveRequestDto saveDto){
-        ItemImgs img=saveDto.toEntity(item);
-        return itemImgsRepository.save(saveDto.toEntity(item));
+    public ItemImgs save(Items item,String originalUri, String saveUri){
+        ItemImgs itemImg =
+                ItemImgs.builder()
+                        .itemImgName(originalUri)
+                        .itemImgUri(saveUri)
+                        .isMain(false)
+                        .item(item)
+                        .build();
+        itemImg.setItem(item);
+        return itemImgsRepository.save(itemImg);
     }
 
     public ItemImgsGetResponseDto getImgs(Items item){

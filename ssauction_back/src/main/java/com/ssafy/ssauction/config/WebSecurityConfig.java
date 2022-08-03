@@ -58,6 +58,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 //                .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
 //                .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)
+
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")

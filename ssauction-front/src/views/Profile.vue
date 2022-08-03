@@ -46,7 +46,7 @@
               <div class="card">
                 <div class="card-body">
                   <div>
-                    {{ index.itemMainImg.itemImgUri }}
+                    {{ index.itemMainImg }}
                     <br />
                     {{ index.item.itemName }}
                     <br />
@@ -115,13 +115,18 @@ export default {
       console.log(this.userNo);
       console.log(this.isLogin);
       await axios
-        .get("/houses/" + this.userNo)
+        .get("/houses/profile/" + this.userNo)
         .then(({ data }) => {
           console.log(data);
-          this.sellItem = data.sellItemsList;
-          console.log(this.sellItem[0].itemMainImg);
-          console.log(this.sellItem);
-          console.log(this.buyItem);
+
+          if (data === null) {
+            console.log("null data");
+          } else {
+            this.sellItem = data.sellItemsList;
+            console.log(this.sellItem[0].itemMainImg);
+            console.log(this.sellItem);
+            console.log(this.buyItem);
+          }
         })
         .catch(({ data }) => {
           console.log(data);

@@ -1,7 +1,6 @@
 package com.ssafy.ssauction.web.controller;
 
-import com.ssafy.ssauction.domain.items.DealStatus;
-import com.ssafy.ssauction.domain.items.Qualilty;
+import com.ssafy.ssauction.domain.items.Quality;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.service.Items.ItemsService;
@@ -153,7 +152,7 @@ class UsersControllerTest {
         ItemsSaveRequestDto itemDto=ItemsSaveRequestDto.builder()
                 .itemName("item")
                 .itemModelNo("item123")
-                .itemQuality(Qualilty.A)
+                .itemQuality(Quality.A)
                 .itemStartPrice(500000)
                 .build();
         ItemImgsSaveRequestDto imgDto=ItemImgsSaveRequestDto.builder()
