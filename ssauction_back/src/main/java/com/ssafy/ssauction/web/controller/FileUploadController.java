@@ -49,7 +49,7 @@ public class FileUploadController {
 
     @PostMapping
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
-        storageService.store(file, type);
+        storageService.store(file, file.getName(), type);
 
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }

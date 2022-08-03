@@ -1,16 +1,22 @@
 <template>
-  <br />
-  <br />
-
-  <h1>메인 페이지</h1>
-  <button @click="clickBtn">click</button>
+  <div>
+    <h1>Hot Deals</h1>
+    <div>
+      <main-houses v-for="(hot, index) in hotDeals" :key="index" />
+    </div>
+  </div>
+  <div>
+    <h1>Comming Soon</h1>
+    <div></div>
+  </div>
   <h1>{{ userInfo }}</h1>
 </template>
 
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import axios from "@/utils/axios.js";
+import MainHouses from "@/components/MainHouses.vue";
+// import axios from "@/utils/axios.js";
 
 function useUser() {
   const store = useStore();
@@ -21,24 +27,17 @@ function useUser() {
 }
 export default {
   name: "SsauctionHome",
-
-  data() {
+  components: {
+    MainHouses,
+  },
+  MainHousesdata() {
     return {
       ...useUser(),
     };
   },
 
   mounted() {},
-  methods: {
-    clickBtn: () => {
-      console.log("click");
-      const obj = { name: "giyeon", age: 26, userno: 1, desc: "hi, everyone" };
-      axios.post("hello", JSON.stringify(obj)).then(({ data }) => {
-        alert(data);
-      });
-      console.log("end");
-    },
-  },
+  methods: {},
 };
 </script>
 <style></style>

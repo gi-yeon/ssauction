@@ -21,7 +21,7 @@
     </div>
     <div class="col-2 data">
       <v-date-picker
-        v-model="houseDate"
+        v-model="house.houseDate"
         mode="dateTime"
         locale="ko-KR"
         :model-config="modelConfig"
@@ -157,13 +157,15 @@ export default {
       },
       house: {
         houseTitle: null,
-        houseAucTime: null,
-        houseStatus: null,
+        // Datepicker 관련 구현이 아직 완벽하지 않아
+        // houseAucTime, houseStatus 값을 우선 하드코딩된 값으로 대체했다.
+        houseAucTime: "2022-02-22T22:22:22",
+        houseStatus: 0,
       },
       houseDate: new Date(),
       modelConfig: {
         type: "string",
-        mask: "YYYY-MM-DDThh:mm",
+        mask: "YYYY-MM-DDThh:mm:ss",
       },
       itemImages: [],
     };
@@ -181,41 +183,40 @@ export default {
       this.$refs.itemImage.value = "";
     },
     createHouse() {
-      this.house.houseAucTime = this.houseAucTime;
+      // this.house.houseAucTime = this.houseAucTime;
       console.log(this.house);
-      // axios
-      //   .post(
-      //     "/houses",
-      //     JSON.stringify({
-      //       item: this.item,
-      //       house: this.house,
-      //     })
-      //   )
-      //   .then((data) => {
-      //     console.log(data);
-      //   });
-      this.sendFile();
+
+      // file은 multipart/form-data 형식으로 전송되어야 한다.
+      // multipart/form-data 형식으로 요청하면 JSON을 바로 body에 넣는 방식을 사용할 수 없다.
+      // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
+      const housejson = JSON.stringify(this.house);
+      const itemjson = JSON.stringify(this.item);
+      const houseblob = new Blob([housejson], { type: "application/json" });
+      const itemblob = new Blob([itemjson], { type: "application/json" });
+
+      // html의 form 태그를 이용해 submit하면 formData 객체와 multipart/form-data 형식으로 전달된다.
+      // form 태그를 이용하고 있지 않지만 이용한 것처럼 요청하기 위해 새 formData 객체를 만든다.
+      let formData = new FormData();
+      formData.append("itemDto", itemblob);
+      formData.append("houseDto", houseblob);
+
+      // Spring에서 여러 file을 자동으로 배열로 받기 위해서는 Json 리스트를 그대로 전달하면 안된다.
+      // 같은 이름을 가진 여러 개의 file을 전송한다.
+      for (let img of this.itemImages) {
+        formData.append("files", img);
+      }
+
+      axios
+        .post("/houses", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((data) => {
+          console.log(data);
+        });
+      // this.sendFile();
       this.itemImages.splice(0);
     },
-    sendFile() {
-      if (this.itemImages !== null && this.itemImages.length > 0) {
-        for (let img of this.itemImages) {
-          let formData = new FormData();
-          formData.append("file", img);
-          formData.append("type", "item");
-          axios
-            .post("file", formData, {
-              headers: { "Content-Type": "multipart/form-data" },
-            })
-            .then((data) => {
-              console.log(data);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      }
-    },
+
     deleteImg(index) {
       this.itemImages.splice(index, 1);
       console.log(this.$refs.itemImage);
