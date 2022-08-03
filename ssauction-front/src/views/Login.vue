@@ -7,7 +7,7 @@
     <input
       id="user_email"
       type="email"
-      v-model="loginEmail"
+      v-model="loginInfo.userEmail"
       placeholder="이메일"
     />
     <br />
@@ -16,7 +16,7 @@
     <input
       id="user_pwd"
       type="password"
-      v-model="loginPwd"
+      v-model="loginInfo.userPwd"
       placeholder="비밀번호"
     />
     <br />
@@ -48,58 +48,28 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+// import router from '@/router'
 
 export default {
   name: "SsauctionLogin",
 
   data() {
     return {
-      loginEmail: "",
-      loginPwd: "",
-      returnValue: {},
+      //로그인 객체
+      loginInfo: {
+        userEmail: "",
+        userPwd: "",
+      },
     };
   },
 
   mounted() {},
 
   methods: {
-    findid() {
-      this.$router.push('/findid')
-    },
-
-    resetpwd() {
-      this.$router.push('/resetpwd')
-    },
-
-    login: function () {
-      console.log("login start");
-      console.log(this.loginEmail);
-      console.log(this.loginPwd);
-
-      const obj = {
-        loginEmail: this.loginEmail,
-        loginPwd: this.loginPwd,
-      };
-      console.log("start posting");
-
-      axios.post("/users/login", JSON.stringify(obj)).then(({ data }) => {
-        console.log(data.userNo);
-        console.log(data.userNickname);
-        console.log(data.userGrade);
-        this.returnValue = data;
-        if (this.returnValue !== "") {
-          alert("로그인 되었습니다.");
-          this.$store.dispatch("user/getUserNo", this.returnValue.userNo);
-          this.$store.dispatch(
-            "user/getNickname",
-            this.returnValue.userNickname
-          );
-          this.$store.dispatch("user/getGrade", this.returnValue.userGrade);
-        } else {
-          alert("입력 정보를 확인해주세요.");
-        }
-      });
+    login() {
+      console.log(this.loginInfo);
+      //user 모듈의 userLogin으로 보낸다.
+      this.$store.dispatch("user/userLogin", this.loginInfo);
     },
   },
 };

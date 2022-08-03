@@ -1,11 +1,13 @@
 <template>
-  <br>
-  <br>
+  <br />
+  <br />
   <h1>{{ userNickname }}님의 프로필</h1>
-  <br>
-  <br>
-  <h3>유저번호 : {{userNo}} </h3><br>
-  <h3>유저등급 : {{userGrade}} </h3><br>
+  <br />
+  <br />
+  <h3>유저번호 : {{ userNo }}</h3>
+  <br />
+  <h3>유저등급 : {{ userGrade }}</h3>
+  <br />
 </template>
 
 <script>
