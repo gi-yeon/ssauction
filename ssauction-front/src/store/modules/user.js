@@ -1,6 +1,8 @@
 import { USER } from "../mutation-types";
 import axios from "axios";
 import router from "@/router";
+import VueCookies from "vue-cookies";
+
 
 const state = {
   //로그인 한 유저의 정보
@@ -11,6 +13,10 @@ const state = {
   },
   //로그인 여부
   isLogin: false,
+  //access token
+  accessToken: "",
+  //refresh token
+  refreshtoken: "",
 };
 
 const getters = {
@@ -23,6 +29,12 @@ const getters = {
   userGrade: (state) => {
     return `${state.loginUser.grade}`;
   },
+  accessToken: (state) => {
+    return `${state.accessToken}`;
+  },
+  refreshToken: (state) => {
+    return `${state.refreshToken}`;
+  },
   // userInfo: (state) => {
   //   return `'닉네임' : ${state.nickname}, '유저번호' : ${state.userNo}, '등급' : ${state.grade}`;
   // },
@@ -34,10 +46,9 @@ const actions = {
     axios.post("/users/login", JSON.stringify(loginInfo)).then((res) => {
       //success 메시지가 떴다면
       if (res.data.message === "success") {
-        //헤더에 acessToken 넣어준다.
-        axios.defaults.headers.common['Authorization'] = res.data.accessToken;
         console.log(res);
         commit('USER_LOGIN', res);
+        commit('SAVE_LOGIN_INFO');
         alert("로그인 되었습니다!");
         router.push('/'); //홈으로 이동
       }
@@ -53,15 +64,34 @@ const actions = {
   userLogout({ commit }) {
     axios.post("/users/logout").then((res) => {
       commit('USER_LOGOUT')
+      commit('RESET_LOGIN_INFO')
       console.log(res.data)
-      //헤더 access token 없애준다.
-      axios.defaults.headers.common['Authorization'] = null;
+
       alert("로그아웃되었습니다. 다음에 또 만나요 ^____^")
       router.push('/'); //홈으로 이동
 
     })
 
   },
+
+  //로그인 정보 가져오기
+  getLoginInfo({ commit }) {
+    commit('GET_LOGIN_INFO')
+  },
+
+  //토큰 재발급
+  refreshToken() {
+    axios
+      .post("/users/refresh", JSON.stringify(state.loginUser.userNo))
+      .then((res) => {
+        console.log(res);
+        if (res.data.message === "success") {
+          alert("refresh성공");
+        }
+      });
+  },
+
+
   getNickname({ commit }, value) {
     commit(USER.SET_NICKNAME, value);
   },
@@ -90,7 +120,6 @@ const mutations = {
     state.loginUser.userNo = payload.data.userNo;
     state.loginUser.userNickname = payload.data.userNickname;
     state.loginUser.userGrade = payload.data.userGrade;
-    state.token = payload.data.accessToken;
   },
   //로그아웃
   USER_LOGOUT(state) {
@@ -100,7 +129,36 @@ const mutations = {
       userNickname: "",
       userGrade: ""
     }
-  }
+  },
+  //쿠키에 로그인 정보 저장
+  SAVE_LOGIN_INFO(state) {
+    VueCookies.set("login.userNo", state.loginUser.userNo, '30m');
+    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30m');
+    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30m');
+    VueCookies.set("isLogin", state.isLogin, '30m');
+  },
+  //쿠키에 있는 로그인 정보 읽어오기
+  GET_LOGIN_INFO(state) {
+    if (VueCookies.get("login.userNo") != null) {
+      state.loginUser.userNo = VueCookies.get("login.userNo")
+    }
+    if (VueCookies.get("login.userNickname") != null) {
+      state.loginUser.userNickname = VueCookies.get("login.userNickname")
+    }
+    if (VueCookies.get("login.userGrade") != null) {
+      state.loginUser.userGrade = VueCookies.get("login.userGrade")
+    }
+    if (VueCookies.get("isLogin") != null) {
+      state.isLogin = VueCookies.get("isLogin")
+    }
+  },
+  //쿠키에 있는 로그인 정보 삭제
+  RESET_LOGIN_INFO() {
+    VueCookies.remove("login.userNo");
+    VueCookies.remove("login.userNickname");
+    VueCookies.remove("login.userGrade");
+    VueCookies.remove("isLogin");
+  },
 };
 
 export default {

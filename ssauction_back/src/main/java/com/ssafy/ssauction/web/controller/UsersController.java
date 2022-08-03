@@ -129,11 +129,11 @@ public class UsersController {
         //userEmail로 DB에 저장된 user정보 불러옴
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
-        //비밀번호가 올바르게 입력됐다면면
+        //비밀번호가 올바르게 입력됐다면
 //       if (passwordEncoder.matches(userPwd, user.getUserPwd())) { 이 부분은 passwordEncorder 설정 후 교체 예정
         if (userPwd.equals(user.getUserPwd())) {
 
-            //리스트에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
+            //맵에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("userEmail", user.getUserEmail());
             userMap.put("userNickname", user.getUserNickname());
@@ -144,19 +144,26 @@ public class UsersController {
             String accessToken = jwtTokenProvider.createAccessToken(userMap);
             String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
             //result에 정보 담아준다.
-            result.put("accessToken", accessToken);
-            result.put("refreshToken", refreshToken);
             result.put("userNo", user.getUserNo());
             result.put("userNickname", user.getUserNickname());
             result.put("userGrade", user.getUserGrade());
             usersService.updateRefreshToken(user.getUserNo(), refreshToken); //token db 저장
 
-
+            //access token 쿠키에 담아줌
             Cookie cookie = new Cookie("accessToken", accessToken);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
+            cookie.setMaxAge(30);
             res.addCookie(cookie);
+
+            //refresh token 쿠키에 담아줌
+            Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+            refreshCookie.setPath("/");
+            refreshCookie.setHttpOnly(true);
+            refreshCookie.setSecure(true);
+            refreshCookie.setMaxAge(60 * 60 * 24 * 3);
+            res.addCookie(refreshCookie);
 
 
             //success 메시지 담아준다.
@@ -175,12 +182,21 @@ public class UsersController {
 
     @PostMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout(HttpServletResponse res) {
+        //access token 제거
         Cookie cookie = new Cookie("accessToken", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         res.addCookie(cookie);
+
+        //refresh token
+        Cookie recookie = new Cookie("refreshToken", null);
+        recookie.setHttpOnly(true);
+        recookie.setSecure(false);
+        recookie.setMaxAge(0);
+        recookie.setPath("/");
+        res.addCookie(recookie);
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", SUCCESS);
@@ -194,16 +210,32 @@ public class UsersController {
 
     //refresh token으로 access token 재발급
     @PostMapping("/refresh")
-    public ResponseEntity<Map<String, Object>> validateRefreshToken(@RequestBody String userEmail) {
+    public ResponseEntity<Map<String, Object>> validateRefreshToken(@RequestBody Long userNo, HttpServletResponse res) {
+
         HashMap<String, Object> result = new HashMap<>();
         //refresh token 유효성 검사 후 유효하다면 새로운 access token 생성
-        String newAccessToken = jwtTokenProvider.validateRefreshToken(userEmail);
+        String newAccessToken = jwtTokenProvider.validateRefreshToken(userNo);
         HttpStatus status = null;
 
         //새로운 access token 이 생성됐다면
         if (newAccessToken != null) {
+
+            //기존 access token 쿠기 삭제하고
+            Cookie cookie = new Cookie("accessToken", null);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(false);
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            res.addCookie(cookie);
+            //새로운 token 쿠키로 등록
+            Cookie newCookie = new Cookie("accessToken", newAccessToken);
+            newCookie.setPath("/");
+            newCookie.setHttpOnly(true);
+            newCookie.setSecure(true);
+            res.addCookie(newCookie);
+
+            result.put("new", newAccessToken);
             //access token 결과로 넣는다.
-            result.put("accessToken", newAccessToken);
             result.put("message", SUCCESS);
             status = HttpStatus.ACCEPTED;
         }

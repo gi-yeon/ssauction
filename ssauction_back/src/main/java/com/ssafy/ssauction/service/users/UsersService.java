@@ -56,6 +56,13 @@ public class UsersService {
         return new UsersAuthResponseDto(entity);
     }
 
+    public UsersAuthResponseDto findByUserNo(Long userNo) {
+        Users entity = usersRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+
+        return new UsersAuthResponseDto(entity);
+    }
+
     public Users findEntityById(Long userNo) {
 
         return usersRepository.findById(userNo).get();

@@ -46,8 +46,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .cors()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and() //세션 사용하지 않음
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 사용하지 않음
+                .and()
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()

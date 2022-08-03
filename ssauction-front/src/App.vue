@@ -5,21 +5,24 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue'
-import SideBar from '@/components/SideBar.vue'
+import NavBar from "@/components/NavBar.vue";
+import SideBar from "@/components/SideBar.vue";
 
 export default {
   name: "App",
-  components: {NavBar, SideBar},
+  components: { NavBar, SideBar },
+  mounted() {
+    this.$store.dispatch("user/getLoginInfo");
+  },
 };
 </script>
 
 <style>
 @font-face {
-  font-family:'NanumSquareRoundB';
-  src: url('assets/font/NanumSquareRoundB.ttf') format('truetype');
+  font-family: "NanumSquareRoundB";
+  src: url("assets/font/NanumSquareRoundB.ttf") format("truetype");
   font-weight: 300;
-  color: #f6f6f6
+  color: #f6f6f6;
 }
 
 #app {

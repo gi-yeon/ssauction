@@ -17,11 +17,13 @@
         ><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"
       /></router-link>
       &nbsp; &nbsp;
-      <!--로그인 한 상태-->
+      <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
       <b v-if="user.isLogin">
         {{ user.loginUser.userNickname }}님 반갑습니다*^^*
       </b>
       <button v-if="user.isLogin" @click="logout">logout</button>
+      <!--테스트용 refresh-->
+      <button @click="refresh">refresh</button>
     </div>
   </div>
 </template>
@@ -32,11 +34,15 @@ import { mapState } from "vuex";
 export default {
   name: "NavBar",
   computed: {
-    ...mapState(["user", ["isLogin"]]),
+    ...mapState(["user"]),
   },
   methods: {
     logout() {
       this.$store.dispatch("user/userLogout");
+    },
+    refresh() {
+      console.log(this.user.loginUser.userNo);
+      this.$store.dispatch("user/refreshToken", this.user.loginUser.userNo);
     },
   },
 };
