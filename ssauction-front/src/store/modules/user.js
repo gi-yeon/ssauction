@@ -4,6 +4,7 @@ import router from "@/router";
 import VueCookies from "vue-cookies";
 
 
+
 const state = {
   //로그인 한 유저의 정보
   loginUser: {
@@ -14,9 +15,9 @@ const state = {
   //로그인 여부
   isLogin: false,
   //access token
-  accessToken: "",
+  accessToken: null,
   //refresh token
-  refreshtoken: "",
+  refreshToken: null,
 };
 
 const getters = {
@@ -35,9 +36,6 @@ const getters = {
   refreshToken: (state) => {
     return `${state.refreshToken}`;
   },
-  // userInfo: (state) => {
-  //   return `'닉네임' : ${state.nickname}, '유저번호' : ${state.userNo}, '등급' : ${state.grade}`;
-  // },
 };
 
 const actions = {
@@ -52,7 +50,7 @@ const actions = {
         alert("로그인 되었습니다!");
         router.push('/'); //홈으로 이동
       }
-      //success 메시지가 뜨지 않았다면
+      //success 메시지가 뜨지 않았다면 (fail)
       else {
         alert("아이디 또는 비밀번호가 일치하지 않습니다.");
         router.push({ name: 'userLogin' });
@@ -124,6 +122,8 @@ const mutations = {
   //로그아웃
   USER_LOGOUT(state) {
     state.isLogin = false;
+    state.accessToken = null;
+    state.refreshToken = null;
     state.loginUser = {
       userNo: "",
       userNickname: "",
@@ -152,6 +152,7 @@ const mutations = {
       state.isLogin = VueCookies.get("isLogin")
     }
   },
+
   //쿠키에 있는 로그인 정보 삭제
   RESET_LOGIN_INFO() {
     VueCookies.remove("login.userNo");

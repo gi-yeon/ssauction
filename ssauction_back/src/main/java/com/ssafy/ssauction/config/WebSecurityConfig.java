@@ -55,7 +55,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/swagger*/**", "/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
-                        "/webjars/**", "/swagger.json", "/users/login", "/users/logout", "/users/join", "/users/refresh").permitAll()
+                        "/webjars/**", "/swagger.json", "/users/login", "/users/logout", "/users/join", "/users/refresh", "/users/token").permitAll()
                 //해당 경로는 ADMIN만 허용 (test용)
                 .antMatchers("/users/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용

@@ -22,8 +22,6 @@
         {{ user.loginUser.userNickname }}님 반갑습니다*^^*
       </b>
       <button v-if="user.isLogin" @click="logout">logout</button>
-      <!--테스트용 refresh-->
-      <button @click="refresh">refresh</button>
     </div>
   </div>
 </template>
@@ -39,10 +37,6 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("user/userLogout");
-    },
-    refresh() {
-      console.log(this.user.loginUser.userNo);
-      this.$store.dispatch("user/refreshToken", this.user.loginUser.userNo);
     },
   },
 };
