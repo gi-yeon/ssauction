@@ -82,16 +82,19 @@ public class HousesController {
     public ResponseEntity<List<HousesItemsResponseDto>> searchAllBySeller(@PathVariable Long sellerNo) {
         Users user = usersService.findEntityById(sellerNo);
         List<Items> itemList=user.getSellItems();
-
+        HousesResponseDto hr = null;
+        List<ItemImgsResponseDto> iir = null;
         List<HousesItemsResponseDto> result = new ArrayList<>();
         for (Items item : itemList) {
             ItemsResponseDto ir = new ItemsResponseDto(item);
             Houses house = item.getHouse();
-            HousesResponseDto hr = new HousesResponseDto(house);
-            List<ItemImgs> itemImgs = item.getImages();
-            List<ItemImgsResponseDto> iir = new ArrayList<>();
-            for (ItemImgs i : itemImgs) {
-                iir.add(new ItemImgsResponseDto(i));
+            if (house != null) {
+                hr = new HousesResponseDto(house);
+                List<ItemImgs> itemImgs = item.getImages();
+                iir = new ArrayList<>();
+                for (ItemImgs i : itemImgs) {
+                    iir.add(new ItemImgsResponseDto(i));
+                }
             }
             result.add(new HousesItemsResponseDto(ir, iir, hr));
         }
