@@ -1,25 +1,31 @@
 <template>
   <nav-bar></nav-bar>
-  <side-bar></side-bar>
-  <router-view />
+  <div class="container">
+    <div class="row">
+      <side-bar class="col-xs-1"></side-bar>
+      <div class="col-xs-11">
+        <router-view />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue'
-import SideBar from '@/components/SideBar.vue'
+import NavBar from "@/components/NavBar.vue";
+import SideBar from "@/components/SideBar.vue";
 
 export default {
   name: "App",
-  components: {NavBar, SideBar},
+  components: { NavBar, SideBar },
 };
 </script>
 
 <style>
 @font-face {
-  font-family:'NanumSquareRoundB';
-  src: url('assets/font/NanumSquareRoundB.ttf') format('truetype');
+  font-family: "NanumSquareRoundB";
+  src: url("assets/font/NanumSquareRoundB.ttf") format("truetype");
   font-weight: 300;
-  color: #f6f6f6
+  color: #f6f6f6;
 }
 
 #app {

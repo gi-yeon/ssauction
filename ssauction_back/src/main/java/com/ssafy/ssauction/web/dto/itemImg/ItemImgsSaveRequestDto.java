@@ -15,12 +15,13 @@ public class ItemImgsSaveRequestDto {
     private Long itemNo;
     private String itemImgName;
     private String itemImgUri;
-
+    private Boolean isMain;
     @Builder
-    public ItemImgsSaveRequestDto(Long itemNo,String itemImgName, String itemImgUri) {
+    public ItemImgsSaveRequestDto(Long itemNo,String itemImgName, Boolean isMain, String itemImgUri) {
         this.itemNo=itemNo;
         this.itemImgName=itemImgName;
         this.itemImgUri=itemImgUri;
+        this.isMain=isMain;
     }
 
     @Override
@@ -36,6 +37,7 @@ public class ItemImgsSaveRequestDto {
         ItemImgs temp=ItemImgs.builder()
                 .itemImgName(itemImgName)
                 .itemImgUri(itemImgUri)
+                .isMain(isMain)
                 .item(item)
                 .build();
         return temp;

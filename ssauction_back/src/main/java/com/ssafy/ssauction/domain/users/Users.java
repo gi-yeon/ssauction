@@ -46,7 +46,7 @@ public class Users implements UserDetails {
     @Column(name = "user_phone_no", nullable = false, length = 11)
     private String userPhoneNo;
 
-    @Column(name = "user_nickname", length = 16)
+    @Column(name = "user_nickname", length = 16,nullable = false,unique = true)
     private String userNickname;
 
     @Column(name = "user_desc", length = 200)
@@ -66,6 +66,7 @@ public class Users implements UserDetails {
 
     @Column(name = "user_role")
     @Setter
+    @Enumerated(EnumType.STRING)
     private Authority authority;
     @Setter
     @Column(name = "refresh_token")
@@ -124,10 +125,6 @@ public class Users implements UserDetails {
         this.results = results;
         this.likes = likes;
         this.refreshToken = refreshToken;
-
-//        this.roles = roles;
-        // 토큰 완성 되면 지우기
-        // 원본
         this.authority=authority;
     }
 
