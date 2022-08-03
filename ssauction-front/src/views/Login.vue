@@ -24,8 +24,8 @@
     <button @click="login" width="500px" class="btn_yellow">로그인</button>
     <br />
     <br />
-    <button class="btn_pink">아이디 찾기</button> &nbsp;
-    <button class="btn_pink">비밀번호 찾기</button>
+    <button @click="findid()" class="btn_pink">아이디 찾기</button>&nbsp;
+    <button @click="resetpwd()" class="btn_pink">비밀번호 재설정</button>&nbsp;
     <br />
     <br />
     <br />
@@ -49,7 +49,6 @@
 
 <script>
 import axios from "@/utils/axios";
-// import router from '@/router'
 
 export default {
   name: "SsauctionLogin",
@@ -65,6 +64,14 @@ export default {
   mounted() {},
 
   methods: {
+    findid() {
+      this.$router.push('/findid')
+    },
+
+    resetpwd() {
+      this.$router.push('/resetpwd')
+    },
+
     login: function () {
       console.log("login start");
       console.log(this.loginEmail);
