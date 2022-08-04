@@ -1,21 +1,21 @@
 package com.ssafy.ssauction.service.board;
 
 import com.ssafy.ssauction.domain.board.Board;
-import com.ssafy.ssauction.domain.board.BoardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ssafy.ssauction.web.dto.board.BoardDtoReq;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+import java.util.Map;
 
-@Service
-public class BoardService {
+public interface BoardService {
 
-    @Autowired
-    private BoardRepository boardRepository;
+    Page<Board> boardList(PageRequest pageRequest);
 
-    public Page<Board> boardList(PageRequest pageRequest) {
-        return boardRepository.findAll(pageRequest);
-    }
+    Board boardDetail(long boardNo);
+
+    Board boardRegister(BoardDtoReq boardDtoReq);
+
+    boolean boardModify(BoardDtoReq boardDtoReq);
+
+    boolean boardDelete(long boardNo);
 }

@@ -10,15 +10,16 @@
         > -->
         공지사항  자유 게시판
       </div>
-      <div class="register">
-        <button class="rgboardbtn">글쓰기</button>
-      </div>
+
     </div>
     <div class="line"></div>
   </div>
 </template>
 
 <script>
+export default {
+  name: "BoardChoice"
+}
 </script>
 
 <style>

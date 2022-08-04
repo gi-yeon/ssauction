@@ -18,7 +18,7 @@
         ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
       /></router-link>
       <br /><br /><br /><br />
-      <router-link to="board"
+      <router-link to="/board"
         ><img src="@\assets\imgs\home.png" alt="Board" class="icon"
       /></router-link>
       <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />

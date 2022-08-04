@@ -31,4 +31,6 @@ public class Board {
 
     @Column(name = "user_no", nullable = false)
     private Long userNo;
+    @Column(name = "user_nickname", nullable = false)
+    private String userNickname;
 }
