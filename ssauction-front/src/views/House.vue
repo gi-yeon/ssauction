@@ -1,6 +1,4 @@
 <template>
-  <br />
-  <br />
   <h1>경매방 만들기</h1>
   <div class="row house-input">
     <div class="col-4 label">
@@ -212,9 +210,14 @@ export default {
         })
         .then((data) => {
           console.log(data);
+          // this.sendFile();
+          this.itemImages.splice(0);
+          alert("생성 완료");
+          this.$route.push({ name: "Home" });
+        })
+        .catch((error) => {
+          alert(error);
         });
-      // this.sendFile();
-      this.itemImages.splice(0);
     },
 
     deleteImg(index) {

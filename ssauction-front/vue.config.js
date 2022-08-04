@@ -5,4 +5,6 @@ module.exports = defineConfig({
     proxy: "http://localhost:8080",
   },
   transpileDependencies: true,
+  lintOnSave: false,
+  outputDir: '../ssauction_back/src/main/resources/dist'
 });
