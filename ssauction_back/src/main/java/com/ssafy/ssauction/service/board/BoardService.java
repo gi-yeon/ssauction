@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface BoardService {
 
-    Page<Board> boardList(PageRequest pageRequest);
+    Page<Board> boardList(PageRequest pageRequest, String searchType, String search);
 
     Board boardDetail(long boardNo);
 

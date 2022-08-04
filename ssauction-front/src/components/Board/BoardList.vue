@@ -2,6 +2,10 @@
     <div class="table">
         <h1>BoardList</h1>
         <div class="register">
+            <div class="boardSearch">
+                <input type="text" name="" id="">
+                <button>검색</button>
+            </div>
             <router-link to="regist">
                 <button>글쓰기</button>
             </router-link>
@@ -63,14 +67,15 @@ export default {
             pages: [],
             first: Boolean,
             last: Boolean,
-
+            searchType: "",
+            search: ""
         });
 
         const getArticles = (p) => {
-            getPage(p, 10);
+            getPage(p, 10, state.searchType, state.search);
         }
 
-        const getPage = (p, s) => {
+        const getPage = (p, s, searchT, search) => {
             if (p < 0) {
                 alert("첫 페이지 리스트 입니다");
                 return;
@@ -84,6 +89,8 @@ export default {
                 params: {
                     page: p,
                     size: s,
+                    searchType: searchT,
+                    search: search
                 },
             })
             .then(({data}) => {

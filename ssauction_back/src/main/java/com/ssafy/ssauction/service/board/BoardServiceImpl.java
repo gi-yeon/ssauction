@@ -24,8 +24,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<Board> boardList(PageRequest pageRequest) {
-        return boardRepository.findAll(pageRequest);
+    public Page<Board> boardList(PageRequest pageRequest, String searchType, String search) {
+        if(searchType == null)
+            return boardRepository.findAll(pageRequest);
+        else if("title".equals(searchType))
+            return boardRepository.findByBoardTitleContaining(pageRequest, search);
+        else
+            return boardRepository.findByUserNickname(pageRequest, search);
     }
 
     @Override

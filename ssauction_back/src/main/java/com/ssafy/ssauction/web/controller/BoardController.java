@@ -27,11 +27,13 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> boardList(@RequestParam("page") int page,
-                                                         @RequestParam("size") int size) {
+                                                         @RequestParam("size") int size,
+                                                         @RequestParam(value = "searchType", required = false) String searchType,
+                                                         @RequestParam(value = "search", required = false) String search) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardNo").descending());
-        resultMap.put("list", boardService.boardList(pageRequest));
+        resultMap.put("list", boardService.boardList(pageRequest, searchType, search));
         return new ResponseEntity<>(resultMap, status);
     }
 
