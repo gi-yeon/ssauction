@@ -18,12 +18,13 @@
           </p>
           <p>
             <label>Session</label>
-            <input
+            {{ $route.params.houseTitle }}
+            <!-- <input
               v-model="mySessionId"
               class="form-control"
               type="text"
               required
-            />
+            /> -->
           </p>
           <p class="text-center">
             <button class="btn btn-lg btn-success" @click="joinSession()">
@@ -104,9 +105,9 @@
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import MainVideo from "@/components/MainVideo.vue";
-import ParticipantVideo from "./components/ParticipantVideo.vue";
-import ChatMessage from "./components/ChatMessage.vue";
-import InSessionPanel from "./components/InSessionPanel.vue";
+import ParticipantVideo from "@/components/ParticipantVideo.vue";
+import ChatMessage from "@/components/ChatMessage.vue";
+import InSessionPanel from "@/components/InSessionPanel.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -120,6 +121,9 @@ export default {
     ParticipantVideo,
     ChatMessage,
     InSessionPanel,
+  },
+  mounted() {
+    this.mySessionId = this.$route.params.houseNo;
   },
   data() {
     return {
@@ -184,6 +188,7 @@ export default {
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken().then((token) => {
+        console.log(`received token : ${token}`);
         this.session
           .connect(token, { clientData: this.myUserName })
           .then(() => {
@@ -266,7 +271,7 @@ export default {
             })
           )
           .then((response) => response.data)
-          .then((data) => resolve(data[0]))
+          .then((data) => resolve(data.token))
           .catch((error) => reject(error.response));
       });
     },

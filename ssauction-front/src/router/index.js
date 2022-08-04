@@ -10,6 +10,7 @@ import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
 import Zzim from "@/views/Zzim.vue";
 import Settings from "@/views/Settings.vue";
+import Sessions from "@/views/Sessions.vue";
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/sessions/:houseNo",
+    name: "Sessions",
+    component: Sessions,
   },
   {
     path: "/zzim",

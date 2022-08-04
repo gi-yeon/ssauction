@@ -1,5 +1,5 @@
 <template>
-  <div class="container main-house">
+  <div class="container main-house" @click="joinSession">
     <div class="row">
       <div class="col-6">
         <img
@@ -22,6 +22,7 @@
         <div class="row" v-if="!isSelling">
           <div>{{ this.hot.house.houseDesc }}</div>
         </div>
+        <div><button @click="like">찜하기</button></div>
       </div>
     </div>
   </div>
@@ -49,6 +50,20 @@ export default {
       this.imgNameList.push(img.itemImgUri);
     }
     console.log(this.imgNameList);
+  },
+  methods: {
+    joinSession() {
+      console.log(`houseNo : ${this.hot.house.houseNo}`);
+      // this.$router.push({
+      //   name: "Sessions",
+      //   params: { houseNo: this.hot.house.houseNo },
+      // });
+      window.open(
+        `http://localhost:8083/sessions/${this.hot.house.houseNo}?isInSession=true`,
+        "_blank"
+      );
+      this.$route.push({ name: "sessionRedirect" });
+    },
   },
 };
 </script>

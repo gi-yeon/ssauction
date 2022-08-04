@@ -1,5 +1,5 @@
 <template>
-  <div class="container" @click="joinSession">
+  <div class="container">
     <div class="row">
       <div class="row">
         <h1>Hot Deals</h1>
@@ -49,7 +49,7 @@ export default {
       console.log(this.hotDeals);
     });
   },
-  methods: { joinSession() {} },
+  methods: {},
 };
 </script>
 <style>
