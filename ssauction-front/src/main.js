@@ -11,10 +11,10 @@ import axios from "axios";
 const app = createApp(App);
 app.use(router).use(store).use(VCalendar).mount("#app");
 
-//axios interceptor
-//토큰을 확인하여 refresh는 유효하고 access는 만료되었으면 refresh를 호출한다.
-//권한이 없다면 권한없음 alert
-//access, refresh token 모두가 만료됐다면 재로그인 alert
+// axios interceptor
+// 토큰을 확인하여 refresh는 유효하고 access는 만료되었으면 refresh를 호출한다.
+// 권한이 없다면 권한없음 alert
+// access, refresh token 모두가 만료됐다면 재로그인 alert
 axios.interceptors.response.use(
     (response) => {
         return response;

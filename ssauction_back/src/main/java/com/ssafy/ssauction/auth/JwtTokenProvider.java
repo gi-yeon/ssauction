@@ -26,8 +26,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Autowired
-    private UsersService usersService;
 
     //secretkey
     private Key accessKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -120,20 +118,11 @@ public class JwtTokenProvider {
     }
 
     //refreshToken의 유효성 검증 ->유효하다면 새로운 accessToken 생성, 유효하지 않다면 null 반환
-    public String validateRefreshToken(Long userNo) {
-        String refreshToken = usersService.findByUserNo(userNo).getUserRefreshToken();
-
+    public String validateRefreshToken(String refreshToken, Map<String, Object> userMap) {
 
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(keyForAccessToken).build().parseClaimsJws(refreshToken);
             if (!claims.getBody().getExpiration().before(new Date())) {
-
-                UsersAuthResponseDto user = usersService.findByUserNo(userNo);
-
-                Map<String, Object> userMap = new HashMap<>();
-                userMap.put("userEmail", user.getUserEmail());
-                userMap.put("userNickname", user.getUserNickname());
-                userMap.put("authority", user.getAuthority());
 
                 String newAccessToken = createAccessToken(userMap);
                 return newAccessToken;

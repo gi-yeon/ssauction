@@ -26,8 +26,10 @@ import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
 import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.http.Path;
 
@@ -57,6 +59,9 @@ public class UsersController {
 
     private final HousesService housesService;
     private final LikesService likesService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/{userNo}")
 
@@ -131,8 +136,7 @@ public class UsersController {
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
         //비밀번호가 올바르게 입력됐다면
-//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) { 이 부분은 passwordEncorder 설정 후 교체 예정
-        if (userPwd.equals(user.getUserPwd())) {
+       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
 
             //맵에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
             Map<String, Object> userMap = new HashMap<>();
@@ -216,8 +220,19 @@ public class UsersController {
 
         HashMap<String, Object> result = new HashMap<>();
 
+        //userNo로 db에서 refresh token 가져온다.
+        String refreshToken = usersService.findByUserNo(userNo).getUserRefreshToken();
+
+        //userNo로 email, nickname, authorigy 가져와서 map에 넣어준다.
+        UsersAuthResponseDto user = usersService.findByUserNo(userNo);
+
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("userEmail", user.getUserEmail());
+        userMap.put("userNickname", user.getUserNickname());
+        userMap.put("authority", user.getAuthority());
+
         //refresh token 유효성 검사 후 유효하다면 새로운 access token 생성
-        String newAccessToken = jwtTokenProvider.validateRefreshToken(userNo);
+        String newAccessToken = jwtTokenProvider.validateRefreshToken(refreshToken, userMap);
         HttpStatus status = null;
 
         //새로운 access token 이 생성됐다면
