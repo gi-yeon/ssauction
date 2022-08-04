@@ -106,10 +106,6 @@ public class Users implements UserDetails {
                  String userPhoneNo, String userNickname,
                  String userDesc, String userComment,
                  int userGrade, Timestamp userUpdateDate,
-                 List<Items> sellItems,
-                 List<Items> purchaseItems,
-                 List<ResultOrders> results,
-                 List<Likes> likes, String refreshToken,
                  Authority authority) {
         this.userEmail = userEmail;
         this.userPwd = userPwd;
@@ -120,11 +116,6 @@ public class Users implements UserDetails {
         this.userGrade = userGrade;
         this.userRegDate = new Timestamp(System.currentTimeMillis());
         this.userUpdateDate = userUpdateDate;
-        this.sellItems = sellItems;
-        this.purchaseItems = purchaseItems;
-        this.results = results;
-        this.likes = likes;
-        this.refreshToken = refreshToken;
         this.authority=authority;
     }
 
@@ -177,6 +168,27 @@ public class Users implements UserDetails {
         return true;
     }
 
-
+    @Override
+    public String toString() {
+        return "Users{" +
+                "userNo=" + userNo +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                ", userPhoneNo='" + userPhoneNo + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userDesc='" + userDesc + '\'' +
+                ", userComment='" + userComment + '\'' +
+                ", userGrade=" + userGrade +
+                ", userRegDate=" + userRegDate +
+                ", userUpdateDate=" + userUpdateDate +
+                ", authority=" + authority +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", userImgs=" + userImgs +
+                ", sellItems=" + sellItems +
+                ", purchaseItems=" + purchaseItems +
+                ", results=" + results +
+                ", likes=" + likes +
+                '}';
+    }
 }
 

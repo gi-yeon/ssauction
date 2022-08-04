@@ -46,7 +46,8 @@
               <div class="card">
                 <div class="card-body">
                   <div>
-                    {{ index.itemMainImg }}
+                    <img v-bind:src="'data:image/png;base64,'+index.itemMainImg"/>
+                    
                     <br />
                     {{ index.item.itemName }}
                     <br />
@@ -118,7 +119,7 @@ export default {
         .get("/houses/profile/" + this.userNo)
         .then(({ data }) => {
           console.log(data);
-
+          console.log(data[0]);
           if (data === null) {
             console.log("null data");
           } else {

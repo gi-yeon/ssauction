@@ -78,26 +78,6 @@ public class Items {
     @Setter
     private List<Categories> categories = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "Items{" +
-                "itemNo=" + itemNo +
-                ", itemName='" + itemName + '\'' +
-                ", itemModelNo='" + itemModelNo + '\'' +
-                ", itemQuality=" + itemQuality +
-                ", itemDealStatus=" + itemDealStatus +
-                ", itemDesc='" + itemDesc + '\'' +
-                ", itemStartPrice=" + itemStartPrice +
-                ", itemFinalPrice=" + itemFinalPrice +
-                ", itemRegTime=" + itemRegTime +
-                ", itemUpdateTime=" + itemUpdateTime +
-                ", seller=" + seller +
-                ", buyer=" + buyer +
-                ", house=" + house +
-                ", categories=" + categories +
-                '}';
-    }
-
     @Builder
     public Items(String itemName, String itemModelNo, Quality itemQuality, DealStatus itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice, Users seller, Users buyer, Houses house, List<ItemImgs> images) {
         this.itemName = itemName;

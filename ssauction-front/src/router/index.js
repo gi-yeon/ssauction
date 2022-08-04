@@ -8,7 +8,7 @@ import ResetPwd from "@/views/ResetPwd.vue";
 import ResetPwd2 from "@/views/ResetPwd2.vue";
 import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
-import Zzim from "@/views/Zzim.vue";
+import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
 import ProfileUpdate from "@/views/ProfileUpdate.vue"
 const routes = [
@@ -66,7 +66,7 @@ const routes = [
   {
     path: "/zzim",
     name: "Zzim",
-    component: Zzim,
+    component: Like,
   },
   {
     path: "/settings",

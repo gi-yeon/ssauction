@@ -20,15 +20,24 @@ import com.ssafy.ssauction.web.dto.itemImg.ItemImgsResponseDto;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONValue;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,37 +52,52 @@ public class HousesController {
     private final StorageService storageService;
 
     @GetMapping("/profile/{userNo}")
-    public ResponseEntity<MyHouseResponseDto> myAllHouses(@PathVariable Long userNo){
-        System.out.println(userNo);
-        Users user=usersService.findEntityById(userNo);
-        List<ItemInfoResponseDto> sellList=new ArrayList<>();
-        for(Items item:user.getSellItems()){
-            String uri=item.getImages().get(0).getItemImgUri();
-            sellList.add(new ItemInfoResponseDto(SellItemResponseDto.builder().item(item).build(),
-                    serveFile(uri,"item")));
+    public ResponseEntity<MyHouseResponseDto> myAllHouses(@PathVariable Long userNo) {
+        System.out.println("1 here is myallhouses");
+        Users user = usersService.findEntityById(userNo);
+        List<ItemInfoResponseDto> sellList = new ArrayList<>();
+        for (Items item : user.getSellItems()) {
+            String uri = item.getImages().get(0).getItemImgUri();
+            System.out.println(uri);
+            byte[] transform=null;
+            System.out.println("2 under transform");
+            try {
+                System.out.println("3 before file");
+                File file=new File(System.getProperty("user.dir")+"/imgs/item/"+uri);
+                System.out.println("3-1 "+file);
+                FileInputStream inputStream=new FileInputStream(file);
+                System.out.println("3-2 "+inputStream);
+                transform=new byte[(int)file.length()];
+                inputStream.read(transform);
+                inputStream.close();
+                System.out.println("4 after file");
+                System.out.println("5 ioexception");
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+            System.out.println("6 "+Arrays.toString(transform));
+            if (transform != null)
+                sellList.add(new ItemInfoResponseDto(SellItemResponseDto.builder().item(item).build(),
+                        transform));
         }
-        System.out.println(sellList.toString());
-        MyHouseResponseDto resDto=null;
-        if(sellList!=null)
-            resDto=new MyHouseResponseDto(sellList,user.getPurchaseItems());
-        if(resDto==null)
+        System.out.println("7 "+sellList.toString());
+        MyHouseResponseDto resDto = null;
+        if (sellList != null)
+            resDto = new MyHouseResponseDto(sellList, user.getPurchaseItems());
+        if (resDto == null)
             return null;
-        return new ResponseEntity<>(resDto,HttpStatus.OK);
-    }
-
-    public Resource serveFile(String filename, String type) {
-        Resource file = storageService.loadAsResource(filename, type);
-        return file;
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(resDto);
     }
 
     // swagger 2.x 버전에서는 여러 개의 파일을 한 번에 전송하는 요청을 지원하지 않는다ㅠㅠ
     @PostMapping
     public ResponseEntity<String> createHouse(
-            @RequestPart(value="itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
-            @RequestPart(value="houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
-            @RequestPart(value="files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
+            @RequestPart(value = "itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
+            @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
+            @RequestPart(value = "files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
         Users user = usersService.findEntityById(itemDto.getUserNo());          //  itemDto에서 현재 사용자의 UserNo를 통해 현재 user를 찾는다.
-                                                                                //      나중에 JWT 인증 정보로 대체해야 한다.
+        //      나중에 JWT 인증 정보로 대체해야 한다.
         System.out.println(itemDto.toString());
         Items item = itemsService.save(user, itemDto);                          //  item에 유저 정보와 item 정보를 등록한다.
         user.getSellItems().add(item);                                          //  user.SellItems에도 해당 item의 정보를 추가한다.
@@ -90,7 +114,7 @@ public class HousesController {
                             + originalFileName                                  //              원본 파일 이름을 합친다.
                             .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
                     storageService.store(file, saveFileName, "item");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
-                    ItemImgs img=itemImgsService.save(item, originalFileName, saveFileName);   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
+                    ItemImgs img = itemImgsService.save(item, originalFileName, saveFileName);   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
                     item.getImages().add(img);
                 }
             }
@@ -131,8 +155,8 @@ public class HousesController {
 //    }
 
     @DeleteMapping("{houseNo}")
-    public ResponseEntity<String> deleteHouse(@PathVariable Long houseNo){
+    public ResponseEntity<String> deleteHouse(@PathVariable Long houseNo) {
         housesService.delete(houseNo);
-        return new ResponseEntity<>("deleted",HttpStatus.OK);
+        return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
 }
