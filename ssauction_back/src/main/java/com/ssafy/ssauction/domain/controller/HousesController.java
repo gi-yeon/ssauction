@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.web.controller;
+package com.ssafy.ssauction.domain.controller;
 
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;

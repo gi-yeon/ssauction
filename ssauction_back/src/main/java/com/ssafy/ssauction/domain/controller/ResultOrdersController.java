@@ -1,13 +1,11 @@
-package com.ssafy.ssauction.web.controller;
+package com.ssafy.ssauction.domain.controller;
 
 import com.ssafy.ssauction.domain.houses.Houses;
-import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
-import com.ssafy.ssauction.service.likes.LikesService;
+import com.ssafy.ssauction.service.resultOrders.ResultOrdersService;
 import com.ssafy.ssauction.service.users.UsersService;
-import com.ssafy.ssauction.web.dto.likes.LikesSaveDto;
 import com.ssafy.ssauction.web.dto.resultOrders.ResultOrdersSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,18 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-public class LikesController {
+public class ResultOrdersController {
     private final UsersService usersService;
     private final HousesService housesService;
-    private final LikesService likesService;
+    private final ResultOrdersService resultOrdersService;
 
-    @PostMapping("/likes")
-    public Long save(@RequestBody LikesSaveDto requestDto){
+    @PostMapping("/results")
+    public Long save(@RequestBody ResultOrdersSaveDto requestDto){
         Users user =usersService.findEntityById(requestDto.getUserNo());
         Houses house=housesService.findEntityById(requestDto.getHouseNo());
-        Likes like=likesService.save(user,house,requestDto);
-        user.getLikes().add(like);
-        house.getLikes().add(like);
-        return like.getLikeNo();
+        ResultOrders resultOrders=resultOrdersService.save(user,house,requestDto);
+        user.getResults().add(resultOrders);
+        house.getResults().add(resultOrders);
+        return resultOrders.getOrderNo();
     }
+
 }

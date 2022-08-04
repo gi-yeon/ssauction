@@ -98,91 +98,91 @@
         <option value="기타물품">기타물품</option>
       </select> -->
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr1" value="전자기기">
+        <input class="form-check-input" type="checkbox" id="ctgr1" value="전자기기" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr1">전자기기</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr2" value="생활가전">
+        <input class="form-check-input" type="checkbox" id="ctgr2" value="생활가전" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr2">생활가전</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr3" value="가구/인테리어">
+        <input class="form-check-input" type="checkbox" id="ctgr3" value="가구/인테리어" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr3">가구/인테리어</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr4" value="생활/주방">
+        <input class="form-check-input" type="checkbox" id="ctgr4" value="생활/주방" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr4">생활/주방</label>
       </div>
       <br/>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr5" value="여성명품">
+        <input class="form-check-input" type="checkbox" id="ctgr5" value="여성명품" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr5">여성명품</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr6" value="여성의류/신발">
+        <input class="form-check-input" type="checkbox" id="ctgr6" value="여성의류/신발" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr6">여성의류/신발</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr7" value="여성잡화">
+        <input class="form-check-input" type="checkbox" id="ctgr7" value="여성잡화" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr7">여성잡화</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr8" value="뷰티/미용">
+        <input class="form-check-input" type="checkbox" id="ctgr8" value="뷰티/미용" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr8">뷰티/미용</label>
       </div>
       <br/>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr9" value="남성명품">
+        <input class="form-check-input" type="checkbox" id="ctgr9" value="남성명품" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr9">남성명품</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr10" value="남성의류/신발">
+        <input class="form-check-input" type="checkbox" id="ctgr10" value="남성의류/신발" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr10">남성의류/신발</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr11" value="남성잡화">
+        <input class="form-check-input" type="checkbox" id="ctgr11" value="남성잡화" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr11">남성잡화</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr12" value="스포츠/레저">
+        <input class="form-check-input" type="checkbox" id="ctgr12" value="스포츠/레저" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr12">스포츠/레저</label>
       </div>
       <br/>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr13" value="취미/게임/음반">
+        <input class="form-check-input" type="checkbox" id="ctgr13" value="취미/게임/음반" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr13">취미/게임/음반</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr14" value="도서">
+        <input class="form-check-input" type="checkbox" id="ctgr14" value="도서" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr14">도서</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr15" value="티켓/입장권">
+        <input class="form-check-input" type="checkbox" id="ctgr15" value="티켓/입장권" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr15">티켓/입장권</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr16" value="상품권/교환권">
+        <input class="form-check-input" type="checkbox" id="ctgr16" value="상품권/교환권" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr16">상품권/교환권</label>
       </div>
       <br/>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr17" value="유아동">
+        <input class="form-check-input" type="checkbox" id="ctgr17" value="유아동" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr17">유아동</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr18" value="가공식품">
+        <input class="form-check-input" type="checkbox" id="ctgr18" value="가공식품" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr18">가공식품</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr19" value="반려동물용품">
+        <input class="form-check-input" type="checkbox" id="ctgr19" value="반려동물용품" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr19">반려동물용품</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr20" value="식물">
+        <input class="form-check-input" type="checkbox" id="ctgr20" value="식물" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr20">식물</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="ctgr21" value="기타물품">
+        <input class="form-check-input" type="checkbox" id="ctgr21" value="기타물품" v-model="ctgr.ctgrName">
         <label class="form-check-label" for="ctgr21">기타물품</label>
       </div>
     </div>
@@ -262,10 +262,13 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        itemCategory: null,
         itemSellerNo: null,
         itemDealStatus : "SELL",
-        userNo: 1,
+        userNo: 1,  // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
+      },
+      ctgr: {
+        itemNo:1,
+        ctgrName: [],
       },
       house: {
         houseTitle: null,
@@ -297,20 +300,25 @@ export default {
     createHouse() {
       // this.house.houseAucTime = this.houseAucTime;
       console.log(this.house);
+      console.log(this.item);
+      console.log(this.ctgr);
 
       // file은 multipart/form-data 형식으로 전송되어야 한다.
       // multipart/form-data 형식으로 요청하면 JSON을 바로 body에 넣는 방식을 사용할 수 없다.
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
       const housejson = JSON.stringify(this.house);
       const itemjson = JSON.stringify(this.item);
+      const ctgrjson = JSON.stringify(this.ctgr);
       const houseblob = new Blob([housejson], { type: "application/json" });
       const itemblob = new Blob([itemjson], { type: "application/json" });
+      const ctgrblob = new Blob([ctgrjson], {type: "application/json"});
 
       // html의 form 태그를 이용해 submit하면 formData 객체와 multipart/form-data 형식으로 전달된다.
       // form 태그를 이용하고 있지 않지만 이용한 것처럼 요청하기 위해 새 formData 객체를 만든다.
       let formData = new FormData();
       formData.append("itemDto", itemblob);
       formData.append("houseDto", houseblob);
+      formData.append("ctgrDto", ctgrblob);
 
       // Spring에서 여러 file을 자동으로 배열로 받기 위해서는 Json 리스트를 그대로 전달하면 안된다.
       // 같은 이름을 가진 여러 개의 file을 전송한다.
@@ -322,6 +330,14 @@ export default {
         .post("/houses", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
+        .then((data) => {
+          console.log(data);
+        });
+
+      console.log(ctgrjson);
+
+      axios
+        .post("/categories", ctgrjson)
         .then((data) => {
           console.log(data);
         });
