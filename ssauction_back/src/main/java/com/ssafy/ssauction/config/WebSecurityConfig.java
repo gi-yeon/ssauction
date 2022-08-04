@@ -50,14 +50,15 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .and() //세션 사용하지 않음
                 .headers().frameOptions().disable()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/swagger*/**", "/v2/api-docs",
-                        "/swagger-resources/**",
-                        "/swagger-ui.html",
-                        "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh").permitAll()
-                .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
-                .and()
+//                .authorizeRequests()
+//                .antMatchers("/swagger*/**", "/v2/api-docs",
+//                        "/swagger-resources/**",
+//                        "/swagger-ui.html",
+//                        "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh").permitAll()
+//                .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
+//                .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)
+
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")

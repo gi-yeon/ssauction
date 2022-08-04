@@ -1,16 +1,12 @@
 package com.ssafy.ssauction.service.users;
 
+import com.ssafy.ssauction.domain.userImages.UserImgs;
+import com.ssafy.ssauction.domain.userImages.UserImgsRepository;
 import com.ssafy.ssauction.domain.users.Authority;
 import com.ssafy.ssauction.domain.users.Users;
 
 import com.ssafy.ssauction.domain.users.UsersRepository;
-import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
-import com.ssafy.ssauction.web.dto.users.UsersAuthResponseDto;
-import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
-import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
-import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
+import com.ssafy.ssauction.web.dto.users.*;
 
 import java.util.NoSuchElementException;
 
@@ -19,24 +15,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-
 @RequiredArgsConstructor
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
-
+    private final UserImgsRepository userImgsRepository;
     @Transactional
     public Users save(UsersSaveRequestDto requestDto) {
-        return usersRepository.save(requestDto.toEntity());
+        Users user=usersRepository.save(requestDto.toEntity());
+        user.setAuthority(Authority.ROLE_USER);
+        return user;
     }
 
     @Transactional
-    public Long updateProfile(Long userNo, UsersUpdateProfileRequestDto requestDto) {
+    public void updateInfo(Long userNo, UsersInfoUpdateRequestDto requestDto) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         users.updateProfile(requestDto.getUserComment(), requestDto.getUserDesc());
-        return userNo;
     }
+    @Transactional
+    public String updateNickname(Long userNo, UsersNameUpdateRequestDto requestDto) {
+        Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        try {
+            Users others=usersRepository.findByUserEmail(requestDto.getUserNickname()).get();
+        }catch (NoSuchElementException e){
+            users.updateNickname(requestDto.getUserNickname());
+            return "success";
+        }
+        return "fail";
+    }
+
     @Transactional
     public Long updateRefreshToken(Long userNo, String refreshToken) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -50,7 +57,10 @@ public class UsersService {
     }
 
     public UsersAuthResponseDto findByUserEmail(String userEmail) {
-        Users entity = usersRepository.findByUserEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        System.out.println("\n\n\n---------------------------"+userEmail+"--------------------------\n\n\n");
+        Users entity = usersRepository.findByUserEmail(userEmail).get();
+        //orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        System.out.println(entity.toString());
 
         return new UsersAuthResponseDto(entity);
     }
@@ -97,20 +107,27 @@ public class UsersService {
         System.out.println(requestDto.toString());
         Users user = null;
         try {
-            if (requestDto.getAuthority() == Authority.ROLE_USER) {
-                user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd()).get();
-            }
+            user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd()).get();
         } catch (NoSuchElementException e) {
             System.out.println("없음");
             e.getMessage();
         }
         UsersResponseDto responseDto = null;
 
-        if (user != null) {
-            responseDto=UsersResponseDto.builder()
+        if (user != null&&user.getAuthority()==Authority.ROLE_USER) {
+            responseDto= UsersResponseDto.builder()
                     .entity(user)
                     .build();
         }
         return responseDto;
+    }
+
+    public UserInfoResponseDto getInfo(Long userNo) {
+        Users user=usersRepository.findById(userNo).get();
+        UserImgs img=userImgsRepository.findByUser(user).get();
+        return UserInfoResponseDto.builder()
+                .user(user)
+                .img(img)
+                .build();
     }
 }

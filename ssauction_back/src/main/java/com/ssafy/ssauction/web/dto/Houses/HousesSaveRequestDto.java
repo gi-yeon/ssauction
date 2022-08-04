@@ -15,13 +15,15 @@ public class HousesSaveRequestDto {
     private String houseTitle;
     private Timestamp houseAucTime;
     private int houseStatus;
+    private String houseDesc;
     private Long itemNo;
 
     @Builder
-    public HousesSaveRequestDto(String houseTitle, Timestamp houseAucTime, int houseStatus, Long itemNo) {
+    public HousesSaveRequestDto(String houseTitle, Timestamp houseAucTime, int houseStatus, String houseDesc, Long itemNo) {
         this.houseTitle = houseTitle;
         this.houseAucTime=houseAucTime;
         this.houseStatus = houseStatus;
+        this.houseDesc=houseDesc;
         this.itemNo = itemNo;
     }
 
@@ -31,6 +33,7 @@ public class HousesSaveRequestDto {
                 .houseAucTime(houseAucTime)
                 .houseTitle(houseTitle)
                 .houseStatus(houseStatus)
+                .houseDesc(houseDesc)
                 .item(item)
                 .build();
     }

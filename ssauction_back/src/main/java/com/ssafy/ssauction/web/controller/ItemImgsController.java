@@ -16,12 +16,12 @@ public class ItemImgsController {
     private final ItemsService itemsService;
     private final ItemImgsService itemImgsService;
 
-    @PostMapping("/items/imgs")
-    public Long save(@RequestBody ItemImgsSaveRequestDto requestDto){
-        Items item=itemsService.findEntityById(requestDto.getItemNo());
-        ItemImgs img= itemImgsService.save(item,requestDto);
-        item.getImages().add(img);
-        return img.getImgNo();
-    }
+//    @PostMapping("/items/imgs")
+//    public Long save(@RequestBody ItemImgsSaveRequestDto requestDto){
+//        Items item=itemsService.findEntityById(requestDto.getItemNo());
+//        ItemImgs img= itemImgsService.save(item,requestDto);
+//        item.getImages().add(img);
+//        return img.getImgNo();
+//    }
 
 }
