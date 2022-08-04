@@ -1,6 +1,5 @@
 <template>
-  <br />
-  <br />
+  <div style="margin-top: 100px">
   <h1>{{ userNickname }}님의 프로필</h1>
   <br />
   <br />
@@ -8,6 +7,8 @@
   <br />
   <h3>유저등급 : {{ userGrade }}</h3>
   <br />
+
+  </div>
 </template>
 
 <script>

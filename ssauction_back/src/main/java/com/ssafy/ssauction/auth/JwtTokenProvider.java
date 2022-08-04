@@ -32,9 +32,10 @@ public class JwtTokenProvider {
     //secretkey
     private Key accessKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    //유효시간 30분
-//    private long tokenValidTime = 1000 * 60 * 30L;
-    private long tokenValidTime = 1000L * 30;
+//    유효시간 30분
+    private long tokenValidTime = 1000 * 60 * 30L;
+
+//    private long tokenValidTime = 1000L * 30; 30초
 
     private final UserDetailsService userDetailsService;
 

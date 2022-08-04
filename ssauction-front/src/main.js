@@ -1,5 +1,9 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
 import router from "./router";
 import 'v-calendar/dist/style.css';
 import VCalendar from 'v-calendar';
@@ -9,7 +13,8 @@ import store from "./store";
 
 
 const app = createApp(App);
-app.use(router).use(store).use(VCalendar).mount("#app");
+app.use(router).use(store).use(VCalendar).use(ElementPlus).mount("#app");
+
 
 // axios.interceptors.request.use(async function (config) {
 //     // Do something before request is sent

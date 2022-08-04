@@ -1,6 +1,5 @@
 <template>
-  <br />
-  <br>
+<div style="margin-top: 100px">
   <h1>아이디 찾기</h1>
   <p>
     휴대폰 인증을 통해 아이디(이메일)을 찾을 수 있습니다. 
@@ -25,7 +24,7 @@
         <button class="btn_pink" @click="verifyCode">아이디 찾기</button>
     </div>
   </div>
-  
+  </div>
 </template>
 
 <script>
@@ -94,14 +93,4 @@
 
 
 <style>
-.box{
-  width: 800px;
-  /* border: 2.5px solid;
-  border-radius: 5px; */
-  align-content: center;
-  border-block-color: rgb(134, 133, 133);
-  padding-top: 30px;
-  padding-bottom : 50px;
-  margin: auto;
-}
 </style>

@@ -1,7 +1,7 @@
 // 비밀번호 수정 (휴대폰 인증 후)
 
 <template>
-  <br />
+  <div style="margin-top: 100px">
   <h1>비밀번호 재설정</h1>
   <br />
 
@@ -14,6 +14,7 @@
   <input id="user_password2" type="password" v-model="password2" />
   <h1>{{ password2 }}</h1>
   <button @click="ResetPwd2">Reset Password</button>
+  </div>
 </template>
 
 <script>

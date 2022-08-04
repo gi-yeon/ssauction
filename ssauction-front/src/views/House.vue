@@ -1,6 +1,5 @@
 <template>
-  <br />
-  <br />
+<div style="margin-top: 100px">
   <h1>경매방 만들기</h1>
   <div class="row house-input">
     <div class="col-4 label">
@@ -119,8 +118,11 @@
       <input class="form-control" type="text" />
     </div>
   </div>
-  <div class="row house-input">
-    <button @click="createHouse">경매방 생성</button>
+  <br>
+  <div class="house-input">
+    <button @click="createHouse" class="btn_pink">경매방 생성</button>
+  </div>
+
   </div>
 </template>
 
