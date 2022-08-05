@@ -5,10 +5,11 @@ import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.sql.Timestamp;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class UsersSaveRequestDto {
     private String userEmail;
@@ -20,6 +21,7 @@ public class UsersSaveRequestDto {
     private String userNickname;
     private Authority authority;
 
+
     @Builder
     public UsersSaveRequestDto(String userEmail, String userPwd, String userPhoneNo, String userNickname) {
         this.userEmail = userEmail;
@@ -29,7 +31,16 @@ public class UsersSaveRequestDto {
         this.authority=Authority.ROLE_USER;
     }
 
-
+    @Override
+    public String toString() {
+        return "UsersSaveRequestDto{" +
+                "userEmail='" + userEmail + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                ", userPhoneNo='" + userPhoneNo + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", authority=" + authority +
+                '}';
+    }
 
     public Users toEntity(){
         return Users.builder()

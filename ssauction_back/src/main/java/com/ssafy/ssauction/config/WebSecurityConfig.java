@@ -55,12 +55,16 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/swagger*/**", "/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
-                        "/webjars/**", "/swagger.json", "/users/login", "/users/logout", "/users/join", "/users/refresh", "/users/findId/**", "/users/sendSMS/**").permitAll()
+                        "/webjars/**", "/swagger.json", "/users/login",
+                        "/users/logout", "/users/join", "/users/refresh",
+                        "/users/token", "/users/findId/**", "/users/resetPwd/**",
+                        "/users/sendSMS/**").permitAll()
                 //해당 경로는 ADMIN만 허용 (test용)
-                .antMatchers("/users/**").hasAnyRole("ADMIN")
+                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)
+
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")

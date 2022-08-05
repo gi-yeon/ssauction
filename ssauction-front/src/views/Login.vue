@@ -24,8 +24,8 @@
     <button @click="login" width="500px" class="btn_yellow">로그인</button>
     <br />
     <br />
-    <button @click="findid()" class="btn_pink">아이디 찾기</button>&nbsp;
-    <button @click="resetpwd()" class="btn_pink">비밀번호 재설정</button>&nbsp;
+    <button class="btn_pink">아이디 찾기</button> &nbsp;
+    <button class="btn_pink">비밀번호 찾기</button>
     <br />
     <br />
     <br />
@@ -74,7 +74,6 @@ export default {
       this.$router.push('/resetpwd')
     },
     login() {
-      console.log(this.loginInfo);
       //user 모듈의 userLogin으로 보낸다.
       this.$store.dispatch("user/userLogin", this.loginInfo);
     },

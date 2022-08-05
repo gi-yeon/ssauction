@@ -35,10 +35,14 @@
       <router-link to="/signup" v-if="!user.isLogin"
         ><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"
       /></router-link>
-      &nbsp; &nbsp; -->
-
-
-  <!-- </div> -->
+      &nbsp; &nbsp;
+      <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
+      <b v-if="user.isLogin">
+        {{ user.loginUser.userNickname }}님 반갑습니다*^^*
+      </b>
+      <button v-if="user.isLogin" @click="logout">logout</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -52,10 +56,6 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("user/userLogout");
-    },
-    refresh() {
-      console.log(this.user.loginUser.userNo);
-      this.$store.dispatch("user/refreshToken", this.user.loginUser.userNo);
     },
   },
 };

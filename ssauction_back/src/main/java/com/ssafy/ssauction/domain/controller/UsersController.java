@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.web.controller;
+package com.ssafy.ssauction.domain.controller;
 
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
@@ -7,6 +7,7 @@ import com.ssafy.ssauction.auth.JwtTokenProvider;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
 
+import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
@@ -14,30 +15,26 @@ import com.ssafy.ssauction.service.userImages.UserImgsService;
 
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
-import com.ssafy.ssauction.web.dto.users.*;
 
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
 import com.ssafy.ssauction.web.dto.likes.LikesSaveDto;
-import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
-import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
-import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
+import com.ssafy.ssauction.web.dto.users.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 
+import java.util.*;
+import javax.naming.spi.ObjectFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,15 +54,17 @@ public class UsersController {
     private final HousesService housesService;
     private final LikesService likesService;
 
-    @GetMapping("/{userNo}")
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-    public UsersResponseDto findById(@PathVariable Long userNo) {
-        return usersService.findById(userNo);
+    @GetMapping("/profile/{userNo}")
+    public UserInfoResponseDto findById(@PathVariable Long userNo) {
+        return usersService.getInfo(userNo);
     }
 
     @PostMapping("/join")
     public String save(@RequestBody UsersSaveRequestDto requestDto) {
-
+        System.out.println(requestDto.toString());
         Users user = usersService.save(requestDto);
         Long userImgs = userImgsService.save(user);
         System.out.println(userImgs);
@@ -75,8 +74,10 @@ public class UsersController {
         return "OK";
     }
 
-    @PutMapping("/img/{userNo}")
+    @PutMapping("/profile/img/{userNo}")
     public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
+        System.out.println(userNo);
+        System.out.println(requestDto.toString());
         return userImgsService.update(userNo, requestDto);
     }
 
@@ -86,13 +87,6 @@ public class UsersController {
     public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo) {
         return usersService.findByPhoneNo(userPhoneNo);
     }
-//    @GetMapping("/users/findId/{userPhoneNo}")
-//    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
-//        UsersFindIdDto findIdDto= usersService.findByPhoneNo(userPhoneNo);
-//        if(findIdDto==null)
-//            return null;
-//        return findIdDto;
-//    }
 
     // 비밀번호 재설정
     // 아이디(이메일) + 전화번호를 이용해 비밀번호 재설정 구현
@@ -101,9 +95,23 @@ public class UsersController {
         return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
 
-    @PutMapping("/profile/{userNo}")
-    public Long updateProfile(@PathVariable Long userNo, @RequestBody UsersUpdateProfileRequestDto requestDto) {
-        return usersService.updateProfile(userNo, requestDto);
+    @PutMapping("/profile/info/{userNo}")
+    public ResponseEntity<String> updateInfo(@PathVariable Long userNo, @RequestBody UsersInfoUpdateRequestDto requestDto) {
+        System.out.println(userNo);
+        System.out.println(requestDto.toString());
+        try {
+            usersService.updateInfo(userNo, requestDto);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+
+    @PutMapping("/profile/name/{userNo}")
+    public ResponseEntity<UsersNameResponseDto> updateNickname(@PathVariable Long userNo, @RequestBody UsersNameUpdateRequestDto requestDto) {
+        System.out.println(requestDto.getUserNickname());
+        String result = usersService.updateNickname(userNo, requestDto);
+        return new ResponseEntity<>(UsersNameResponseDto.builder().userNickname(requestDto.getUserNickname()).build(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userNo}")
@@ -118,6 +126,7 @@ public class UsersController {
     }
 
     //로그인
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo, HttpServletResponse res) {
         String userEmail = loginInfo.getUserEmail();
@@ -130,8 +139,7 @@ public class UsersController {
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
         //비밀번호가 올바르게 입력됐다면
-//       if (passwordEncoder.matches(userPwd, user.getUserPwd())) { 이 부분은 passwordEncorder 설정 후 교체 예정
-        if (userPwd.equals(user.getUserPwd())) {
+       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
 
             //맵에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
             Map<String, Object> userMap = new HashMap<>();
@@ -143,18 +151,19 @@ public class UsersController {
             //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
             String accessToken = jwtTokenProvider.createAccessToken(userMap);
             String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
+            usersService.updateRefreshToken(user.getUserNo(), refreshToken); //token db 저장
+
             //result에 정보 담아준다.
             result.put("userNo", user.getUserNo());
             result.put("userNickname", user.getUserNickname());
             result.put("userGrade", user.getUserGrade());
-            usersService.updateRefreshToken(user.getUserNo(), refreshToken); //token db 저장
 
             //access token 쿠키에 담아줌
             Cookie cookie = new Cookie("accessToken", accessToken);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
-            cookie.setMaxAge(30);
+            cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
             res.addCookie(cookie);
 
             //refresh token 쿠키에 담아줌
@@ -162,8 +171,8 @@ public class UsersController {
             refreshCookie.setPath("/");
             refreshCookie.setHttpOnly(true);
             refreshCookie.setSecure(true);
-            refreshCookie.setMaxAge(60 * 60 * 24 * 3);
-            res.addCookie(refreshCookie);
+            refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
+           res.addCookie(refreshCookie);
 
 
             //success 메시지 담아준다.
@@ -190,7 +199,7 @@ public class UsersController {
         cookie.setPath("/");
         res.addCookie(cookie);
 
-        //refresh token
+        //refresh token 제거
         Cookie recookie = new Cookie("refreshToken", null);
         recookie.setHttpOnly(true);
         recookie.setSecure(false);
@@ -213,8 +222,20 @@ public class UsersController {
     public ResponseEntity<Map<String, Object>> validateRefreshToken(@RequestBody Long userNo, HttpServletResponse res) {
 
         HashMap<String, Object> result = new HashMap<>();
+
+        //userNo로 db에서 refresh token 가져온다.
+        String refreshToken = usersService.findByUserNo(userNo).getUserRefreshToken();
+
+        //userNo로 email, nickname, authorigy 가져와서 map에 넣어준다.
+        UsersAuthResponseDto user = usersService.findByUserNo(userNo);
+
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("userEmail", user.getUserEmail());
+        userMap.put("userNickname", user.getUserNickname());
+        userMap.put("authority", user.getAuthority());
+
         //refresh token 유효성 검사 후 유효하다면 새로운 access token 생성
-        String newAccessToken = jwtTokenProvider.validateRefreshToken(userNo);
+        String newAccessToken = jwtTokenProvider.validateRefreshToken(refreshToken, userMap);
         HttpStatus status = null;
 
         //새로운 access token 이 생성됐다면
@@ -227,14 +248,15 @@ public class UsersController {
             cookie.setMaxAge(0);
             cookie.setPath("/");
             res.addCookie(cookie);
-            //새로운 token 쿠키로 등록
+
+            //새로운 access token 쿠키로 등록
             Cookie newCookie = new Cookie("accessToken", newAccessToken);
             newCookie.setPath("/");
             newCookie.setHttpOnly(true);
             newCookie.setSecure(true);
+            newCookie.setMaxAge(60 * 30);
             res.addCookie(newCookie);
 
-            result.put("new", newAccessToken);
             //access token 결과로 넣는다.
             result.put("message", SUCCESS);
             status = HttpStatus.ACCEPTED;
@@ -247,6 +269,26 @@ public class UsersController {
 
         return new ResponseEntity<Map<String, Object>>(result, status);
 
+    }
+
+    //쿠키에서 토큰 가져다 반환
+    @GetMapping("/token")
+    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req){
+        Map<String, Object> map = new HashMap<>();
+        HttpStatus status = null;
+
+        //token 추출해서 map에 넣어준다.
+        Cookie[] list = req.getCookies();
+        for(Cookie cookie : list){
+            if(cookie.getName().equals("accessToken")) {
+                map.put("accessToken", cookie.getValue());
+            }else if(cookie.getName().equals("refreshToken")){
+                map.put("refreshToken", cookie.getValue());
+            }
+        }
+        status = HttpStatus.ACCEPTED;
+
+        return new ResponseEntity<>(map, status);
     }
 
     @PostMapping("/likes")

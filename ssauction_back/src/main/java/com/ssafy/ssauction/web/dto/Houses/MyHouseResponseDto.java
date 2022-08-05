@@ -1,7 +1,7 @@
 package com.ssafy.ssauction.web.dto.Houses;
-
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class HousesSearchAllResponseDto {
-    private List<Items> itemsList;
-    private List<Houses> housesList;
+public class MyHouseResponseDto {
+    private List<ItemInfoResponseDto> sellItemsList;
+    private List<Items> boughtItemsList;
 }

@@ -1,4 +1,4 @@
-<!--권한(role)으로 걸러지는지 테스트-->
+<!--권한(role)으로 걸러지는지 테스트 / ADMIN만 허용-->
 <template>
   <div>
     <button @click="getProfile">getProfile</button>

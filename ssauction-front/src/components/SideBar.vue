@@ -40,4 +40,11 @@
   height: 40px;
   width: 40px;
 }
+.target {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.target::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
 </style>
