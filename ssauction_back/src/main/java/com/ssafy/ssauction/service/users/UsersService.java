@@ -16,6 +16,8 @@ import java.util.NoSuchElementException;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +28,21 @@ import java.util.NoSuchElementException;
 public class UsersService {
     private final UsersRepository usersRepository;
 
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+
     @Transactional
     public Users save(UsersSaveRequestDto requestDto) {
-        return usersRepository.save(requestDto.toEntity());
+
+        UsersSaveRequestDto user = new UsersSaveRequestDto();
+        user.setUserEmail(requestDto.getUserEmail());
+        // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
+        user.setUserPwd(passwordEncoder.encode(requestDto.getUserPwd()));
+        user.setUserPhoneNo(requestDto.getUserPhoneNo());
+        user.setUserNickname(requestDto.getUserNickname());
+        return usersRepository.save(user.toEntity());
     }
 
     @Transactional
@@ -93,7 +107,7 @@ public class UsersService {
         Users users;
         try {
             users = usersRepository.findByUserPhoneNo(userPhoneNo).get();
-            users.updatePwd(resetPwdDto.getUserPwd());
+            users.updatePwd(passwordEncoder.encode(resetPwdDto.getUserPwd()));
         } catch (NoSuchElementException e) {
             System.out.println("없음");
             return null;

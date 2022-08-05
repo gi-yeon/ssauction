@@ -5,10 +5,11 @@ import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.sql.Timestamp;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class UsersSaveRequestDto {
     private String userEmail;
@@ -19,6 +20,7 @@ public class UsersSaveRequestDto {
 
     private String userNickname;
     private Authority authority;
+
 
     @Builder
     public UsersSaveRequestDto(String userEmail, String userPwd, String userPhoneNo, String userNickname) {

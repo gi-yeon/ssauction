@@ -67,7 +67,6 @@ export default {
 
   methods: {
     login() {
-      console.log(this.loginInfo);
       //user 모듈의 userLogin으로 보낸다.
       this.$store.dispatch("user/userLogin", this.loginInfo);
     },

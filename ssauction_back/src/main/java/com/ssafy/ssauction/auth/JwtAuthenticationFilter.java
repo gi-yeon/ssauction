@@ -36,21 +36,4 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         chain.doFilter(request, response);
 
     }
-
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//
-//        String token = jwtTokenProvider.resolveToken(request);
-//
-//        //토큰이 유효하다면
-//
-//        if (token != null && jwtTokenProvider.validateToken(token)) {
-//            //유저 정보 받아와서 securitycontext에 인가된 객체 저장
-//            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//            filterChain.doFilter(request, response);
-//
-//        }
-//    }
 }
