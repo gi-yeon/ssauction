@@ -360,37 +360,37 @@
 <script>
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-import { ref } from "vue";
+// import { ref } from "vue";
 
-const value1 = ref("");
-const value2 = ref("");
+// const value1 = ref("");
+// const value2 = ref("");
 
-const shortcuts = [
-  {
-    text: "오늘",
-    value: new Date(),
-  },
-  {
-    text: "내일",
-    value: () => {
-      const date = new Date();
-      date.setTime(date.getTime() + 3600 * 1000 * 24);
-      return date;
-    },
-  },
-  {
-    text: "다음 주",
-    value: () => {
-      const date = new Date();
-      date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
-      return date;
-    },
-  },
-];
+// const shortcuts = [
+//   {
+//     text: "오늘",
+//     value: new Date(),
+//   },
+//   {
+//     text: "내일",
+//     value: () => {
+//       const date = new Date();
+//       date.setTime(date.getTime() + 3600 * 1000 * 24);
+//       return date;
+//     },
+//   },
+//   {
+//     text: "다음 주",
+//     value: () => {
+//       const date = new Date();
+//       date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+//       return date;
+//     },
+//   },
+// ];
 
-const disabledDate = (time: Date) => {
-  return time.getTime() > Date.now();
-};
+// const disabledDate = (time: Date) => {
+//   return time.getTime() > Date.now();
+// };
 
 export default {
   name: "SsauctionHouse",
@@ -404,6 +404,8 @@ export default {
         itemStartPrice: null,
         itemDesc: null,
         itemSellerNo: null,
+        itemDealStatus : "SELL",
+        userNo: this.$store.state.user.userNo,
         itemDealStatus: "SELL",
         userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },

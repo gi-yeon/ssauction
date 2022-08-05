@@ -10,7 +10,7 @@
         <side-bar id="sidebar" v-if="!isInSession"></side-bar>
       </el-aside>
 
-      <el-main id="conitainer">
+      <el-main id="container">
         <router-view></router-view>
       </el-main>
 
@@ -35,6 +35,7 @@ export default {
     const URLParams = new URL(window.location).searchParams;
     console.log(URLParams.get("isInSession"));
     this.isInSession = URLParams.get("isInSession");
+
     //쿠키에서 logininfo를 가져온다.
     this.$store.dispatch("user/getLoginInfo");
   },

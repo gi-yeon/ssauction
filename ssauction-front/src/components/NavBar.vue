@@ -1,47 +1,39 @@
 <template>
-    <div>
-      <div class="brand" style="d-flex justify-content-start padding-left:15px">SSAUCTION</div>
-       
-      <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
-        <b v-if="user.isLogin" style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;">
-          {{ user.loginUser.userNickname }}님 반갑습니다😎
-        </b>&nbsp; &nbsp;
-        <a v-if="user.isLogin" @click="logout" style="margin-right: 15px;"><img src="@\assets\imgs\logout.png" alt="Logout" class="icon2"></a>&nbsp; &nbsp;
-
-      <!-- 로그아웃 한 상태에서는 로그인, 회원가입 버튼만 노출됨 -->
-         <div v-else style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;">
-        <router-link to="/login"><img src="@\assets\imgs\login.png" alt="Login" class="icon2"></router-link> &nbsp; &nbsp;
-        <router-link to="/signup"><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"></router-link> &nbsp; &nbsp;
-        </div>
+  <div>
+    <div class="brand" style="d-flex justify-content-start padding-left:15px">
+      SSAUCTION
     </div>
 
+    <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
+    <b
+      v-if="user.isLogin"
+      style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;"
+    >
+      {{ user.loginUser.userNickname }}님 반갑습니다😎 </b
+    >&nbsp; &nbsp;
+    <a v-if="user.isLogin" @click="logout" style="margin-right: 15px"
+      ><img src="@\assets\imgs\logout.png" alt="Logout" class="icon2" /></a
+    >&nbsp; &nbsp;
 
-      <!--테스트용 refresh-->
-      <!-- <button @click="refresh">refresh</button>
-       -->
-      
-<!-- 
-    <div class="wrap">
-      <router-link to="/test">Test</router-link> &nbsp;
-      <router-link to="/findid">FindId</router-link> &nbsp;
-      <router-link to="/resetpwd">ResetPwd</router-link> &nbsp; -->
-      <!--권한설정 테스트용-->
-      <!-- <router-link to="/authorizationTest">authorizationTest</router-link>
-      &nbsp;
-      <router-link to="/login" v-if="!user.isLogin"
+    <!-- 로그아웃 한 상태에서는 로그인, 회원가입 버튼만 노출됨 -->
+    <div
+      v-else
+      style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;"
+    >
+      <router-link to="/login"
         ><img src="@\assets\imgs\login.png" alt="Login" class="icon2"
       /></router-link>
       &nbsp; &nbsp;
-      <router-link to="/signup" v-if="!user.isLogin"
+      <router-link to="/signup"
         ><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"
       /></router-link>
       &nbsp; &nbsp;
-      <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
-      <b v-if="user.isLogin">
-        {{ user.loginUser.userNickname }}님 반갑습니다*^^*
-      </b>
-      <button v-if="user.isLogin" @click="logout">logout</button>
     </div>
+    <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
+    <b v-if="user.isLogin">
+      {{ user.loginUser.userNickname }}님 반갑습니다*^^*
+    </b>
+    <button v-if="user.isLogin" @click="logout">logout</button>
   </div>
 </template>
 
@@ -62,8 +54,6 @@ export default {
 </script>
 
 <style>
-      
-
 .brand {
   /* display: inline; */
   font-size: 50px;

@@ -9,22 +9,16 @@ import ResetPwd from "@/views/ResetPwd.vue";
 import ResetPwd2 from "@/views/ResetPwd2.vue";
 import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
-import Zzim from "@/views/Zzim.vue";
+import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
+import ProfileUpdate from "@/views/ProfileUpdate.vue"
 import Sessions from "@/views/Sessions.vue";
-import ProfileUpdate from "@/views/ProfileUpdate.vue";
-import authorizationTest from "@/views/authorizationTest.vue";
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
-  },
-  {
-    path: "/authorizationTest",
-    name: "authorizationTest",
-    component: authorizationTest,
   },
   {
     path: "/login",
@@ -80,7 +74,7 @@ const routes = [
   {
     path: "/zzim",
     name: "Zzim",
-    component: Zzim,
+    component: Like,
   },
   {
     path: "/settings",

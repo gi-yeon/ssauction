@@ -22,6 +22,7 @@ app.use(router).use(store).use(VCalendar).use(ElementPlus).mount("#app");
 // access, refresh token 모두가 만료됐다면 재로그인 alert
 axios.interceptors.response.use(
     (response) => {
+        console.log("ok");
         return response;
     },
     async (error) => {
@@ -31,12 +32,12 @@ axios.interceptors.response.use(
         } = error;
         let accessToken = null; //access token
         let refreshToken = null; //refresh token
-
+        
+        console.log(status);
         //쿠키에서 token을 가져오는 api 호출하여 토큰 값에 담아줌
         await axios.get("/users/token").then(({ data }) => {
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
-
         })
 
         //access는 만료, refresh는 존재한다면

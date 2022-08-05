@@ -112,10 +112,6 @@ public class Users implements UserDetails {
                  String userPhoneNo, String userNickname,
                  String userDesc, String userComment,
                  int userGrade, Timestamp userUpdateDate,
-                 List<Items> sellItems,
-                 List<Items> purchaseItems,
-                 List<ResultOrders> results,
-                 List<Likes> likes, String refreshToken,
                  Authority authority) {
         this.userEmail = userEmail;
         this.userPwd = userPwd;
@@ -143,6 +139,7 @@ public class Users implements UserDetails {
     public void updateNickname(String userNickname){
         this.userNickname=userNickname;
     }
+
     // 비밀번호 재설정
     public void updatePwd(String userPwd) {
         this.userPwd = userPwd;
@@ -185,7 +182,27 @@ public class Users implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
+    @Override
+    public String toString() {
+        return "Users{" +
+                "userNo=" + userNo +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                ", userPhoneNo='" + userPhoneNo + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userDesc='" + userDesc + '\'' +
+                ", userComment='" + userComment + '\'' +
+                ", userGrade=" + userGrade +
+                ", userRegDate=" + userRegDate +
+                ", userUpdateDate=" + userUpdateDate +
+                ", authority=" + authority +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", userImgs=" + userImgs +
+                ", sellItems=" + sellItems +
+                ", purchaseItems=" + purchaseItems +
+                ", results=" + results +
+                ", likes=" + likes +
+                '}';
+    }
 }
 

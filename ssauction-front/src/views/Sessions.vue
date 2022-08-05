@@ -1,7 +1,6 @@
 <template>
   <div id="main-container" class="container">
     <join-session v-if="!session" @joinSession="joinSession" />
-
     <div class="row" id="session" v-if="session">
       <div id="session-header">
         <div class="col">
@@ -96,6 +95,9 @@ export default {
     InSessionPanel,
     JoinSession,
     SessionTimer,
+  },
+  mounted() {
+    this.mySessionId = this.$route.params.houseNo;
   },
   mounted() {
     this.mySessionId = this.$route.params.houseNo;

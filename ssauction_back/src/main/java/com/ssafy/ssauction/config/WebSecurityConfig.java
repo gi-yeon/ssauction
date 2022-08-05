@@ -58,7 +58,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         "/webjars/**", "/swagger.json", "/users/login",
                         "/users/logout", "/users/join", "/users/refresh",
                         "/users/token", "/users/findId/**", "/users/resetPwd/**",
-                        "/users/sendSMS/**")
+                        "/users/sendSMS/**","/houses/searchAll/**")
                 .permitAll()
                 // 해당 경로는 ADMIN만 허용 (test용)
                 .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
@@ -66,7 +66,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler)
                 .accessDeniedHandler(accessDeniedHandler)
-
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")

@@ -3,13 +3,13 @@
     <div class="row">
       <div class="row">
         <h1>Hot Deals</h1>
-        <div id="hotdeal-container">
+        <!-- <div id="hotdeal-container">
           <main-houses
             v-for="(hot, index) in hotDeals"
             :key="index"
             :hot="hot"
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import MainHouses from "@/components/MainHouses.vue";
-import axios from "@/utils/axios.js";
+//import axios from "@/utils/axios.js";
 
 function useUser() {
   const store = useStore();
@@ -41,15 +41,13 @@ export default {
   data() {
     return { hotDeals: null };
   },
-
   mounted() {
-    axios.get("/houses/searchAll/1").then((response) => {
-      console.log(response.data);
-      this.hotDeals = response.data;
-      console.log(this.hotDeals);
-    });
+    // axios.get("/houses/searchAll/1").then((response) => {
+    //   console.log(response.data);
+    //   this.hotDeals = response.data;
+    //   console.log(this.hotDeals);
+    // });
   },
-
   methods: {},
 };
 </script>

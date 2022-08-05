@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class ItemsSaveRequestDto {
     private String itemName;
     private String itemModelNo;
-
     private Quality itemQuality;
     private DealStatus itemDealStatus;
     private String itemDesc;
@@ -22,7 +21,6 @@ public class ItemsSaveRequestDto {
     private Long userNo;
 
     @Builder
-
     public ItemsSaveRequestDto(Long userNo, String itemName, String itemModelNo, Quality itemQuality,
             DealStatus itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice) {
         this.itemName = itemName;

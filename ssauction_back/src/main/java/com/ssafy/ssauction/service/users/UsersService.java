@@ -22,26 +22,21 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final UserImgsRepository userImgsRepository;
 
-    @Transactional
-    public Users saveImage(UsersSaveRequestDto requestDto) {
-        Users user = usersRepository.save(requestDto.toEntity());
-        user.setAuthority(Authority.ROLE_USER);
-        return user;
-    }
-
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @Transactional
     public Users save(UsersSaveRequestDto requestDto) {
 
-        UsersSaveRequestDto user = new UsersSaveRequestDto();
-        user.setUserEmail(requestDto.getUserEmail());
+        UsersSaveRequestDto userDto = new UsersSaveRequestDto();
+        userDto.setUserEmail(requestDto.getUserEmail());
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-        user.setUserPwd(passwordEncoder.encode(requestDto.getUserPwd()));
-        user.setUserPhoneNo(requestDto.getUserPhoneNo());
-        user.setUserNickname(requestDto.getUserNickname());
-        return usersRepository.save(user.toEntity());
+        userDto.setUserPwd(passwordEncoder.encode(requestDto.getUserPwd()));
+        userDto.setUserPhoneNo(requestDto.getUserPhoneNo());
+        userDto.setUserNickname(requestDto.getUserNickname());
+        Users user= usersRepository.save(userDto.toEntity());
+        user.setAuthority(Authority.ROLE_USER);
+        return user;
     }
 
     @Transactional
@@ -75,6 +70,7 @@ public class UsersService {
     }
 
     public UsersAuthResponseDto findByUserEmail(String userEmail) {
+
         System.out.println("\n\n\n---------------------------" + userEmail + "--------------------------\n\n\n");
         Users entity = usersRepository.findByUserEmail(userEmail).get();
         // orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -86,12 +82,10 @@ public class UsersService {
     public UsersAuthResponseDto findByUserNo(Long userNo) {
         Users entity = usersRepository.findByUserNo(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-
         return new UsersAuthResponseDto(entity);
     }
 
     public Users findEntityById(Long userNo) {
-
         return usersRepository.findById(userNo).get();
     }
 
@@ -132,8 +126,7 @@ public class UsersService {
         System.out.println(requestDto.toString());
         Users user = null;
         try {
-            user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd())
-                    .get();
+            user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd()).get();
         } catch (NoSuchElementException e) {
             System.out.println("없음");
             e.getMessage();

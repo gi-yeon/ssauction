@@ -14,10 +14,10 @@ import com.ssafy.ssauction.service.likes.LikesService;
 import com.ssafy.ssauction.service.userImages.UserImgsService;
 
 import com.ssafy.ssauction.service.users.UsersService;
+import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
-import com.ssafy.ssauction.web.dto.likes.LikesSaveDto;
 import com.ssafy.ssauction.web.dto.users.*;
 
 import lombok.RequiredArgsConstructor;
@@ -29,14 +29,12 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.*;
+
 import javax.naming.spi.ObjectFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @RequiredArgsConstructor
@@ -53,6 +51,7 @@ public class UsersController {
 
     private final HousesService housesService;
     private final LikesService likesService;
+
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -125,8 +124,7 @@ public class UsersController {
         return 1L;
     }
 
-    //로그인
-
+    //login
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo, HttpServletResponse res) {
         String userEmail = loginInfo.getUserEmail();
@@ -292,11 +290,10 @@ public class UsersController {
     }
 
     @PostMapping("/likes")
-    public ResponseEntity<String> createLikes(@RequestBody LikesSaveDto saveDto) {
+    public ResponseEntity<String> createLikes(@RequestBody LikesSaveRequestDto saveDto) {
         Users user = usersService.findEntityById(saveDto.getUserNo());
         Houses house = housesService.findEntityById(saveDto.getHouseNo());
-        ;
-        Likes like = likesService.save(user, house, saveDto);
+        Likes like = likesService.save(user, house);
         user.getLikes().add(like);
         house.getLikes().add(like);
         return new ResponseEntity<>("created", HttpStatus.OK);

@@ -4,35 +4,34 @@
       <div class="col-6">
         <img
           class="itemimg d-block m-3"
-          :src="`http://localhost:8080/file/item/${imgNameList[0]}`"
+          :src="'data:image/png;base64,'+this.like.itemImgList[0]"
           alt=""
         />
       </div>
       <div class="col-6">
-        <div class="row">{{ this.hot.house.houseTitle }}</div>
-        <div class="row">{{ this.hot.item.sellerNickname }}</div>
+        <div class="row">{{ this.like.house.houseTitle }}</div>
+        <div class="row">{{ this.like.item.sellerNickname }}</div>
         <div class="row" v-if="isSelling">{{ participantNum }}</div>
         <div class="row" v-if="!isSelling">
-          {{ this.hot.house.houseAucTime }}
+          {{ this.like.house.houseAucTime }}
         </div>
         <div class="row" v-if="isSelling">
           <div class="col">{{ houseAuctionCurrentPrice }}</div>
           <div class="col">{{ houseAuctionRemainingTime }}</div>
         </div>
         <div class="row" v-if="!isSelling">
-          <div>{{ this.hot.house.houseDesc }}</div>
+          <div>{{ this.like.house.houseDesc }}</div>
         </div>
-        <div><button @click="like">찜하기</button></div>
+        <div><button @click="like">찜 취소</button></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from '@/utils/axios';
 export default {
   components: {},
-  name: "MainHouses",
+  name: "LikeHouses",
 
   data() {
     return {
@@ -40,43 +39,26 @@ export default {
       houseAuctionCurrentPrice: 100,
       houseAuctionRemainingTime: "01:00",
       isSelling: false,
-      imgNameList: [],
-      userNo:0
     };
   },
   props: {
-    hot: Object,
+    like: Object,
   },
   mounted() {
-    for (let img of this.hot.itemImgList) {
-      this.imgNameList.push(img.itemImgUri);
-    }
-    console.log(this.imgNameList);
-    this.userNo=this.$store.state.user.userNo;
   },
   methods: {
     joinSession() {
-      console.log(`houseNo : ${this.hot.house.houseNo}`);
+      console.log(`houseNo : ${this.like.house.houseNo}`);
       // this.$router.push({
       //   name: "Sessions",
-      //   params: { houseNo: this.hot.house.houseNo },
+      //   params: { houseNo: this.like.house.houseNo },
       // });
       window.open(
-        `http://localhost:8083/sessions/${this.hot.house.houseNo}?isInSession=true`,
+        `http://localhost:8083/sessions/${this.like.house.houseNo}?isInSession=true`,
         "_blank"
       );
       this.$route.push({ name: "sessionRedirect" });
     },
-    like : async function(){
-      console.log("like start");
-      const obj={
-        userNo:this.userNo,
-        houseNo:this.hot.house.houseNo
-      }
-      axios.post("/likes", obj).then(({data})=>{
-        console.log(data);
-      })
-    }
   },
 };
 </script>
