@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 100px">
     <br />
     <h1>로그인</h1>
     <br />
@@ -66,6 +66,13 @@ export default {
   mounted() {},
 
   methods: {
+    findid() {
+      this.$router.push('/findid')
+    },
+
+    resetpwd() {
+      this.$router.push('/resetpwd')
+    },
     login() {
       //user 모듈의 userLogin으로 보낸다.
       this.$store.dispatch("user/userLogin", this.loginInfo);

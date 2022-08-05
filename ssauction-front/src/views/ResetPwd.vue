@@ -1,8 +1,7 @@
 // 비밀번호 수정 전 (휴대폰 인증 전)
 
 <template>
-  <br />
-  <br>
+  <div style="margin-top: 100px">
   <h1>비밀번호 재설정</h1>
   <p>
     휴대폰 인증을 통해 비밀번호를 변경할 수 있습니다. 
@@ -27,6 +26,7 @@
       <br>
         <button class="btn_pink" @click="verifyCode">비밀번호 재설정하기</button>
     </div>
+  </div>
   </div>
 </template>
 

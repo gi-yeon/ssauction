@@ -1,18 +1,30 @@
 <template>
-  <br />
-  <br />
-  <h1>경매방 만들기</h1>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>제목</h3>
-    </div>
-    <div class="col-8 data">
-      <input
-        v-model="house.houseTitle"
-        class="form-control"
-        type="text"
-        required
+  <div style="margin-top: 100px">
+    <br>
+    <h1>경매방 만들기</h1>
+    <br>
+    <div class="row" style="padding:10px;">
+      <label class="col-4" for="houseTitle">방 제목</label>
+      <div class="col-8">
+        <el-input
+          id="houseTitle"
+          v-model="house.houseTitle"
+          type="text"
+          required>
+      </div>
+      
+      <label class="col-4" for="">경매 날짜</label>
+      <div class="col-8">
+      <el-date-picker
+        v-model="value2"
+        type="date"
+        placeholder="경매 날짜를 선택하세요"
+        :shortcuts="shortcuts"
+        :size="size"
       />
+
+      </div>
+
     </div>
   </div>
   <div class="row house-input">
@@ -249,7 +261,37 @@
 
 <script>
 import axios from "@/utils/axios";
-import ItemImagePreview from "@/components/ItemImagePreview.vue";
+import { ref } from 'vue';
+
+const value1 = ref('')
+const value2 = ref('')
+
+const shortcuts = [
+  {
+    text: '오늘',
+    value: new Date(),
+  },
+  {
+    text: '내일',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() + 3600 * 1000 * 24)
+      return date
+    },
+  },
+  {
+    text: '다음 주',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
+      return date
+    },
+  },
+]
+
+const disabledDate = (time: Date) => {
+  return time.getTime() > Date.now()
+}
 
 export default {
   name: "SsauctionHouse",
@@ -353,9 +395,20 @@ export default {
 };
 </script>
 
-<style>
-.house-input {
-  padding: 10px;
+
+<style scoped>
+el-input {
+  width: 500px;
+  height: 50px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
+label {
+  text-align: center;
 }
 .preview {
   overflow-x: auto;

@@ -1,4 +1,5 @@
 <template>
+<div style="margin-top: 100px">
   <div>
     <h1>Hot Deals</h1>
     <div>
