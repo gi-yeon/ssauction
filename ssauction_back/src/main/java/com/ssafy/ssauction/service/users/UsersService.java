@@ -107,7 +107,7 @@ public class UsersService {
         Users users;
         try {
             users = usersRepository.findByUserPhoneNo(userPhoneNo).get();
-            users.updatePwd(resetPwdDto.getUserPwd());
+            users.updatePwd(passwordEncoder.encode(resetPwdDto.getUserPwd()));
         } catch (NoSuchElementException e) {
             System.out.println("없음");
             return null;
