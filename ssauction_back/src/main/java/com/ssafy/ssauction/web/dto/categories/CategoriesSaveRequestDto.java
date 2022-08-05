@@ -6,20 +6,23 @@ import com.ssafy.ssauction.domain.items.Items;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public class CategoriesSaveRequestDto {
-    private Long itemNo;
+    private Items item;
     private String ctgrName;
 
     @Builder
-    public CategoriesSaveRequestDto(Long itemNo, String ctgrName) {
-        this.itemNo=itemNo;
+    public CategoriesSaveRequestDto(Items item, String ctgrName) {
+        this.item=item;
         this.ctgrName=ctgrName;
     }
 
-    public Categories toEntity(Items item, CategoriesSaveRequestDto dto){
+
+    public Categories toEntity(Items item, String ctgrName){
         Categories temp=Categories.builder()
-                .ctgrName(dto.getCtgrName())
+                .ctgrName(ctgrName)
                 .item(item)
                 .build();
         return temp;

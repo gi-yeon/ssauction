@@ -1,6 +1,8 @@
+// 비밀번호 수정 (휴대폰 인증 후)
+
 <template>
-  <br />
-  <h1>비밀번호 변경</h1>
+  <div style="margin-top: 100px">
+  <h1>비밀번호 재설정</h1>
   <br />
 
   <h1>{{ phoneNo }}</h1>
@@ -12,6 +14,7 @@
   <input id="user_password2" type="password" v-model="password2" />
   <h1>{{ password2 }}</h1>
   <button @click="ResetPwd2">Reset Password</button>
+  </div>
 </template>
 
 <script>
@@ -42,22 +45,22 @@
 
   methods: {
     ResetPwd2: function () {
-      console.log("ResetPwd start");
-      console.log(this.password);
-      console.log(this.password2);
+      // console.log("ResetPwd start");
+      // console.log(this.password);
+      // console.log(this.password2);
       
       if (this.password === this.password2) {
         const obj = {
           userPwd: this.password,
         };
-        console.log("start putting");
+        // console.log("start putting");
         axios.put("/users/resetPwd/" + this.phoneNo + "/" + this.email, JSON.stringify(obj),).then(({ data }) => {
-        console.log(data.userPhoneNo);
-        console.log(data.userEmail);
+        // console.log(data.userPhoneNo);
+        // console.log(data.userEmail);
         this.returnValue = data;
-        console.log(this.returnValue);
+        // console.log(this.returnValue);
           if (this.returnValue !== "") {
-            alert("비밀번호가 변경되었습니다.");
+            alert("비밀번호가 재설정되었습니다.");
             this.$router.push('/login')
           } else {
             alert("에러: 다시 시도해주세요.");

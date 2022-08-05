@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,5 +16,5 @@ public class HousesItemsSaveRequestDto {
 
     private HousesSaveRequestDto houseDto;
     private ItemsSaveRequestDto itemDto;
-    private ItemImgsSaveRequestDto imgDto;
+    private List<ItemImgsSaveRequestDto> imgDtoList;
 }

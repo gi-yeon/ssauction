@@ -14,7 +14,13 @@ public class UsersAuthRequestDto {
     private String userPwd;
 
 
-
+    @Override
+    public String toString() {
+        return "UsersAuthRequestDto{" +
+                "userEmail='" + userEmail + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                '}';
+    }
 
     @Builder
     public UsersAuthRequestDto(String userEmail, String userPwd) {

@@ -1,6 +1,5 @@
 package com.ssafy.ssauction.web.dto.likes;
 
-
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.users.Users;
@@ -10,11 +9,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class LikesSaveDto {
+public class LikesSaveRequestDto {
     private Long userNo,houseNo;
 
     @Builder
-    public LikesSaveDto(Long userNo, Long houseNo){
+    public LikesSaveRequestDto(Long userNo, Long houseNo){
         this.userNo=userNo;
         this.houseNo=houseNo;
     }

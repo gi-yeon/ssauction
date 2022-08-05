@@ -2,6 +2,8 @@ package com.ssafy.ssauction.domain.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.ssauction.domain.board.Board;
+import com.ssafy.ssauction.domain.comments.Comments;
 import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
@@ -11,9 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.boot.model.convert.spi.ConverterAutoApplyHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,13 +27,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class Users implements UserDetails {
+
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
@@ -46,7 +54,7 @@ public class Users implements UserDetails {
     @Column(name = "user_phone_no", nullable = false, length = 11)
     private String userPhoneNo;
 
-    @Column(name = "user_nickname", length = 16)
+    @Column(name = "user_nickname", length = 16,nullable = false,unique = true)
     private String userNickname;
 
     @Column(name = "user_desc", length = 200)
@@ -65,6 +73,8 @@ public class Users implements UserDetails {
     private Timestamp userUpdateDate;
 
     @Column(name = "user_role")
+    @Setter
+    @Enumerated(EnumType.STRING)
     private Authority authority;
     @Setter
     @Column(name = "refresh_token")
@@ -98,16 +108,19 @@ public class Users implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     private List<Likes> likes = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
+    @JoinColumn(name="user_no")
+    private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
+    @JoinColumn(name="user_no")
+    private List<Comments> comments = new ArrayList<>();
 
     @Builder
     public Users(String userEmail, String userPwd,
                  String userPhoneNo, String userNickname,
                  String userDesc, String userComment,
                  int userGrade, Timestamp userUpdateDate,
-                 List<Items> sellItems,
-                 List<Items> purchaseItems,
-                 List<ResultOrders> results,
-                 List<Likes> likes, String refreshToken,
                  Authority authority) {
         this.userEmail = userEmail;
         this.userPwd = userPwd;
@@ -123,11 +136,7 @@ public class Users implements UserDetails {
         this.results = results;
         this.likes = likes;
         this.refreshToken = refreshToken;
-
-//        this.roles = roles;
-
-        this.authority = authority;
-
+        this.authority=authority;
     }
 
     public void updateProfile(String userComment, String userDesc) {
@@ -136,15 +145,21 @@ public class Users implements UserDetails {
         this.userUpdateDate = new Timestamp(System.currentTimeMillis());
     }
 
+    public void updateNickname(String userNickname){
+        this.userNickname=userNickname;
+    }
 
     // 비밀번호 재설정
-    public void updatePwd(String userPwd){
-        this.userPwd=userPwd;
+    public void updatePwd(String userPwd) {
+        this.userPwd = userPwd;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(String.valueOf(this.authority)));
+        return authorities;
     }
 
     @Override
@@ -176,7 +191,27 @@ public class Users implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
+    @Override
+    public String toString() {
+        return "Users{" +
+                "userNo=" + userNo +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                ", userPhoneNo='" + userPhoneNo + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userDesc='" + userDesc + '\'' +
+                ", userComment='" + userComment + '\'' +
+                ", userGrade=" + userGrade +
+                ", userRegDate=" + userRegDate +
+                ", userUpdateDate=" + userUpdateDate +
+                ", authority=" + authority +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", userImgs=" + userImgs +
+                ", sellItems=" + sellItems +
+                ", purchaseItems=" + purchaseItems +
+                ", results=" + results +
+                ", likes=" + likes +
+                '}';
+    }
 }
 

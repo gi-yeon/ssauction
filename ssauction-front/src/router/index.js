@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+// import { useCookies } from "vue3-cookies";
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Signup from "@/views/Signup.vue";
@@ -8,8 +9,10 @@ import ResetPwd from "@/views/ResetPwd.vue";
 import ResetPwd2 from "@/views/ResetPwd2.vue";
 import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
-import Zzim from "@/views/Zzim.vue";
+import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
+import ProfileUpdate from "@/views/ProfileUpdate.vue"
+import Sessions from "@/views/Sessions.vue";
 
 const routes = [
   {
@@ -59,14 +62,53 @@ const routes = [
     component: Profile,
   },
   {
+    path: "/sessions/:houseNo",
+    name: "Sessions",
+    component: Sessions,
+  },
+  {
+    path: "/profile/update",
+    name: "ProfileUpdate",
+    component: ProfileUpdate,
+  },
+  {
     path: "/zzim",
     name: "Zzim",
-    component: Zzim,
+    component: Like,
   },
   {
     path: "/settings",
     name: "Settings",
     component: Settings,
+  },
+  {
+    path: "/board",
+    name: "Board",
+    component: () => import("@/views/BoardView.vue"),
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardList",
+        component: () => import("@/components/Board/BoardList.vue"),
+      },
+      {
+        path: "detail/:id",
+        name: "boardDetail",
+        component: () => import("@/components/Board/BoardDetail.vue"),
+      },
+      {
+        path: "modify/:id",
+        name: "boardModify",
+        component: () => import("@/components/Board/BoardModify.vue"),
+      },
+      {
+        path: "regist",
+        name: "boardRegister",
+        component: () => import("@/components/Board/BoardRegister.vue"),
+      },
+
+    ]
   },
 ];
 const router = createRouter({

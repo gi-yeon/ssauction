@@ -6,7 +6,6 @@ import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,8 @@ public class UserImgsService {
 
     @Transactional
     public Long update(Long userNo, UserImgsUpdateRequestDto requestDto){
-        UserImgs img=userImgsRepository.findById(userNo).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다."));
+        Users user=usersRepository.findById(userNo).get();
+        UserImgs img=userImgsRepository.findByUser(user).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다."));
         img.update(requestDto.getImgName(),requestDto.getImgUri());
         return userNo;
     }

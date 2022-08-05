@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.service.auth;
 
+import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,11 @@ public class UserDetailService implements UserDetailsService {
 
     private final UsersRepository usersRepository;
 
+    private Users users;
+
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        System.out.println("this is userEmail : " + userEmail);
+
         return usersRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException());
     }
