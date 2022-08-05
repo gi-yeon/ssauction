@@ -1,11 +1,15 @@
 package com.ssafy.ssauction.domain.board;
 
-import com.ssafy.ssauction.domain.users.Users;
+import com.ssafy.ssauction.domain.comments.Comments;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
@@ -33,4 +37,8 @@ public class Board {
     private Long userNo;
     @Column(name = "user_nickname", nullable = false)
     private String userNickname;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
+    @JoinColumn(name="board_no")
+    private List<Comments> comments = new ArrayList<>();
 }

@@ -2,7 +2,7 @@
     <div>
         <input type="text" name="title" id="title" v-model="state.boardTitle" readonly>
         <div></div>
-        <textarea name="content" id="content" cols="30" rows="10" v-model="state.boardContent" readonly>
+        <textarea name="boardContent" id="boardContent" cols="30" rows="10" v-model="state.boardContent" readonly>
 
         </textarea>
 
@@ -13,6 +13,17 @@
                 <button>목록</button>
             </router-link>
         </div>
+            <board-comment-item v-for="(comment, index) in state.comments"
+            :key="index"
+            v-bind="comment"
+            ></board-comment-item>
+            <div>
+                <textarea name="commentRegister" id="commentRegister" cols="30" rows="2" v-model="state.commentContent"></textarea>
+                <button @click="registerComment">댓글 달기</button>
+            </div>
+        <div>
+            
+        </div>
     </div>
 </template>
 
@@ -20,9 +31,14 @@
 import axios from '@/utils/axios';
 import {reactive} from "vue";
 import { useRouter, useRoute } from 'vue-router';
+import BoardCommentItem from "@/components/Board/item/BoardCommentItem";
+
 
 export default {
     name: "BoardDetail",
+    components: {
+        BoardCommentItem,
+    },
     setup() {
         const router = useRouter();
         const route = useRoute();
@@ -33,6 +49,8 @@ export default {
             boardContent: String,
             userNo: Number,
             userNickname: String,
+            comments: [],
+            commentContent: "",
         });
 
         const ModifyArticle = () => {
@@ -52,6 +70,19 @@ export default {
             router.push({path: "/board"});
         }
 
+        const registerComment = () => {
+            let params = {
+                boardNo: state.boardNo,
+                userNo: 1,
+                commentContent: state.commentContent
+            }
+            axios.post("http://localhost:8080/comment", JSON.stringify(params))
+            .then(() => {
+                alert("댓글을 등록하였습니다.");
+                router.go();
+            })
+        }
+
         axios.get("http://localhost:8080/board/detail", {
             params: {
                 boardNo: route.params.id
@@ -63,12 +94,14 @@ export default {
             state.boardContent = data.board.boardContent;
             state.userNo = data.board.userNo;
             state.userNickname = data.board.userNickname;
+            state.comments = data.board.comments;
         })
 
         return {
             state,
             ModifyArticle,
-            DeleteArticle
+            DeleteArticle,
+            registerComment
         }
     }
 

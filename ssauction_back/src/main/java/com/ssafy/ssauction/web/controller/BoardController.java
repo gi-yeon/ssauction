@@ -3,6 +3,7 @@ package com.ssafy.ssauction.web.controller;
 import com.ssafy.ssauction.domain.board.Board;
 import com.ssafy.ssauction.service.board.BoardService;
 import com.ssafy.ssauction.web.dto.board.BoardDtoReq;
+import com.ssafy.ssauction.web.dto.board.BoardDtoRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -41,7 +42,7 @@ public class BoardController {
     public ResponseEntity<Map<String, Object>> boardDetail(@RequestParam("boardNo") long boardNo) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
-        Board board = boardService.boardDetail(boardNo);
+        BoardDtoRes board = boardService.boardDetail(boardNo);
 
         if(board == null) {
             resultMap.put("message", "해당 글을 찾을 수 없습니다.");
