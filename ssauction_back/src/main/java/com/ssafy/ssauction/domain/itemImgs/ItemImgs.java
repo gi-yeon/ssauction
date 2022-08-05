@@ -6,6 +6,7 @@ import com.ssafy.ssauction.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -26,6 +27,8 @@ public class ItemImgs {
     @Column(name = "item_img_uri", length = 200)
     private String itemImgUri;
 
+    @Column(name ="item_img_main", nullable = false)
+    private Boolean isMain;
     @Column(name = "item_img_reg_date")
     private Timestamp itemImgRegDate;
 
@@ -34,6 +37,7 @@ public class ItemImgs {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "item_no")
+    @Setter
     private Items item;
 
     @Override
@@ -44,14 +48,14 @@ public class ItemImgs {
                 ", itemImgUri='" + itemImgUri + '\'' +
                 ", itemImgRegDate=" + itemImgRegDate +
                 ", itemImgUpdateDate=" + itemImgUpdateDate +
-                ", item=" + item +
                 '}';
     }
 
     @Builder
-    public ItemImgs(String itemImgName, String itemImgUri, Items item) {
+    public ItemImgs(String itemImgName, String itemImgUri, boolean isMain,Items item) {
         this.itemImgName = itemImgName;
         this.itemImgUri = itemImgUri;
+        this.isMain=isMain;
         this.item = item;
         this.itemImgRegDate = new Timestamp(System.currentTimeMillis());
         this.itemImgUpdateDate = itemImgUpdateDate;

@@ -1,101 +1,72 @@
 <template>
   <div id="main-container" class="container">
-    <div id="join" v-if="!session">
-      <!-- <div id="img-div"> -->
-      <!-- <img src="resources/images/openvidu_grey_bg_transp_cropped.png" /> -->
-      <!-- </div> -->
-      <div id="join-dialog" class="jumbotron vertical-center">
-        <h1>Join a video session</h1>
-        <div class="form-group">
-          <p>
-            <label>Participant</label>
-            <input
-              v-model="myUserName"
-              class="form-control"
-              type="text"
-              required
-            />
-          </p>
-          <p>
-            <label>Session</label>
-            <input
-              v-model="mySessionId"
-              class="form-control"
-              type="text"
-              required
-            />
-          </p>
-          <p class="text-center">
-            <button class="btn btn-lg btn-success" @click="joinSession()">
-              Join!
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
-
+    <join-session v-if="!session" @joinSession="joinSession" />
     <div class="row" id="session" v-if="session">
       <div id="session-header">
         <div class="col">
           <h1 id="session-title">{{ mySessionId }}</h1>
         </div>
-        <div class="col">
-          <input
-            class="btn btn-large btn-danger"
-            type="button"
-            id="buttonLeaveSession"
-            @click="leaveSession"
-            value="Leave session"
-          />
-        </div>
+        <div class="col"></div>
       </div>
-      <div id="session-view" v-if="mode == 'basic'">
-        <div id="video-container">
-          <participant-video
-            :stream-manager="publisher"
-            @click="updateMainVideoStreamManager(publisher)"
-            style="display: inline-block"
-          />
-          <participant-video
-            v-for="sub in subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
-        </div>
-        <div class="row main-video">
-          <div class="col-md-9" id="main-video">
-            <main-video :stream-manager="mainStreamManager" />
-          </div>
-          <div class="col-md-3" id="session-chat">
-            <div id="chat-history">
-              <chat-message
-                v-for="(m, index) in messageHistory"
-                :key="index"
-                :sender="m.sender"
-                :message="m.message"
+      <div class="row">
+        <div class="col-9">
+          <div class="row">
+            <div id="video-container">
+              <participant-video
+                :stream-manager="publisher"
+                @click="updateMainVideoStreamManager(publisher)"
+                style="display: inline-block"
+              />
+              <participant-video
+                v-for="sub in subscribers"
+                :key="sub.stream.connection.connectionId"
+                :stream-manager="sub"
+                @click="updateMainVideoStreamManager(sub)"
               />
             </div>
-            <div id="chat-control-panel"></div>
-            <div class="input-group" id="chat-input">
-              <textarea
-                v-model="message"
-                class="form-control"
-                type="text"
-                v-on:keyup.enter="submitMessage"
-              />
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                @click="submitMessage"
-              >
-                전송
-              </button>
+          </div>
+          <div class="row main-video">
+            <div class="col-md-9" id="main-video">
+              <main-video :stream-manager="mainStreamManager" />
             </div>
+          </div>
+          <div class="row">
+            <in-session-panel
+              :isVideoOn="this.isVideoOn"
+              :isMicOn="this.isMicOn"
+            />
+          </div>
+        </div>
+        <div class="col-md-3" id="timer-bid-chat">
+          <div class="row" id="timer">
+            <session-timer></session-timer>
+          </div>
+          <div class="row" id="chat-history">
+            <chat-message
+              v-for="(m, index) in messageHistory"
+              :key="index"
+              :sender="m.sender"
+              :message="m.message"
+            />
+          </div>
+          <div id="chat-control-panel"></div>
+          <div class="input-group" id="chat-input">
+            <textarea
+              v-model="message"
+              class="form-control"
+              type="text"
+              v-on:keyup.enter="submitMessage"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              @click="submitMessage"
+            >
+              전송
+            </button>
           </div>
         </div>
       </div>
-      <in-session-panel :isVideoOn="this.isVideoOn" :isMicOn="this.isMicOn" />
     </div>
   </div>
 </template>
@@ -104,9 +75,11 @@
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import MainVideo from "@/components/MainVideo.vue";
-import ParticipantVideo from "./components/ParticipantVideo.vue";
-import ChatMessage from "./components/ChatMessage.vue";
-import InSessionPanel from "./components/InSessionPanel.vue";
+import ParticipantVideo from "@/components/ParticipantVideo.vue";
+import ChatMessage from "@/components/ChatMessage.vue";
+import InSessionPanel from "@/components/InSessionPanel.vue";
+import JoinSession from "@/components/JoinSession.vue";
+import SessionTimer from "@/components/SessionTimer.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -120,6 +93,14 @@ export default {
     ParticipantVideo,
     ChatMessage,
     InSessionPanel,
+    JoinSession,
+    SessionTimer,
+  },
+  mounted() {
+    this.mySessionId = this.$route.params.houseNo;
+  },
+  mounted() {
+    this.mySessionId = this.$route.params.houseNo;
   },
   data() {
     return {
@@ -155,7 +136,7 @@ export default {
       // On every new Stream received...
       this.session.on("streamCreated", ({ stream }) => {
         const subscriber = this.session.subscribe(stream);
-        this.subscribers.push(subscriber);
+        this.subscribers.push(subscriber); // 해당 스트림을 subscribe하고 video player를 삽입한다.
       });
 
       // On every Stream destroyed...
@@ -171,12 +152,45 @@ export default {
         console.warn(exception);
       });
 
-      // On every message received...
-      this.session.on(`signal:${this.mySessionId}`, (event) => {
+      // 채팅 메시지 신호 수신
+      this.session.on(`signal:${this.mySessionId}/message`, (event) => {
         console.log(event.data); // Message
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
         this.appendMessage(event);
+      });
+
+      // 경매 시작 신호 수신
+      this.session.on(`signal:${this.mySessionId}/startAuction`, (event) => {
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+        this.resetTimer();
+        this.initTimer();
+      });
+
+      // 입찰 신호 수신
+      this.session.on(`signal:${this.mySessionId}/bid`, (event) => {
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+        this.updateBid(event);
+      });
+
+      // 경매 종료 신호 수신
+      this.session.on(`signal:${this.mySessionId}/endAuction`, (event) => {
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+        this.endAuction(event);
+      });
+
+      // 경매 결과 신호 수신
+      this.session.on(`signal:${this.mySessionId}/result`, (event) => {
+        console.log(event.data); // Message
+        console.log(event.from); // Connection object of the sender
+        console.log(event.type); // The type of message ("my-chat")
+        this.showResult(event);
       });
 
       // --- Connect to the session with a valid user token ---
@@ -184,6 +198,7 @@ export default {
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken().then((token) => {
+        console.log(`received token : ${token}`);
         this.session
           .connect(token, { clientData: this.myUserName })
           .then(() => {
@@ -205,7 +220,7 @@ export default {
 
             // --- Publish your stream ---
 
-            this.session.publish(this.publisher);
+            this.session.publish(this.publisher); // publisher 객체를 publish하고 video player를 삽입힌다.
           })
           .catch((error) => {
             console.log(
@@ -266,7 +281,7 @@ export default {
             })
           )
           .then((response) => response.data)
-          .then((data) => resolve(data[0]))
+          .then((data) => resolve(data.token))
           .catch((error) => reject(error.response));
       });
     },
@@ -279,7 +294,7 @@ export default {
             message: this.message,
           }),
           to: [],
-          type: this.mySessionId,
+          type: this.mySessionId + "/message",
         })
         .then(() => {
           console.log();
@@ -288,9 +303,30 @@ export default {
     },
 
     appendMessage(event) {
-      const c = JSON.parse(event.data);
-      this.messageHistory.push(c);
+      const message = JSON.parse(event.data);
+      this.messageHistory.push(message);
     },
+
+    // (판매자 전용) 경매 시작 메시지를 보낸다.
+    startAuction(event) {},
+
+    // 타이머 카운트다운을 시작한다.
+    initTimer() {},
+
+    // 타이머 시간을 30초로 초기화하고 시작한다.
+    resetTimer() {},
+
+    // 타이머를 30초로 초기화하고 금액을 전달받은 금액으로 업데이트한다.
+    // 만약 전달받은 금액이 이전 금액보다 작거나 같으면 업데이트하지 않는다.
+    updateBid(event) {
+      this.resetTimer();
+      this.initTimer();
+    },
+
+    // 타이머를 종료시킨다.
+    // (판매자 전용) 경매 결과를 서버에 POST한다.
+    // (판매자 전용) 모두에게 경매 결과가 담긴 신호를 전달한다.
+    endAuction(event) {},
 
     turnOnVideo() {
       this.session.publish(this.publisher);
@@ -301,63 +337,6 @@ export default {
     },
 
     turnOnMic() {},
-    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-session
-    // createSession(sessionId) {
-    //   return new Promise((resolve, reject) => {
-    //     axios
-    //       .post(
-    //         `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
-    //         JSON.stringify({
-    //           customSessionId: sessionId,
-    //         }),
-    //         {
-    //           auth: {
-    //             username: "OPENVIDUAPP",
-    //             password: OPENVIDU_SERVER_SECRET,
-    //           },
-    //         }
-    //       )
-    //       .then((response) => response.data)
-    //       .then((data) => resolve(data.id))
-    //       .catch((error) => {
-    //         if (error.response.status === 409) {
-    //           resolve(sessionId);
-    //         } else {
-    //           console.warn(
-    //             `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
-    //           );
-    //           if (
-    //             window.confirm(
-    //               `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
-    //             )
-    //           ) {
-    //             location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
-    //           }
-    //           reject(error.response);
-    //         }
-    //       });
-    //   });
-    // },
-
-    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-connection
-    // createToken(sessionId) {
-    //   return new Promise((resolve, reject) => {
-    //     axios
-    //       .post(
-    //         `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-    //         {},
-    //         {
-    //           auth: {
-    //             username: "OPENVIDUAPP",
-    //             password: OPENVIDU_SERVER_SECRET,
-    //           },
-    //         }
-    //       )
-    //       .then((response) => response.data)
-    //       .then((data) => resolve(data.token))
-    //       .catch((error) => reject(error.response));
-    //   });
-    // },
   },
 };
 </script>

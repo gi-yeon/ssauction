@@ -19,7 +19,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -45,35 +44,44 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .csrf().disable()
                 .cors()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and() //세션 사용하지 않음
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// 세션 사용하지 않음
+                .and()
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
+                // 해당 경로는 모두 허용
                 .antMatchers("/swagger*/**", "/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
-                        "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh", "/board/**", "/comment/**").permitAll()
-                .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
+                        "/webjars/**", "/swagger.json", "/users/login",
+                        "/users/logout", "/users/join", "/users/refresh",
+                        "/users/token", "/users/findId/**", "/users/resetPwd/**",
+                        "/users/sendSMS/**","/houses/searchAll/**", "/board/**", "/comment/**")
+                .permitAll()
+                // 해당 경로는 ADMIN만 허용 (test용)
+                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()// 그 외 모두 인증된 사용자만 허용
+
                 .and()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler)
+                .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")
                 .and()
                 .oauth2Login()
-//                .userInfoEndpoint()
-//                .userService(customOAuth2UserService)
+                // .userInfoEndpoint()
+                // .userService(customOAuth2UserService)
                 .and()
                 .build();
     }
 
-    //비밀번호 암호화 시 사용
+    // 비밀번호 암호화 시 사용
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }
