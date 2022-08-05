@@ -81,6 +81,35 @@ const routes = [
     name: "Settings",
     component: Settings,
   },
+  {
+    path: "/board",
+    name: "Board",
+    component: () => import("@/views/BoardView.vue"),
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardList",
+        component: () => import("@/components/Board/BoardList.vue"),
+      },
+      {
+        path: "detail/:id",
+        name: "boardDetail",
+        component: () => import("@/components/Board/BoardDetail.vue"),
+      },
+      {
+        path: "modify/:id",
+        name: "boardModify",
+        component: () => import("@/components/Board/BoardModify.vue"),
+      },
+      {
+        path: "regist",
+        name: "boardRegister",
+        component: () => import("@/components/Board/BoardRegister.vue"),
+      },
+
+    ]
+  },
 ];
 const router = createRouter({
   history: createWebHistory(),

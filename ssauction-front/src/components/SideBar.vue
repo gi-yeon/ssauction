@@ -25,6 +25,11 @@
       <router-link to="house"
         ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
       /></router-link>
+
+      <router-link to="/board"
+        ><img src="@\assets\imgs\home.png" alt="Board" class="icon"
+      /></router-link>
+
       <router-link to="settings"
         ><img src="@\assets\imgs\settings.png" alt="Settings" class="icon" style="position:fixed; bottom:15px; padding-left:0px"
       /></router-link>
