@@ -1,10 +1,13 @@
 <template>
-  <nav-bar></nav-bar>
+  <nav-bar v-if="!isInSession"></nav-bar>
   <div class="container">
     <div class="row">
-      <side-bar class="col-xs-1"></side-bar>
-      <div class="col-xs-11">
+      <side-bar v-if="!isInSession" class="col-xs-1"></side-bar>
+      <div v-if="!isInSession">
         <router-view />
+      </div>
+      <div v-else class="col-xs-11">
+        <router-view/>
       </div>
     </div>
   </div>
@@ -17,6 +20,16 @@ import SideBar from "@/components/SideBar.vue";
 export default {
   name: "App",
   components: { NavBar, SideBar },
+  data() {
+    return {
+      isInSession: false,
+    };
+  },
+  mounted() {
+    const URLParams = new URL(window.location).searchParams;
+    console.log(URLParams.get("isInSession"));
+    this.isInSession = URLParams.get("isInSession");
+  },
 };
 </script>
 

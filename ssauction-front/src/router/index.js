@@ -11,6 +11,7 @@ import Profile from "@/views/Profile.vue";
 import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
 import ProfileUpdate from "@/views/ProfileUpdate.vue"
+import Sessions from "@/views/Sessions.vue";
 const routes = [
   {
     path: "/",
@@ -62,6 +63,11 @@ const routes = [
     path: "/profile/update",
     name: "ProfileUpdate",
     component: ProfileUpdate,
+  },
+  {
+    path: "/sessions/:houseNo",
+    name: "Sessions",
+    component: Sessions,
   },
   {
     path: "/zzim",

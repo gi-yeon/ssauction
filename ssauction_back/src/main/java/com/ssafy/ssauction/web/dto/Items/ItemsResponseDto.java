@@ -18,6 +18,7 @@ public class ItemsResponseDto {
     private String itemDesc;
     private int itemStartPrice;
     private int itemFinalPrice;
+    private String sellerNickname;
 
     @Builder
     public ItemsResponseDto(Items item) {
@@ -29,5 +30,6 @@ public class ItemsResponseDto {
         this.itemDealStatus = item.getItemDealStatus();
         this.itemStartPrice = item.getItemStartPrice();
         this.itemFinalPrice = item.getItemFinalPrice();
+        this.sellerNickname = item.getSeller().getUserNickname();
     }
 }

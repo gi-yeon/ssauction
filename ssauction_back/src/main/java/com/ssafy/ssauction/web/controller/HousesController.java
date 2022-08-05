@@ -3,9 +3,11 @@ package com.ssafy.ssauction.web.controller;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
 import com.ssafy.ssauction.service.houses.HousesService;
+import com.ssafy.ssauction.service.likes.LikesService;
 import com.ssafy.ssauction.service.storage.StorageService;
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.Houses.*;
@@ -18,6 +20,7 @@ import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsGetResponseDto;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsResponseDto;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsSaveRequestDto;
+import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONValue;
 import org.springframework.core.io.ByteArrayResource;
@@ -123,6 +126,28 @@ public class HousesController {
         return new ResponseEntity<>("created", HttpStatus.OK);
     }
 
+    @GetMapping("/searchAll/{sellerNo}")
+    public ResponseEntity<List<HousesItemsResponseDto>> searchAllBySeller(@PathVariable Long sellerNo) {
+        Users user = usersService.findEntityById(sellerNo);
+        List<Items> itemList=user.getSellItems();
+        HousesResponseDto hr = null;
+        List<ItemImgsResponseDto> iir = null;
+        List<HousesItemsResponseDto> result = new ArrayList<>();
+        for (Items item : itemList) {
+            ItemsResponseDto ir = new ItemsResponseDto(item);
+            Houses house = item.getHouse();
+            if (house != null) {
+                hr = new HousesResponseDto(house);
+                List<ItemImgs> itemImgs = item.getImages();
+                iir = new ArrayList<>();
+                for (ItemImgs i : itemImgs) {
+                    iir.add(new ItemImgsResponseDto(i));
+                }
+            }
+            result.add(new HousesItemsResponseDto(ir, iir, hr));
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     @GetMapping("{itemNo}")
     public ResponseEntity<HousesItemsResponseDto> search(@PathVariable Long itemNo) {
         Items item = itemsService.findEntityById(itemNo);

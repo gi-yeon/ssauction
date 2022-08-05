@@ -13,10 +13,10 @@ import com.ssafy.ssauction.service.likes.LikesService;
 import com.ssafy.ssauction.service.userImages.UserImgsService;
 
 import com.ssafy.ssauction.service.users.UsersService;
+import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
-import com.ssafy.ssauction.web.dto.likes.LikesSaveDto;
 import com.ssafy.ssauction.web.dto.users.*;
 
 import lombok.RequiredArgsConstructor;
@@ -198,11 +198,11 @@ public class UsersController {
     }
 
     @PostMapping("/likes")
-    public ResponseEntity<String> createLikes(@RequestBody LikesSaveDto saveDto) {
+    public ResponseEntity<String> createLikes(@RequestBody LikesSaveRequestDto saveDto) {
         Users user = usersService.findEntityById(saveDto.getUserNo());
         Houses house = housesService.findEntityById(saveDto.getHouseNo());
         ;
-        Likes like = likesService.save(user, house, saveDto);
+        Likes like = likesService.save(user, house);
         user.getLikes().add(like);
         house.getLikes().add(like);
         return new ResponseEntity<>("created", HttpStatus.OK);
