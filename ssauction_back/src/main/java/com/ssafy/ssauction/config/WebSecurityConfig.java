@@ -46,17 +46,23 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .cors()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and() //세션 사용하지 않음
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 사용하지 않음
+                .and()
                 .headers().frameOptions().disable()
                 .and()
-//                .authorizeRequests()
-//                .antMatchers("/swagger*/**", "/v2/api-docs",
-//                        "/swagger-resources/**",
-//                        "/swagger-ui.html",
-//                        "/webjars/**", "/swagger.json", "/users/login", "/users/join", "/users/refresh").permitAll()
-//                .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
-//                .and()
+                .authorizeRequests()
+                //해당 경로는 모두 허용
+                .antMatchers("/swagger*/**", "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**", "/swagger.json", "/users/login",
+                        "/users/logout", "/users/join", "/users/refresh",
+                        "/users/token", "/users/findId/**", "/users/resetPwd/**",
+                        "/users/sendSMS/**").permitAll()
+                //해당 경로는 ADMIN만 허용 (test용)
+                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()//그 외 모두 인증된 사용자만 허용
+                .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler).accessDeniedHandler(accessDeniedHandler)
 
                 .and()

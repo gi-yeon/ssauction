@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+// import { useCookies } from "vue3-cookies";
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Signup from "@/views/Signup.vue";
@@ -10,12 +11,19 @@ import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
 import Zzim from "@/views/Zzim.vue";
 import Settings from "@/views/Settings.vue";
-import ProfileUpdate from "@/views/ProfileUpdate.vue"
+import ProfileUpdate from "@/views/ProfileUpdate.vue";
+import authorizationTest from "@/views/authorizationTest.vue";
+
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/authorizationTest",
+    name: "authorizationTest",
+    component: authorizationTest,
   },
   {
     path: "/login",

@@ -17,6 +17,10 @@ import SideBar from "@/components/SideBar.vue";
 export default {
   name: "App",
   components: { NavBar, SideBar },
+  //쿠키에서 logininfo를 가져온다.
+  mounted() {
+    this.$store.dispatch("user/getLoginInfo");
+  },
 };
 </script>
 

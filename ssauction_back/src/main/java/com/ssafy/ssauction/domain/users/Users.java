@@ -11,9 +11,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.boot.model.convert.spi.ConverterAutoApplyHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,13 +25,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class Users implements UserDetails {
+
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
@@ -138,13 +144,16 @@ public class Users implements UserDetails {
         this.userNickname=userNickname;
     }
     // 비밀번호 재설정
-    public void updatePwd(String userPwd){
-        this.userPwd=userPwd;
+    public void updatePwd(String userPwd) {
+        this.userPwd = userPwd;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(String.valueOf(this.authority)));
+        return authorities;
     }
 
     @Override
