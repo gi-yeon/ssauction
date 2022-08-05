@@ -9,7 +9,15 @@
       <button class="mic" v-if="isMicOn == true">마이크 끄기</button>
       <button class="mic" v-else>마이크 켜기</button>
     </div>
-    <div class="col"></div>
+    <div class="col">
+      <input
+        class="btn btn-large btn-danger"
+        type="button"
+        id="buttonLeaveSession"
+        @click="leaveSession"
+        value="Leave session"
+      />
+    </div>
   </div>
 </template>
 
