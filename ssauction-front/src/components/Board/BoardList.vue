@@ -2,9 +2,14 @@
     <div class="table">
         <h1>BoardList</h1>
         <div class="register">
-            <div class="boardSearch">
-                <input type="text" name="" id="">
-                <button>검색</button>
+            <div>
+                <select v-model="state.searchType">
+                    <option disabled selected value="">-선택-</option>
+                    <option value="title">제목</option>
+                    <option value="userNickname">작성자</option>
+                </select>
+                <input type="text" name="search" id="search" v-model="state.search">
+                <button @click="getArticles(0)">검색</button>
             </div>
             <router-link to="regist">
                 <button>글쓰기</button>
@@ -110,6 +115,7 @@ export default {
         }
 
         getPage(0, 10);
+        state.searchType = "";
         return {
             state,
             getArticles
