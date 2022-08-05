@@ -1,7 +1,13 @@
 <template>
   <nav-bar></nav-bar>
-  <side-bar></side-bar>
-  <router-view />
+  <div class="container">
+    <div class="row">
+      <side-bar class="col-xs-1"></side-bar>
+      <div class="col-xs-11">
+        <router-view />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

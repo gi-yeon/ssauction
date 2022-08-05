@@ -31,7 +31,16 @@ public class UsersSaveRequestDto {
         this.authority=Authority.ROLE_USER;
     }
 
-
+    @Override
+    public String toString() {
+        return "UsersSaveRequestDto{" +
+                "userEmail='" + userEmail + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                ", userPhoneNo='" + userPhoneNo + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", authority=" + authority +
+                '}';
+    }
 
     public Users toEntity(){
         return Users.builder()

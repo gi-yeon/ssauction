@@ -99,6 +99,9 @@ const actions = {
   getUserNo({ commit }, value) {
     commit(USER.SET_USERNO, value);
   },
+  getIsLogin({commit},value){
+    commit(USER.SET_ISLOGIN,value);
+  }
 };
 
 const mutations = {
@@ -112,6 +115,7 @@ const mutations = {
   [USER.SET_USERNO](state, value) {
     state.userNo = value;
   },
+
   //로그인
   USER_LOGIN(state, payload) {
     state.isLogin = true;

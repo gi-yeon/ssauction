@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.web.controller;
+package com.ssafy.ssauction.domain.controller;
 
 import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.service.userImages.UserImgsService;

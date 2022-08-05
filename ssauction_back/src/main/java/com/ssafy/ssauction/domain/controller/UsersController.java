@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.web.controller;
+package com.ssafy.ssauction.domain.controller;
 
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
@@ -7,6 +7,7 @@ import com.ssafy.ssauction.auth.JwtTokenProvider;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
 
+import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
@@ -14,16 +15,10 @@ import com.ssafy.ssauction.service.userImages.UserImgsService;
 
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
-import com.ssafy.ssauction.web.dto.users.*;
 
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
 import com.ssafy.ssauction.web.dto.likes.LikesSaveDto;
-import com.ssafy.ssauction.web.dto.users.UsersLoginDto;
-import com.ssafy.ssauction.web.dto.users.UsersResponseDto;
-import com.ssafy.ssauction.web.dto.users.UsersSaveRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdateProfileRequestDto;
-import com.ssafy.ssauction.web.dto.users.UsersFindIdDto;
-import com.ssafy.ssauction.web.dto.users.UsersUpdatePwdDto;
+import com.ssafy.ssauction.web.dto.users.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +26,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 
+import java.util.*;
 import javax.naming.spi.ObjectFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,15 +57,14 @@ public class UsersController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @GetMapping("/{userNo}")
-
-    public UsersResponseDto findById(@PathVariable Long userNo) {
-        return usersService.findById(userNo);
+    @GetMapping("/profile/{userNo}")
+    public UserInfoResponseDto findById(@PathVariable Long userNo) {
+        return usersService.getInfo(userNo);
     }
 
     @PostMapping("/join")
     public String save(@RequestBody UsersSaveRequestDto requestDto) {
-
+        System.out.println(requestDto.toString());
         Users user = usersService.save(requestDto);
         Long userImgs = userImgsService.save(user);
         System.out.println(userImgs);
@@ -81,8 +74,10 @@ public class UsersController {
         return "OK";
     }
 
-    @PutMapping("/img/{userNo}")
+    @PutMapping("/profile/img/{userNo}")
     public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
+        System.out.println(userNo);
+        System.out.println(requestDto.toString());
         return userImgsService.update(userNo, requestDto);
     }
 
@@ -92,13 +87,6 @@ public class UsersController {
     public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo) {
         return usersService.findByPhoneNo(userPhoneNo);
     }
-//    @GetMapping("/users/findId/{userPhoneNo}")
-//    public UsersFindIdDto findByPhoneNo(@PathVariable String userPhoneNo){
-//        UsersFindIdDto findIdDto= usersService.findByPhoneNo(userPhoneNo);
-//        if(findIdDto==null)
-//            return null;
-//        return findIdDto;
-//    }
 
     // 비밀번호 재설정
     // 아이디(이메일) + 전화번호를 이용해 비밀번호 재설정 구현
@@ -107,9 +95,23 @@ public class UsersController {
         return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
 
-    @PutMapping("/profile/{userNo}")
-    public Long updateProfile(@PathVariable Long userNo, @RequestBody UsersUpdateProfileRequestDto requestDto) {
-        return usersService.updateProfile(userNo, requestDto);
+    @PutMapping("/profile/info/{userNo}")
+    public ResponseEntity<String> updateInfo(@PathVariable Long userNo, @RequestBody UsersInfoUpdateRequestDto requestDto) {
+        System.out.println(userNo);
+        System.out.println(requestDto.toString());
+        try {
+            usersService.updateInfo(userNo, requestDto);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+
+    @PutMapping("/profile/name/{userNo}")
+    public ResponseEntity<UsersNameResponseDto> updateNickname(@PathVariable Long userNo, @RequestBody UsersNameUpdateRequestDto requestDto) {
+        System.out.println(requestDto.getUserNickname());
+        String result = usersService.updateNickname(userNo, requestDto);
+        return new ResponseEntity<>(UsersNameResponseDto.builder().userNickname(requestDto.getUserNickname()).build(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userNo}")
@@ -124,6 +126,7 @@ public class UsersController {
     }
 
     //로그인
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UsersAuthRequestDto loginInfo, HttpServletResponse res) {
         String userEmail = loginInfo.getUserEmail();
