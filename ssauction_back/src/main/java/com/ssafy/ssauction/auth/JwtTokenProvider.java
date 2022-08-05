@@ -9,11 +9,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.*;
@@ -22,50 +26,45 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Autowired
-    private UsersService usersService;
 
     //secretkey
     private Key accessKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//    private Key refreshKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    //유효시간 30분
+    //유효시간 30분 (access token)
     private long tokenValidTime = 1000 * 60 * 30L;
+
 
     private final UserDetailsService userDetailsService;
 
     //secretkey Base64 인코딩
     String encodedAccessString = Base64.getEncoder().encodeToString(accessKey.getEncoded());
-//    String encodedRefreshString = Base64.getEncoder().encodeToString(refreshKey.getEncoded());
 
     //key 변환
     //base64를 byte[]로 변환
     byte[] decodedAccessByte = Base64.getDecoder().decode(encodedAccessString.getBytes());
-//    byte[] decodedRefreshByte = Base64.getDecoder().decode(encodedRefreshString.getBytes());
 
     SecretKey keyForAccessToken = Keys.hmacShaKeyFor(decodedAccessByte);
-//    SecretKey keyForRefreshToken = Keys.hmacShaKeyFor(decodedRefreshByte);
 
 
     //JWT 토큰 생성
     public String createAccessToken(Map<String, Object> userMap) {
         return Jwts.builder().setHeaderParam("typ", "JWT")
                 .claim("userEmail", userMap.get("userEmail")).claim("userNickname", userMap.get("userNickname")).claim("roles", userMap.get("authority"))
-                .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
                 .signWith(keyForAccessToken).compact();
 
     }
 
-//    //refreshToken으로 accessToken 재생성
-//    public String recreateAccessToken(String claimId, String data) {
-//
-//        return Jwts.builder().setHeaderParam("typ", "JWT").claim(claimId, data).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime)).signWith(keyForAccessToken).compact();
-//
-//    }
 
     //refresh token 생성 (유효시간 3일)
     public String createRefreshToken(String userEmail) {
-        return Jwts.builder().setHeaderParam("typ", "JWT").claim("userEmail", userEmail).setSubject(userEmail).setExpiration(new Date(System.currentTimeMillis() + tokenValidTime * 48 * 3)).signWith(keyForAccessToken).compact();
+        return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .claim("userEmail", userEmail)
+                .setSubject(userEmail)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000* 60 * 30 * 48 * 3L))
+                .signWith(keyForAccessToken).compact();
     }
 
     //토큰에서의 인증 정보 조회
@@ -75,13 +74,19 @@ public class JwtTokenProvider {
     }
 
     //토큰에서 회원 정보 추출
-    private String getUserEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(keyForAccessToken).build().parseClaimsJws(token).getBody().get("userEmail", String.class);
+    public String getUserEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(keyForAccessToken)
+                .build().parseClaimsJws(token).getBody().get("userEmail", String.class);
     }
 
-    //Request의 Header에서 token 값을 가져온다.
+    //Cookie에서 token 값을 가져온다.
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+
+        String token = null;
+        Cookie cookie = WebUtils.getCookie(request, "accessToken");
+        if(cookie != null) token = cookie.getValue();
+        return token;
     }
 
     //accessToken의 유효성 검증
@@ -113,20 +118,11 @@ public class JwtTokenProvider {
     }
 
     //refreshToken의 유효성 검증 ->유효하다면 새로운 accessToken 생성, 유효하지 않다면 null 반환
-    public String validateRefreshToken(String userEmail) {
-        String refreshToken = usersService.findByUserEmail(userEmail).getUserRefreshToken();
-
+    public String validateRefreshToken(String refreshToken, Map<String, Object> userMap) {
 
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(keyForAccessToken).build().parseClaimsJws(refreshToken);
             if (!claims.getBody().getExpiration().before(new Date())) {
-
-                UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
-
-                Map<String, Object> userMap = new HashMap<>();
-                userMap.put("userEmail", user.getUserEmail());
-                userMap.put("userNickname", user.getUserNickname());
-                userMap.put("authority", user.getAuthority());
 
                 String newAccessToken = createAccessToken(userMap);
                 return newAccessToken;
@@ -137,5 +133,6 @@ public class JwtTokenProvider {
             return null;
         }
     }
+
 
 }

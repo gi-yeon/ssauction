@@ -11,9 +11,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.boot.model.convert.spi.ConverterAutoApplyHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,13 +25,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class Users implements UserDetails {
+
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
@@ -46,7 +52,7 @@ public class Users implements UserDetails {
     @Column(name = "user_phone_no", nullable = false, length = 11)
     private String userPhoneNo;
 
-    @Column(name = "user_nickname", length = 16)
+    @Column(name = "user_nickname", length = 16,nullable = false,unique = true)
     private String userNickname;
 
     @Column(name = "user_desc", length = 200)
@@ -65,6 +71,8 @@ public class Users implements UserDetails {
     private Timestamp userUpdateDate;
 
     @Column(name = "user_role")
+    @Setter
+    @Enumerated(EnumType.STRING)
     private Authority authority;
     @Setter
     @Column(name = "refresh_token")
@@ -123,11 +131,7 @@ public class Users implements UserDetails {
         this.results = results;
         this.likes = likes;
         this.refreshToken = refreshToken;
-
-//        this.roles = roles;
-
-        this.authority = authority;
-
+        this.authority=authority;
     }
 
     public void updateProfile(String userComment, String userDesc) {
@@ -136,15 +140,20 @@ public class Users implements UserDetails {
         this.userUpdateDate = new Timestamp(System.currentTimeMillis());
     }
 
-
-    // 비밀번호 재설정
-    public void updatePwd(String userPwd){
-        this.userPwd=userPwd;
+    public void updateNickname(String userNickname){
+        this.userNickname=userNickname;
     }
+    // 비밀번호 재설정
+    public void updatePwd(String userPwd) {
+        this.userPwd = userPwd;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(String.valueOf(this.authority)));
+        return authorities;
     }
 
     @Override

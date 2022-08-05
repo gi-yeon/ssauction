@@ -1,6 +1,8 @@
 package com.ssafy.ssauction.web.dto.Items;
 
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.items.DealStatus;
+import com.ssafy.ssauction.domain.items.Quality;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,13 @@ public class ItemsResponseDto {
     private Long itemNo;
     private String itemName;
     private String itemModelNo;
-    private int itemQuality;
-    private int itemDealStatus;
+
+    private String sellerNickname;
+    private Quality itemQuality;
+    private DealStatus itemDealStatus;
     private String itemDesc;
     private int itemStartPrice;
     private int itemFinalPrice;
-    private String sellerNickname;
 
     @Builder
     public ItemsResponseDto(Items item) {

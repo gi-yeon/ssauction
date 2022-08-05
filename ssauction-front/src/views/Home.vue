@@ -49,6 +49,7 @@ export default {
       console.log(this.hotDeals);
     });
   },
+
   methods: {},
 };
 </script>
