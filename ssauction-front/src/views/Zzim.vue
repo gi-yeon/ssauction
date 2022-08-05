@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 100px">
-  <h1>환경 설정</h1>
+  <h1>찜 목록</h1>
   <br>
   </div>
 
@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "SsauctionHouse",
+  name: "SsauctionZzim",
 
   data() {
     return {};

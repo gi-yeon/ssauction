@@ -1,7 +1,9 @@
 <template>
-  <br />
+  <div style="margin-top: 100px">
   <h1>회원가입</h1>
   <br />
+
+  </div>
 
   <div>
     <input
@@ -26,8 +28,10 @@
       v-model="pwdCheck"
       placeholder="비밀번호 확인"
     />
-    <br />
-    <br />
+    <br>
+    <p v-if="'user_pwd === user_pwd2'">비밀번호가 일치합니다.</p>
+    <p v-else>비밀번호가 일치하지 않습니다.</p>
+    <br>
     <input
       id="user_nickname"
       type="String"
@@ -40,7 +44,7 @@
       id="user_phone_no"
       type="String"
       v-model="userPhoneNo"
-      placeholder="전화번호 010-0000-0000"
+      placeholder="전화번호 ex) 01012345678"
     />
     <br />
     <br />
@@ -62,6 +66,9 @@
   </div>
 </template>
 
+<script lang="ts" setup>
+
+</script>
 
 <script>
 import axios from "@/utils/axios";

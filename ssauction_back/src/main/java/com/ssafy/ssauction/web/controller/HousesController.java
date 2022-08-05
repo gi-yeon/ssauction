@@ -148,6 +148,7 @@ public class HousesController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
     @GetMapping("{itemNo}")
     public ResponseEntity<HousesItemsResponseDto> search(@PathVariable Long itemNo) {
         Items item = itemsService.findEntityById(itemNo);

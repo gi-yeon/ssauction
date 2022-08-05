@@ -1,44 +1,64 @@
-<template> 
-    <div id="App" class="nav">
-      <div class="brand fw-bold">SSAUCTION</div>
-      
-      <div class="wrap">
-        <router-link to="/test">Test</router-link> &nbsp; 
-        <router-link to="/findid">FindId</router-link> &nbsp; 
-        <router-link to="/resetpwd">ResetPwd</router-link> &nbsp;  
-        <router-link to="/login"><img src="@\assets\imgs\login.png" alt="Login" class="icon2"></router-link> &nbsp; &nbsp;
-        <router-link to="/signup"><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"></router-link> &nbsp; &nbsp;
-      </div>
-
+<template>
+  <div>
+    <div class="brand" style="d-flex justify-content-start padding-left:15px">
+      SSAUCTION
     </div>
+
+    <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
+    <b
+      v-if="user.isLogin"
+      style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;"
+    >
+      {{ user.loginUser.userNickname }}님 반갑습니다😎 </b
+    >&nbsp; &nbsp;
+    <a v-if="user.isLogin" @click="logout" style="margin-right: 15px"
+      ><img src="@\assets\imgs\logout.png" alt="Logout" class="icon2" /></a
+    >&nbsp; &nbsp;
+
+    <!-- 로그아웃 한 상태에서는 로그인, 회원가입 버튼만 노출됨 -->
+    <div
+      v-else
+      style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;"
+    >
+      <router-link to="/login"
+        ><img src="@\assets\imgs\login.png" alt="Login" class="icon2"
+      /></router-link>
+      &nbsp; &nbsp;
+      <router-link to="/signup"
+        ><img src="@\assets\imgs\signup.png" alt="Signup" class="icon3"
+      /></router-link>
+      &nbsp; &nbsp;
+    </div>
+    <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
+    <b v-if="user.isLogin">
+      {{ user.loginUser.userNickname }}님 반갑습니다*^^*
+    </b>
+    <button v-if="user.isLogin" @click="logout">logout</button>
+  </div>
 </template>
 
 <script>
-  export default {
-    name: 'NavBar',
-    computed: {
+import { mapState } from "vuex";
+
+export default {
+  name: "NavBar",
+  computed: {
+    ...mapState(["user"]),
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("user/userLogout");
     },
-  }
+  },
+};
 </script>
 
 <style>
-.wrap {
-  padding: 20px 10px;
-}
-      
 .brand {
-  display: inline;
+  /* display: inline; */
   font-size: 50px;
-  color:rgb(94, 94, 94);
+  color: rgb(94, 94, 94);
   padding-left: 15px;
-  margin: 4px;
-  background-color: rgb(255, 170, 165);
-}
-
-.nav {
-  background-color: rgb(255, 170, 165);
-  display: flex;
-  justify-content: space-between;
 }
 
 .icon2 {

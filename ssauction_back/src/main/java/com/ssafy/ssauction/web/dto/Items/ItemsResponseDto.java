@@ -2,6 +2,7 @@ package com.ssafy.ssauction.web.dto.Items;
 
 import com.ssafy.ssauction.domain.items.DealStatus;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.items.DealStatus;
 import com.ssafy.ssauction.domain.items.Quality;
 import lombok.Builder;
 import lombok.Getter;

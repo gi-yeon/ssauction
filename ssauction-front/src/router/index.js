@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+// import { useCookies } from "vue3-cookies";
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Signup from "@/views/Signup.vue";
@@ -12,6 +13,7 @@ import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
 import ProfileUpdate from "@/views/ProfileUpdate.vue"
 import Sessions from "@/views/Sessions.vue";
+
 const routes = [
   {
     path: "/",
@@ -60,14 +62,14 @@ const routes = [
     component: Profile,
   },
   {
-    path: "/profile/update",
-    name: "ProfileUpdate",
-    component: ProfileUpdate,
-  },
-  {
     path: "/sessions/:houseNo",
     name: "Sessions",
     component: Sessions,
+  },
+  {
+    path: "/profile/update",
+    name: "ProfileUpdate",
+    component: ProfileUpdate,
   },
   {
     path: "/zzim",

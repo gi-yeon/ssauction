@@ -52,8 +52,6 @@ public class SessionsController {
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
     }
 
-
-    //    @RequestMapping(value = "/getToken", method = RequestMethod.POST)
     @PostMapping("/getToken")
     @ApiOperation(value = "Token 요청", notes = "<strong>OpenVidu 서버</strong>에 토큰을 요청한다.")
     @ApiResponses({
@@ -61,7 +59,6 @@ public class SessionsController {
             @ApiResponse(code = 404, message = "잘못된 요청", response = SessionsTokenResponseDto.class),
             @ApiResponse(code = 500, message = "서버 오류", response = SessionsTokenResponseDto.class)
     })
-//    public ResponseEntity<JSONObject> getToken(@RequestBody String sessionNameParam, @ApiIgnore HttpSession httpSession)
     public ResponseEntity<SessionsTokenResponseDto> getToken(@RequestBody @ApiParam(value="세션 이름 및 유저 정보", required = true) SessionsCreateJoinRequestDto sessionNameLoggedUserParam)
             throws ParseException {
 
@@ -72,16 +69,12 @@ public class SessionsController {
 //        }
         System.out.println("Getting a token from OpenVidu Server | {sessionName, loggedUser, createNewSession}=" + sessionNameLoggedUserParam);
 
-//        JSONObject sessionJSON = (JSONObject) new JSONParser().parse(sessionNameLoggedUserParam);
-//        JSONObject sessionUserJSON = (JSONObject) new JSONParser().parse(sessionNameLoggedUserParam);
-
         // The video-call to connect
         String sessionName = (String) sessionNameLoggedUserParam.getSessionName();
         String loggedUser = (String) sessionNameLoggedUserParam.getLoggedUser();
         Boolean createNewSession = (Boolean) sessionNameLoggedUserParam.getCreateNewSession();
 
         // Role associated to this user
-//        OpenViduRole role = LoginController.users.get(httpSession.getAttribute("loggedUser")).role;
         OpenViduRole role = null;
         if (createNewSession)
             role = OpenViduRole.MODERATOR;
@@ -89,9 +82,7 @@ public class SessionsController {
             role = OpenViduRole.PUBLISHER;
 
         // Optional data to be passed to other users when this user connects to the
-        // video-call. In this case, a JSON with the value we stored in the HttpSession
-        // object on login
-//        String serverData = "{\"serverData\": \"" + httpSession.getAttribute("loggedUser") + "\"}";
+        // video-call.
         String serverData = "{\"serverData\": \"" + loggedUser + "\"}";
 
         // Build connectionProperties object with the serverData and the role
@@ -162,7 +153,6 @@ public class SessionsController {
             @ApiResponse(code = 404, message = "잘못된 요청", response = JSONObject.class),
             @ApiResponse(code = 500, message = "서버 오류", response = JSONObject.class)
     })
-//    public ResponseEntity<JSONObject> removeUser(@RequestBody String sessionNameToken, @ApiIgnore HttpSession httpSession)
     public ResponseEntity<JSONObject> removeUser(@RequestBody @ApiParam(value="세션 이름 및 토큰", required = true) SessionsRemoveUserRequestDto sessionNameToken)
             throws Exception {
 
@@ -174,7 +164,6 @@ public class SessionsController {
         System.out.println("Removing user | {sessionName, token}=" + sessionNameToken);
 
         // Retrieve the params from BODY
-//        JSONObject sessionNameTokenJSON = (JSONObject) new JSONParser().parse(sessionNameToken);
         String sessionName = (String) sessionNameToken.getSessionName();
         String token = (String) sessionNameToken.getToken();
 

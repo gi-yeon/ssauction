@@ -36,18 +36,6 @@ public class UserImgs {
     @JoinColumn(name = "user_no")
     private Users user;
 
-
-    @Override
-    public String toString() {
-        return "UserImgs{" +
-                "userNo=" +
-                ", userImgName='" + userImgName + '\'' +
-                ", userImgUri='" + userImgUri + '\'' +
-                ", userImgRegDate=" + userImgRegDate +
-                ", userImgUpdateDate=" + userImgUpdateDate +
-                ", user=" + user +
-                '}';
-    }
     public void update(String userImgName, String userImgUri){
         this.userImgName=userImgName;
         this.userImgUri=userImgUri;

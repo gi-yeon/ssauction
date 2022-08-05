@@ -1,15 +1,21 @@
 <template>
-  <nav-bar v-if="!isInSession"></nav-bar>
-  <div class="container">
-    <div class="row">
-      <side-bar v-if="!isInSession" class="col-xs-1"></side-bar>
-      <div v-if="!isInSession">
-        <router-view />
-      </div>
-      <div v-else class="col-xs-11">
-        <router-view/>
-      </div>
-    </div>
+  <div id="app" class="common-layout">
+    <!-- 전체 레이아웃을 el-header, el-aside, el-container로 나눈 뒤, 각각에 navbar.vue, sidebar.vue, router vue를 배치함 -->
+    <el-container>
+      <el-header>
+        <nav-bar id="navbar" v-if="!isInSession"></nav-bar>
+      </el-header>
+
+      <el-aside>
+        <side-bar id="sidebar" v-if="!isInSession"></side-bar>
+      </el-aside>
+
+      <el-main id="container">
+        <router-view></router-view>
+      </el-main>
+
+      <!-- <el-footer id="footer">SSAFY 7th Seoul A806</el-footer> -->
+    </el-container>
   </div>
 </template>
 
@@ -29,6 +35,9 @@ export default {
     const URLParams = new URL(window.location).searchParams;
     console.log(URLParams.get("isInSession"));
     this.isInSession = URLParams.get("isInSession");
+
+    //쿠키에서 logininfo를 가져온다.
+    this.$store.dispatch("user/getLoginInfo");
   },
 };
 </script>
@@ -46,6 +55,46 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: rgb(65, 65, 65);
+}
+
+#footer {
+  position: fixed;
+  text-align: center;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+}
+
+#navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: rgb(255, 170, 165);
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+}
+
+#sidebar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 70px;
+  overflow-x: hidden;
+  bottom: 0;
+  width: 70px;
+  height: 100%;
+  background-color: rgb(255, 211, 182);
+}
+
+#container {
+  position: fixed;
+  left: 70px;
+  right: 70px;
+  top: 70px;
+  bottom: 0;
 }
 </style>
