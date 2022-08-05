@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.domain.controller;
+package com.ssafy.ssauction.web.controller;
 
 import com.ssafy.ssauction.service.posts.PostsService;
 import com.ssafy.ssauction.web.dto.posts.PostsResponseDto;

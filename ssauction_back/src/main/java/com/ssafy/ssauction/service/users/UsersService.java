@@ -10,7 +10,6 @@ import com.ssafy.ssauction.web.dto.users.*;
 
 import java.util.NoSuchElementException;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,19 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
-<<<<<<< HEAD
     private final UserImgsRepository userImgsRepository;
+
     @Transactional
-    public Users save(UsersSaveRequestDto requestDto) {
-        Users user=usersRepository.save(requestDto.toEntity());
+    public Users saveImage(UsersSaveRequestDto requestDto) {
+        Users user = usersRepository.save(requestDto.toEntity());
         user.setAuthority(Authority.ROLE_USER);
         return user;
-=======
-
+    }
 
     @Autowired
     PasswordEncoder passwordEncoder;
-
 
     @Transactional
     public Users save(UsersSaveRequestDto requestDto) {
@@ -45,7 +42,6 @@ public class UsersService {
         user.setUserPhoneNo(requestDto.getUserPhoneNo());
         user.setUserNickname(requestDto.getUserNickname());
         return usersRepository.save(user.toEntity());
->>>>>>> 62ad3126b63b2984a13156332024715ff1a80330
     }
 
     @Transactional
@@ -53,12 +49,13 @@ public class UsersService {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         users.updateProfile(requestDto.getUserComment(), requestDto.getUserDesc());
     }
+
     @Transactional
     public String updateNickname(Long userNo, UsersNameUpdateRequestDto requestDto) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         try {
-            Users others=usersRepository.findByUserEmail(requestDto.getUserNickname()).get();
-        }catch (NoSuchElementException e){
+            Users others = usersRepository.findByUserEmail(requestDto.getUserNickname()).get();
+        } catch (NoSuchElementException e) {
             users.updateNickname(requestDto.getUserNickname());
             return "success";
         }
@@ -78,18 +75,17 @@ public class UsersService {
     }
 
     public UsersAuthResponseDto findByUserEmail(String userEmail) {
-        System.out.println("\n\n\n---------------------------"+userEmail+"--------------------------\n\n\n");
+        System.out.println("\n\n\n---------------------------" + userEmail + "--------------------------\n\n\n");
         Users entity = usersRepository.findByUserEmail(userEmail).get();
-        //orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        // orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
         System.out.println(entity.toString());
-
 
         return new UsersAuthResponseDto(entity);
     }
 
     public UsersAuthResponseDto findByUserNo(Long userNo) {
-        Users entity = usersRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-
+        Users entity = usersRepository.findByUserNo(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         return new UsersAuthResponseDto(entity);
     }
@@ -111,7 +107,7 @@ public class UsersService {
         try {
             entity = usersRepository.findByUserPhoneNo(userPhoneNo).get();
             System.out.println(entity.toString());
-        }catch(NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             System.out.println("없음");
             return null;
         }
@@ -136,15 +132,16 @@ public class UsersService {
         System.out.println(requestDto.toString());
         Users user = null;
         try {
-            user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd()).get();
+            user = usersRepository.findByUserEmailAndUserPwd(requestDto.getLoginEmail(), requestDto.getLoginPwd())
+                    .get();
         } catch (NoSuchElementException e) {
             System.out.println("없음");
             e.getMessage();
         }
         UsersResponseDto responseDto = null;
 
-        if (user != null&&user.getAuthority()==Authority.ROLE_USER) {
-            responseDto= UsersResponseDto.builder()
+        if (user != null && user.getAuthority() == Authority.ROLE_USER) {
+            responseDto = UsersResponseDto.builder()
                     .entity(user)
                     .build();
         }
@@ -152,8 +149,8 @@ public class UsersService {
     }
 
     public UserInfoResponseDto getInfo(Long userNo) {
-        Users user=usersRepository.findById(userNo).get();
-        UserImgs img=userImgsRepository.findByUser(user).get();
+        Users user = usersRepository.findById(userNo).get();
+        UserImgs img = userImgsRepository.findByUser(user).get();
         return UserInfoResponseDto.builder()
                 .user(user)
                 .img(img)

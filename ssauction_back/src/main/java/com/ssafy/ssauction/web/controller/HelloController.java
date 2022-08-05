@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.domain.controller;
+package com.ssafy.ssauction.web.controller;
 import com.ssafy.ssauction.web.dto.HelloResponseDto;
 import com.ssafy.ssauction.web.dto.Hello.HelloPostRequestDto;
 import org.springframework.web.bind.annotation.*;

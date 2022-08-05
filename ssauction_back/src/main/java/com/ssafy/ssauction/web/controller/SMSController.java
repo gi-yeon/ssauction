@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.domain.controller;
+package com.ssafy.ssauction.web.controller;
 
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;

@@ -1,7 +1,7 @@
 package com.ssafy.ssauction.web.dto.Items;
 
-import com.ssafy.ssauction.domain.items.DealStatus;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.items.DealStatus;
 import com.ssafy.ssauction.domain.items.Quality;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +13,8 @@ public class ItemsResponseDto {
     private Long itemNo;
     private String itemName;
     private String itemModelNo;
+
+    private String sellerNickname;
     private Quality itemQuality;
     private DealStatus itemDealStatus;
     private String itemDesc;
@@ -29,5 +31,6 @@ public class ItemsResponseDto {
         this.itemDealStatus = item.getItemDealStatus();
         this.itemStartPrice = item.getItemStartPrice();
         this.itemFinalPrice = item.getItemFinalPrice();
+        this.sellerNickname = item.getSeller().getUserNickname();
     }
 }

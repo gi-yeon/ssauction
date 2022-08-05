@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.domain.controller;
+package com.ssafy.ssauction.web.controller;
 
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;

@@ -1,4 +1,5 @@
-package com.ssafy.ssauction.domain.controller;
+package com.ssafy.ssauction.web.controller;
+
 
 import java.io.IOException;
 import java.util.stream.Collectors;

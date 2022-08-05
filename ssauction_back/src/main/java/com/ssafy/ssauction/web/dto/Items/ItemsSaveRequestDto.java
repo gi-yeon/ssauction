@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class ItemsSaveRequestDto {
     private String itemName;
     private String itemModelNo;
+
     private Quality itemQuality;
     private DealStatus itemDealStatus;
     private String itemDesc;
@@ -21,15 +22,17 @@ public class ItemsSaveRequestDto {
     private Long userNo;
 
     @Builder
-    public ItemsSaveRequestDto(Long userNo, String itemName, String itemModelNo, Quality itemQuality, DealStatus itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice){
-        this.itemName=itemName;
-        this.itemModelNo=itemModelNo;
-        this.itemQuality=itemQuality;
-        this.itemDealStatus=DealStatus.SELL;
-        this.itemDesc=itemDesc;
-        this.itemStartPrice=itemStartPrice;
-        this.itemFinalPrice=itemFinalPrice;
-        this.userNo=userNo;
+
+    public ItemsSaveRequestDto(Long userNo, String itemName, String itemModelNo, Quality itemQuality,
+            DealStatus itemDealStatus, String itemDesc, int itemStartPrice, int itemFinalPrice) {
+        this.itemName = itemName;
+        this.itemModelNo = itemModelNo;
+        this.itemQuality = itemQuality;
+        this.itemDealStatus = DealStatus.SELL;
+        this.itemDesc = itemDesc;
+        this.itemStartPrice = itemStartPrice;
+        this.itemFinalPrice = itemFinalPrice;
+        this.userNo = userNo;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class ItemsSaveRequestDto {
                 '}';
     }
 
-    public Items toEntity(Users seller){
+    public Items toEntity(Users seller) {
         return Items.builder()
                 .itemName(itemName)
                 .itemModelNo(itemModelNo)

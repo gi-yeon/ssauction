@@ -1,37 +1,39 @@
 <template>
-  <br />
-  <br />
-  <h1>{{ userNickname }}님의 프로필</h1>
-  <br />
-  <br />
-  <div v-show="isLogin">
-    <input v-model="nickname" />
-    <br />
-    <button @click="putUserName">닉네임 전송</button>
-    <br />
-    <input v-model="desc" />
-    <br />
-    <input v-model="comment" />
-    <br />
-    <button @click="putUserInfo">프로필 전송</button>
-    <br />
-    <input v-model="imgUri" />
-    <br />
-    <button @click="putUserImg">uri 전송</button>
+  <div>
     <br />
     <br />
-    <h3>유저번호 : {{ userNo }}</h3>
+    <h1>{{ userNickname }}님의 프로필</h1>
     <br />
-    <h3>유저등급 : {{ userGrade }}</h3>
     <br />
-    <h3>유저로그인 : {{ isLogin }}</h3>
-    <br />
-    <h3>유저설명 : {{ userDesc }}</h3>
-    <br />
-    <h3>유저한줄평 : {{ userComment }}</h3>
-    <br />
-    <h3>유저사진uri : {{ userImgUri }}</h3>
-    <br />
+    <div v-show="isLogin">
+      <input v-model="nickname" />
+      <br />
+      <button @click="putUserName">닉네임 전송</button>
+      <br />
+      <input v-model="desc" />
+      <br />
+      <input v-model="comment" />
+      <br />
+      <button @click="putUserInfo">프로필 전송</button>
+      <br />
+      <input v-model="imgUri" />
+      <br />
+      <button @click="putUserImg">uri 전송</button>
+      <br />
+      <br />
+      <h3>유저번호 : {{ userNo }}</h3>
+      <br />
+      <h3>유저등급 : {{ userGrade }}</h3>
+      <br />
+      <h3>유저로그인 : {{ isLogin }}</h3>
+      <br />
+      <h3>유저설명 : {{ userDesc }}</h3>
+      <br />
+      <h3>유저한줄평 : {{ userComment }}</h3>
+      <br />
+      <h3>유저사진uri : {{ userImgUri }}</h3>
+      <br />
+    </div>
   </div>
 </template>
 

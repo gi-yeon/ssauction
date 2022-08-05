@@ -11,6 +11,7 @@ import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
 import Zzim from "@/views/Zzim.vue";
 import Settings from "@/views/Settings.vue";
+import Sessions from "@/views/Sessions.vue";
 import ProfileUpdate from "@/views/ProfileUpdate.vue";
 import authorizationTest from "@/views/authorizationTest.vue";
 
@@ -65,6 +66,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/sessions/:houseNo",
+    name: "Sessions",
+    component: Sessions,
   },
   {
     path: "/profile/update",

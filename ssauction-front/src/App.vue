@@ -1,24 +1,22 @@
 <template>
   <div id="app" class="common-layout">
-  <!-- 전체 레이아웃을 el-header, el-aside, el-container로 나눈 뒤, 각각에 navbar.vue, sidebar.vue, router vue를 배치함 -->
+    <!-- 전체 레이아웃을 el-header, el-aside, el-container로 나눈 뒤, 각각에 navbar.vue, sidebar.vue, router vue를 배치함 -->
     <el-container>
       <el-header>
-        <nav-bar id="navbar"></nav-bar>
+        <nav-bar id="navbar" v-if="!isInSession"></nav-bar>
       </el-header>
 
       <el-aside>
-        <side-bar id="sidebar"></side-bar>
+        <side-bar id="sidebar" v-if="!isInSession"></side-bar>
       </el-aside>
-      
+
       <el-main id="conitainer">
         <router-view></router-view>
       </el-main>
 
       <!-- <el-footer id="footer">SSAFY 7th Seoul A806</el-footer> -->
     </el-container>
-
   </div>
-
 </template>
 
 <script>
@@ -28,8 +26,16 @@ import SideBar from "@/components/SideBar.vue";
 export default {
   name: "App",
   components: { NavBar, SideBar },
-  //쿠키에서 logininfo를 가져온다.
+  data() {
+    return {
+      isInSession: false,
+    };
+  },
   mounted() {
+    const URLParams = new URL(window.location).searchParams;
+    console.log(URLParams.get("isInSession"));
+    this.isInSession = URLParams.get("isInSession");
+    //쿠키에서 logininfo를 가져온다.
     this.$store.dispatch("user/getLoginInfo");
   },
 };
@@ -48,11 +54,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color:rgb(65, 65, 65);
+  color: rgb(65, 65, 65);
 }
 
 #footer {
-  position:fixed;
+  position: fixed;
   text-align: center;
   left: 0;
   right: 0;
@@ -61,7 +67,7 @@ export default {
 }
 
 #navbar {
-  position:fixed;
+  position: fixed;
   left: 0;
   right: 0;
   height: 70px;
@@ -72,7 +78,7 @@ export default {
 }
 
 #sidebar {
-  position:fixed;
+  position: fixed;
   left: 0;
   right: 0;
   top: 70px;
@@ -84,7 +90,7 @@ export default {
 }
 
 #container {
-  position:fixed;
+  position: fixed;
   left: 70px;
   right: 70px;
   top: 70px;

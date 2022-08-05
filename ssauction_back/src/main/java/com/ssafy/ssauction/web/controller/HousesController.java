@@ -1,4 +1,4 @@
-package com.ssafy.ssauction.domain.controller;
+package com.ssafy.ssauction.web.controller;
 
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
@@ -73,7 +73,7 @@ public class HousesController {
             @RequestPart(value="houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
             @RequestPart(value="files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
         Users user = usersService.findEntityById(itemDto.getUserNo());          //  itemDto에서 현재 사용자의 UserNo를 통해 현재 user를 찾는다.
-                                                                                //      나중에 JWT 인증 정보로 대체해야 한다.
+        //      나중에 JWT 인증 정보로 대체해야 한다.
         System.out.println(itemDto.toString());
         Items item = itemsService.save(user, itemDto);                          //  item에 유저 정보와 item 정보를 등록한다.
         user.getSellItems().add(item);                                          //  user.SellItems에도 해당 item의 정보를 추가한다.
