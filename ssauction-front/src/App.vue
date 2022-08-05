@@ -14,7 +14,7 @@
         <router-view></router-view>
       </el-main>
 
-      <el-footer id="footer">SSAFY 7th Seoul A806</el-footer>
+      <!-- <el-footer id="footer">SSAFY 7th Seoul A806</el-footer> -->
     </el-container>
 
   </div>

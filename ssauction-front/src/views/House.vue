@@ -1,133 +1,68 @@
 <template>
-<div style="margin-top: 100px">
-  <h1>경매방 만들기</h1>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>제목</h3>
-    </div>
-    <div class="col-8 data">
-      <input
-        v-model="house.houseTitle"
-        class="form-control"
-        type="text"
-        required
+  <div style="margin-top: 100px">
+    <br>
+    <h1>경매방 만들기</h1>
+    <br>
+    <div class="row" style="padding:10px;">
+      <label class="col-4" for="houseTitle">방 제목</label>
+      <div class="col-8">
+        <el-input
+          id="houseTitle"
+          v-model="house.houseTitle"
+          type="text"
+          required>
+      </div>
+      
+      <label class="col-4" for="">경매 날짜</label>
+      <div class="col-8">
+      <el-date-picker
+        v-model="value2"
+        type="date"
+        placeholder="경매 날짜를 선택하세요"
+        :shortcuts="shortcuts"
+        :size="size"
       />
+
+      </div>
+
     </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>경매 날짜</h3>
-    </div>
-    <div class="col-2 data">
-      <input
-        v-model="this.houseDate"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-    <div class="col-2 label">
-      <h3>경매 시간</h3>
-    </div>
-    <div class="col-2 data">
-      <input
-        v-model="this.houseTime"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>매물 이름</h3>
-    </div>
-    <div class="col-8 data">
-      <input
-        v-model="item.itemName"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>모델 번호</h3>
-    </div>
-    <div class="col-8 data">
-      <input
-        v-model="item.itemModelNo"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>카테고리</h3>
-    </div>
-    <div class="col-8 data">
-      <input
-        v-model="item.itemCategory"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>매물상태</h3>
-    </div>
-    <div class="col-8 data">
-      <input v-model="item.itemQuality" class="form-control" type="text" />
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>매물설명</h3>
-    </div>
-    <div class="col-8 data">
-      <textarea
-        v-model="item.itemDesc"
-        class="form-control"
-        type="text"
-      ></textarea>
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>시작가격</h3>
-    </div>
-    <div class="col-8 data">
-      <input
-        v-model="item.itemStartPrice"
-        class="form-control"
-        type="text"
-        required
-      />
-    </div>
-  </div>
-  <div class="row house-input">
-    <div class="col-4 label">
-      <h3>사진</h3>
-    </div>
-    <div class="col-8 data">
-      <input class="form-control" type="text" />
-    </div>
-  </div>
-  <br>
-  <div class="house-input">
-    <button @click="createHouse" class="btn_pink">경매방 생성</button>
-  </div>
 
   </div>
 </template>
 
 <script>
 import axios from "@/utils/axios";
+import { ref } from 'vue';
+
+const value1 = ref('')
+const value2 = ref('')
+
+const shortcuts = [
+  {
+    text: '오늘',
+    value: new Date(),
+  },
+  {
+    text: '내일',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() + 3600 * 1000 * 24)
+      return date
+    },
+  },
+  {
+    text: '다음 주',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
+      return date
+    },
+  },
+]
+
+const disabledDate = (time: Date) => {
+  return time.getTime() > Date.now()
+}
 
 export default {
   name: "SsauctionHouse",
@@ -181,8 +116,19 @@ export default {
 };
 </script>
 
-<style>
-.house-input {
-  padding: 10px;
+
+<style scoped>
+el-input {
+  width: 500px;
+  height: 50px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
+label {
+  text-align: center;
 }
 </style>
