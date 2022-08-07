@@ -15,8 +15,10 @@ export default {
     return {
       timer: null,
       startTime: 5,
+      pauseTime: null,
       timeCounter: null,
       timerStr: null,
+      isPaused: false,
     };
   },
   mounted() {
@@ -31,11 +33,17 @@ export default {
         return;
       }
       console.log("start of timerStart()");
-      this.timeCounter = this.startTime;
+
+      if (this.isPaused) {
+        this.timeCounter = this.pauseTime;
+      } else {
+        this.timeCounter = this.startTime;
+      }
 
       this.timer = setInterval(() => {
         this.timeCounter--;
-        this.timerStr = this.formatTime();
+        console.log(`timeCounter: ${this.timeCounter}`);
+        this.timerStr = this.formatTime(this.timeCounter);
 
         if (this.timeCounter <= 0) {
           console.log("카운트다운이 종료되었습니다.");
@@ -45,17 +53,24 @@ export default {
     },
     timerPause() {
       clearInterval(this.timer);
+      this.pauseTime = this.timeCounter;
+      this.isPaused = true;
       this.timer = null;
     },
     timerStop() {
       if (this.timer !== null) {
         clearInterval(this.timer);
-        this.timeCounter = 0;
       }
+      this.timeCounter = 0;
+      this.timerStr = this.formatTime(this.timeCounter);
+      this.isPaused = false;
       this.timer = null;
     },
     timerReset() {
       this.timeCounter = this.startTime;
+      this.timerStr = this.formatTime(this.timeCounter);
+
+      console.log(`timeCounter: ${this.timeCounter}`);
     },
     formatTime(timeInSeconds) {
       let time = timeInSeconds / 60;

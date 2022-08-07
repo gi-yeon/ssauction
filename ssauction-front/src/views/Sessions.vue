@@ -13,6 +13,7 @@
           <div class="row">
             <div id="video-container">
               <participant-video
+                id="publisher"
                 :stream-manager="publisher"
                 @click="updateMainVideoStreamManager(publisher)"
                 style="display: inline-block"
@@ -34,6 +35,7 @@
             <in-session-panel
               :isVideoOn="this.isVideoOn"
               :isMicOn="this.isMicOn"
+              @leaveSession="this.leaveSession"
             />
           </div>
         </div>
@@ -74,17 +76,14 @@
 <script>
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import MainVideo from "@/components/MainVideo.vue";
-import ParticipantVideo from "@/components/ParticipantVideo.vue";
-import ChatMessage from "@/components/ChatMessage.vue";
-import InSessionPanel from "@/components/InSessionPanel.vue";
-import JoinSession from "@/components/JoinSession.vue";
-import SessionTimer from "@/components/SessionTimer.vue";
+import MainVideo from "@/components/Session/MainVideo.vue";
+import ParticipantVideo from "@/components/Session/ParticipantVideo.vue";
+import ChatMessage from "@/components/Session/ChatMessage.vue";
+import InSessionPanel from "@/components/Session/InSessionPanel.vue";
+import JoinSession from "@/components/Session/JoinSession.vue";
+import SessionTimer from "@/components/Session/SessionTimer.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
-// const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "SessionsView",
@@ -204,7 +203,7 @@ export default {
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
-            let publisher = this.OV.initPublisher(undefined, {
+            let publisher = this.OV.initPublisher("publisher", {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
@@ -232,6 +231,25 @@ export default {
       });
 
       window.addEventListener("beforeunload", this.leaveSession);
+    },
+
+    shareMonitor() {
+      let monitorPublisher = this.OV.initPublisher("main-video", {
+        videoSource: "screen",
+      });
+      monitorPublisher.once("accessAllowed", () => {
+        publisher.stream
+          .getMediaStream()
+          .getVideoTracks()[0]
+          .addEventListener("ended", () => {
+            console.log('User pressed the "Stop sharing" button');
+          });
+        sessionScreen.publish(publisher);
+      });
+
+      publisher.once("accessDenied", () => {
+        console.warn("ScreenShare: Access Denied");
+      });
     },
 
     leaveSession() {
@@ -337,6 +355,7 @@ export default {
     },
 
     turnOnMic() {},
+    turnOffMic() {},
   },
 };
 </script>
