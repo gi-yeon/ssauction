@@ -22,12 +22,13 @@ import {useRouter } from 'vue-router';
 // npm install universal-cookie
 import { useCookies } from '@vueuse/integrations/useCookies';
 import { useStore } from 'vuex';
+import  jwt_decode from "jwt-decode";
 
 export default {
     name: "BoardRegister",
     setup() {
         const router = useRouter();
-        const cookies = useCookies(['login.userNo', 'login.userNickname']);
+        const cookies = useCookies(['login.userNo', 'login.userNickname', 'accessToken']);
         const store = useStore();
 
         const article = reactive({
@@ -36,6 +37,8 @@ export default {
         });
 
         const registerArticle = () => {
+            console.log(store.state.user.accessToken);
+            console.log(cookies.get('accessToken'));
             let params = {
                 boardTitle: article.title,
                 boardContent: article.content,
