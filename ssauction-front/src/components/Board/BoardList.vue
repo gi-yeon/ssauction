@@ -11,9 +11,8 @@
                 <input type="text" name="search" id="search" v-model="state.search">
                 <button @click="getArticles(0)">검색</button>
             </div>
-            <router-link to="regist">
-                <button>글쓰기</button>
-            </router-link>
+            <button v-show="state.isUser" @click="mvBoardRegister">글쓰기</button>
+
         </div>
         <table class="boardtable">
             <colgroup>
@@ -54,7 +53,10 @@
 <script>
 import BoardListItem from "@/components/Board/item/BoardListItem";
 import axios from '@/utils/axios';
+import { useRouter } from 'vue-router';
 import {reactive} from "vue";
+// npm install universal-cookie
+import { useCookies } from '@vueuse/integrations/useCookies';
 
 export default {
     name: "BoardList",
@@ -62,6 +64,8 @@ export default {
         BoardListItem,
     },
     setup() {
+        const router = useRouter();
+
         const state = reactive({
             startPage : Number,
             endPage: Number,
@@ -73,7 +77,8 @@ export default {
             first: Boolean,
             last: Boolean,
             searchType: "",
-            search: ""
+            search: "",
+            isUser: Boolean
         });
 
         const getArticles = (p) => {
@@ -94,12 +99,12 @@ export default {
                 params: {
                     page: p,
                     size: s,
+                    boardType: 0,
                     searchType: searchT,
                     search: search
                 },
             })
             .then(({data}) => {
-                console.log(data.list);
                 state.currentPage = data.list.number;
                 state.totalPages = data.list.totalPages;
                 state.numberOfElements = data.list.numberOfElements;
@@ -114,11 +119,23 @@ export default {
             })
         }
 
+        const mvBoardRegister = () => {
+            router.push({path: "/board/regist"});
+        }
+
         getPage(0, 10);
         state.searchType = "";
+
+        const cookies = useCookies(['login.userNo']);
+        if(cookies.get('login.userNo') != null)
+            state.isUser = true;
+        else
+            state.isUser = false;
+
         return {
             state,
-            getArticles
+            getArticles,
+            mvBoardRegister
         }
     }
 }
