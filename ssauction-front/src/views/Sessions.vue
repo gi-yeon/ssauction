@@ -1,6 +1,10 @@
 <template>
   <div id="main-container" class="container">
-    <join-session v-if="!session" @joinSession="joinSession" />
+    <join-session
+      v-if="!session"
+      @joinSession="joinSession"
+      @switchModal="switchModal"
+    />
     <div class="row" id="session" v-if="session">
       <div id="session-header">
         <div class="col">
@@ -41,8 +45,11 @@
         </div>
         <div class="col-md-3" id="timer-bid-chat">
           <div class="row" id="timer">
-            <session-timer></session-timer>
+            <session-timer ref="timer"></session-timer>
+            <div><button @click="openBid = !openBid">입찰하기</button></div>
           </div>
+          <div class="row">최고 입찰자 : {{ currentBidder }}</div>
+          <div class="row">최고 금액 : {{ currentPrice }}</div>
           <div class="row" id="chat-history">
             <chat-message
               v-for="(m, index) in messageHistory"
@@ -70,6 +77,71 @@
         </div>
       </div>
     </div>
+    <!-- modal 모달 -->
+    <Teleport to="body">
+      <div v-if="openBid" class="bid-modal">
+        <div class="row modal-title"><h1>경고</h1></div>
+        <div class="row modal-warn">
+          <h3>입찰을 하게 되면 되돌릴 수 없습니다.</h3>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button
+              class="btn btn-primary"
+              @click="priceToBid = Number(priceToBid) + 1000 + ''"
+            >
+              1,000
+            </button>
+          </div>
+          <div class="col">
+            <button
+              class="btn btn-warning"
+              @click="priceToBid = Number(priceToBid) + 5000 + ''"
+            >
+              5,000
+            </button>
+          </div>
+          <div class="col">
+            <button
+              class="btn btn-success"
+              @click="priceToBid = Number(priceToBid) + 10000 + ''"
+            >
+              10,000
+            </button>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger" @click="resetPriceToBid">
+              reset
+            </button>
+          </div>
+          <div class="col-4">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="manualInput"
+                v-model="isManual"
+              />
+              <label class="form-check-label" for="manualInput"
+                >직접 입력하기</label
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <input type="text" v-model="priceToBid" :disabled="!isManual" />
+        </div>
+        <div class="row">
+          {{ priceToKor }}
+        </div>
+        <div class="row">
+          <div class="col">
+            <button @click="makeBid">입찰</button>
+          </div>
+          <div class="col"><button @click="closeModal">닫기</button></div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -98,9 +170,7 @@ export default {
   mounted() {
     this.mySessionId = this.$route.params.houseNo;
   },
-  mounted() {
-    this.mySessionId = this.$route.params.houseNo;
-  },
+
   data() {
     return {
       OV: undefined,
@@ -120,10 +190,78 @@ export default {
       // 마이크, 카메라 설정
       isVideoOn: true,
       isMicOn: true,
+      openBid: false,
+      isManual: false,
+
+      top3List: [],
+      currentBidder: null,
+      currentPrice: "0",
+      priceToBid: "0",
     };
   },
+
+  computed: {
+    priceToKor() {
+      let hanA = new Array(
+        "",
+        "일",
+        "이",
+        "삼",
+        "사",
+        "오",
+        "육",
+        "칠",
+        "팔",
+        "구",
+        "십"
+      );
+      let danA = new Array(
+        "",
+        "십",
+        "백",
+        "천",
+        "",
+        "십",
+        "백",
+        "천",
+        "",
+        "십",
+        "백",
+        "천",
+        "",
+        "십",
+        "백",
+        "천"
+      );
+      let num = this.priceToBid + "";
+      let result = "";
+      for (let i = 0; i < num.length; i++) {
+        let str = "";
+        let han = hanA[num.charAt(num.length - (i + 1))];
+        if (han != "") str += han + danA[i];
+        if (i == 4) str += "만";
+        if (i == 8) str += "억";
+        if (i == 12) str += "조";
+        result = str + result;
+      }
+      return result + "원";
+    },
+  },
   methods: {
-    joinSession() {
+    closeModal() {
+      this.openBid = false;
+      this.resetPriceToBid();
+    },
+    resetPriceToBid() {
+      this.top3List.length == 0
+        ? (this.priceToBid = "0")
+        : (this.priceToBid = this.top3List[0].priceToBid);
+    },
+    switchModal() {
+      this.openBid = !this.openBid;
+    },
+    joinSession(userName) {
+      this.myUserName = userName;
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -253,6 +391,7 @@ export default {
     },
 
     leaveSession() {
+      this.closeModal();
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (this.session) this.session.disconnect();
 
@@ -262,6 +401,10 @@ export default {
       this.subscribers = [];
       this.OV = undefined;
       this.messageHistory = [];
+
+      this.currentBidder = null;
+      this.currentPrice = "0";
+      this.priceToBid = "0";
 
       window.removeEventListener("beforeunload", this.leaveSession);
     },
@@ -333,12 +476,72 @@ export default {
 
     // 타이머 시간을 30초로 초기화하고 시작한다.
     resetTimer() {},
+    makeBid() {
+      // 입찰 검증
+      // if (
+      //   this.top3List.length != 0 &&
+      //   this.top3List[0].sender == this.myUserName
+      // ) {
+      //   console.log("현재 최고가로 입찰하셨습니다.");
+      //   return;
+      // }
 
+      if (
+        this.top3List.length != 0 &&
+        Number(this.top3List[0].priceToBid) >= Number(this.priceToBid)
+      ) {
+        console.log("현재 최고가보다 높은 값을 입력해야 합니다.");
+        return;
+      }
+
+      axios
+        .post(
+          "/sessions/bid",
+          JSON.stringify({
+            bidder: this.myUserName,
+            priceToBid: this.priceToBid,
+            sessionName: this.mySessionId,
+          })
+        )
+        .then(() => {
+          this.session
+            .signal({
+              data: JSON.stringify({
+                sender: this.myUserName,
+                priceToBid: this.priceToBid,
+              }),
+              to: [],
+              type: this.mySessionId + "/bid",
+            })
+            .then((data) => {
+              console.log("after bid");
+              console.log(data);
+            });
+          this.message = null;
+          this.openBid = false;
+        })
+        .catch(() => {
+          console.log("입찰에 실패했습니다.");
+        });
+    },
     // 타이머를 30초로 초기화하고 금액을 전달받은 금액으로 업데이트한다.
     // 만약 전달받은 금액이 이전 금액보다 작거나 같으면 업데이트하지 않는다.
     updateBid(event) {
-      this.resetTimer();
-      this.initTimer();
+      this.$refs.timer.timerReset();
+      this.$refs.timer.timerStart();
+      const data = JSON.parse(event.data);
+      this.currentPrice = data.priceToBid;
+      this.priceToBid = data.priceToBid;
+      this.currentBidder = data.sender;
+      this.top3List.push(data);
+      this.top3List.sort((a, b) => {
+        return Number(b.priceToBid) - Number(a.priceToBid);
+      });
+      if (this.top3List.length > 3) {
+        this.top3List.splice(3, 1);
+      }
+      console.log("updateBid");
+      console.log(this.top3List);
     },
 
     // 타이머를 종료시킨다.
@@ -376,5 +579,25 @@ export default {
 }
 #chat-input {
   background-color: black;
+}
+.bid-modal {
+  position: fixed;
+  z-index: 999;
+  top: 20%;
+  left: 50%;
+  margin-left: -150px;
+  background-color: white;
+  width: auto;
+}
+.form-check {
+  margin-top: 0.5rem;
+  margin-right: 1.5rem;
+  font-size: 1.3rem;
+  width: auto;
+}
+.form-check-input {
+  margin-top: 0;
+  margin-right: 0.3rem;
+  height: 1.8rem;
 }
 </style>

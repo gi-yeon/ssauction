@@ -42,12 +42,13 @@ export default {
 
       this.timer = setInterval(() => {
         this.timeCounter--;
+        if (this.timeCounter <= 0) this.timeCounter = 0;
         console.log(`timeCounter: ${this.timeCounter}`);
         this.timerStr = this.formatTime(this.timeCounter);
 
         if (this.timeCounter <= 0) {
           console.log("카운트다운이 종료되었습니다.");
-          this.timerPause(this.timer);
+          this.timerStop();
         }
       }, 1000);
     },

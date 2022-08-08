@@ -1,16 +1,16 @@
 package com.ssafy.ssauction.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 
+import com.ssafy.ssauction.web.dto.Sessions.BidInfoDto;
 import com.ssafy.ssauction.web.dto.Sessions.SessionsCreateJoinRequestDto;
 import com.ssafy.ssauction.web.dto.Sessions.SessionsRemoveUserRequestDto;
 import com.ssafy.ssauction.web.dto.Sessions.SessionsTokenResponseDto;
 import io.swagger.annotations.*;
+import okhttp3.Response;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -37,6 +37,12 @@ public class SessionsController {
 
     // Collection to pair session names and OpenVidu Session objects
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
+
+    // 경매장별 입찰 정보를 저장하는 map
+    // 각 경매장 이름을 key로 사용하고, 각 경매장별 상위 3명의 정보를 ArrayDeque에 담아 value로 저장한다.
+    // ArrayDeque는 적은 금액에서 큰 금액 순으로 3개까지만 저장한다.
+    private Map<String, ArrayDeque<BidInfoDto>> mapBids = new ConcurrentHashMap<>();
+
     // Collection to pair session names and tokens (the inner Map pairs tokens and
     // role associated)
     private Map<String, Map<String, OpenViduRole>> mapSessionNamesTokens = new ConcurrentHashMap<>();
@@ -229,5 +235,49 @@ public class SessionsController {
         mapSessions.remove(sessionName);
         mapSessionNamesTokens.remove(sessionName);
         return new ResponseEntity<>("Session closed", HttpStatus.OK);
+    }
+
+    @GetMapping("/bid/{sessionName}")
+    public ResponseEntity<ArrayDeque<BidInfoDto>> getBid(@PathVariable String sessionName) {
+        if (mapBids.containsKey(sessionName)) {
+            return new ResponseEntity<>(mapBids.get(sessionName), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PostMapping("/bid")
+    public ResponseEntity<ArrayDeque<BidInfoDto>> updateBid(@RequestBody Map<String, Object> bid) throws Exception {
+        String userName = (String) bid.get("bidder");
+        String priceToBid = (String) bid.get("priceToBid");
+        String sessionName = (String) bid.get("sessionName");
+
+        BidInfoDto newBid = new BidInfoDto(userName, priceToBid);
+        if (!mapBids.containsKey(sessionName)) {
+            mapBids.put(sessionName, new ArrayDeque<>());
+        }
+        ArrayDeque<BidInfoDto> queue = mapBids.get(sessionName);
+        // 적은 금액에서 큰 금액 순으로 3개까지만 저장한다.
+        queue.addLast(newBid);
+        // 3개를 초과하는 입찰 데이터는 필요 없으므로 제거한다.
+        if (queue.size() > 3) {
+            queue.removeFirst();
+        }
+        System.out.println("bidder: " + userName + " priceToBid: " + priceToBid + " mySessionId: " + sessionName);
+
+        return new ResponseEntity<>(queue, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/bid/{sessionName}")
+    public ResponseEntity<ArrayDeque<BidInfoDto>> removeBid(@PathVariable String sessionName) throws Exception {
+        if (mapBids.containsKey(sessionName)) {
+            ArrayDeque<BidInfoDto> result = mapBids.get(sessionName);
+
+            mapBids.remove(sessionName);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
     }
 }

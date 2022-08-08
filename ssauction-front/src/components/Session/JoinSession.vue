@@ -20,7 +20,10 @@
           {{ $route.params.houseTitle }}
         </p>
         <p class="text-center">
-          <button class="btn btn-lg btn-success" @click="$emit('joinSession')">
+          <button
+            class="btn btn-lg btn-success"
+            @click="$emit('joinSession', myUserName)"
+          >
             Join!
           </button>
         </p>
@@ -32,8 +35,10 @@
 <script>
 export default {
   name: "JoinSession",
-  props: {
-    myUserName: String,
+  data() {
+    return {
+      myUserName: null,
+    };
   },
 };
 </script>
