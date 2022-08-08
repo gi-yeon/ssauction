@@ -80,6 +80,18 @@ public class JwtTokenProvider {
                 .build().parseClaimsJws(token).getBody().get("userEmail", String.class);
     }
 
+    public String getUserNo(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(keyForAccessToken)
+                .build().parseClaimsJws(token).getBody().get("userNo", String.class);
+    }
+
+    public String getUserNickname(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(keyForAccessToken)
+                .build().parseClaimsJws(token).getBody().get("userNickname", String.class);
+    }
+
     //Cookie에서 token 값을 가져온다.
     public String resolveToken(HttpServletRequest request) {
 

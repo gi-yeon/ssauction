@@ -1,7 +1,7 @@
 package com.ssafy.ssauction.web.dto.board;
 
 import com.ssafy.ssauction.domain.board.BoardType;
-import com.ssafy.ssauction.domain.comments.Comments;
+import com.ssafy.ssauction.web.dto.comments.CommentsDtoRes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,7 @@ public class BoardDtoRes {
     private int boardReply;
     private String boardRegDate;
 
-    private List<Comments> comments;
+    private List<CommentsDtoRes> comments;
 
     private long userNo;
     private String userNickname;
