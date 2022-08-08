@@ -111,7 +111,8 @@ public class BoardServiceImpl implements BoardService {
         if(board == null)
             return false;
         else {
-            if(board.getUserNo() != boardDtoReq.getUserNo())
+            Users user = usersRepository.findById(boardDtoReq.getUserNo()).orElse(null);
+            if(user == null)
                 return false;
             board.setBoardTitle(boardDtoReq.getBoardTitle() + "(수정됨)");
             board.setBoardContent(boardDtoReq.getBoardContent());

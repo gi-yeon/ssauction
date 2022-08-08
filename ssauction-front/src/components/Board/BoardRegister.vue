@@ -21,12 +21,14 @@ import axios from '@/utils/axios';
 import {useRouter } from 'vue-router';
 // npm install universal-cookie
 import { useCookies } from '@vueuse/integrations/useCookies';
+import { useStore } from 'vuex';
 
 export default {
     name: "BoardRegister",
     setup() {
         const router = useRouter();
         const cookies = useCookies(['login.userNo', 'login.userNickname']);
+        const store = useStore();
 
         const article = reactive({
             title: "",
@@ -37,7 +39,7 @@ export default {
             let params = {
                 boardTitle: article.title,
                 boardContent: article.content,
-                boardType: 0,
+                boardType: store.state.board.boardType,
                 userNo: cookies.get('login.userNo'),
                 userNickname: cookies.get('login.userNickname')
             };

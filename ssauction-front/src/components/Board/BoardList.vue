@@ -57,6 +57,7 @@ import { useRouter } from 'vue-router';
 import {reactive} from "vue";
 // npm install universal-cookie
 import { useCookies } from '@vueuse/integrations/useCookies';
+import { useStore } from 'vuex';
 
 export default {
     name: "BoardList",
@@ -65,6 +66,7 @@ export default {
     },
     setup() {
         const router = useRouter();
+        const store = useStore();
 
         const state = reactive({
             startPage : Number,
@@ -81,6 +83,7 @@ export default {
             isUser: Boolean
         });
 
+
         const getArticles = (p) => {
             getPage(p, 10, state.searchType, state.search);
         }
@@ -94,12 +97,12 @@ export default {
                 alert("마지막 페이지 리스트 입니다");
                 return;
             }
-            
+            console.log(store.state.board.boardType);
             axios.get("http://localhost:8080/board", {
                 params: {
                     page: p,
                     size: s,
-                    boardType: 0,
+                    boardType: store.state.board.boardType,
                     searchType: searchT,
                     search: search
                 },
