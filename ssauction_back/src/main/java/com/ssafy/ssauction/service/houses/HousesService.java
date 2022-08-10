@@ -26,6 +26,7 @@ public class HousesService {
         housesRepository.deleteById(houseNo);
         return houseNo;
     }
+
     public Houses findEntityById(Long houseNo){
         return housesRepository.findById(houseNo).get();
     }

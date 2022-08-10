@@ -5,14 +5,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 
-import com.ssafy.ssauction.web.dto.Sessions.BidInfoDto;
+import com.mysql.cj.x.protobuf.MysqlxCursor;
+import com.ssafy.ssauction.domain.houses.Houses;
+import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
+import com.ssafy.ssauction.domain.users.Users;
+import com.ssafy.ssauction.service.houses.HousesService;
+import com.ssafy.ssauction.service.resultOrders.ResultOrdersService;
+import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.Sessions.SessionsCreateJoinRequestDto;
+import com.ssafy.ssauction.web.dto.Sessions.SessionsInfoResponseDto;
 import com.ssafy.ssauction.web.dto.Sessions.SessionsRemoveUserRequestDto;
 import com.ssafy.ssauction.web.dto.Sessions.SessionsTokenResponseDto;
+import com.ssafy.ssauction.web.dto.resultOrders.ResultOrdersSaveDto;
 import io.swagger.annotations.*;
-import okhttp3.Response;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +32,7 @@ import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
+import retrofit2.http.Path;
 
 @Api(value="세션 API", tags={"Sessions"})
 @RestController
@@ -34,6 +41,11 @@ public class SessionsController {
 
     // OpenVidu object as entrypoint of the SDK
     private OpenVidu openVidu;
+    private final UsersService usersService;
+
+    private final HousesService housesService;
+
+    private final ResultOrdersService resultOrdersService;
 
     // Collection to pair session names and OpenVidu Session objects
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
@@ -41,7 +53,8 @@ public class SessionsController {
     // 경매장별 입찰 정보를 저장하는 map
     // 각 경매장 이름을 key로 사용하고, 각 경매장별 상위 3명의 정보를 ArrayDeque에 담아 value로 저장한다.
     // ArrayDeque는 적은 금액에서 큰 금액 순으로 3개까지만 저장한다.
-    private Map<String, ArrayDeque<BidInfoDto>> mapBids = new ConcurrentHashMap<>();
+    // 방이 생성될 때
+    private Map<String, ArrayDeque<ResultOrdersSaveDto>> mapBids = new ConcurrentHashMap<>();
 
     // Collection to pair session names and tokens (the inner Map pairs tokens and
     // role associated)
@@ -52,7 +65,10 @@ public class SessionsController {
     // Secret shared with our OpenVidu server
     private String SECRET;
 
-    public SessionsController(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
+    public SessionsController(UsersService usersService, HousesService housesService, ResultOrdersService resultOrdersService, @Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
+        this.usersService = usersService;
+        this.housesService = housesService;
+        this.resultOrdersService = resultOrdersService;
         this.SECRET = secret;
         this.OPENVIDU_URL = openviduUrl;
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
@@ -68,36 +84,35 @@ public class SessionsController {
     public ResponseEntity<SessionsTokenResponseDto> getToken(@RequestBody @ApiParam(value="세션 이름 및 유저 정보", required = true) SessionsCreateJoinRequestDto sessionNameLoggedUserParam)
             throws ParseException {
 
-//        try {
-//            checkUserLogged(httpSession);
-//        } catch (Exception e) {
-//            return getErrorResponse(e);
-//        }
-        System.out.println("Getting a token from OpenVidu Server | {sessionName, loggedUser, createNewSession}=" + sessionNameLoggedUserParam);
+        System.out.println("Getting a token from OpenVidu Server | {sessionName, loggedUser, isHost}=" + sessionNameLoggedUserParam);
 
         // The video-call to connect
+        // sessionName이라고 되어있지만 이름 중복으로 인한 오작동을 피하기 위해 sessionNo를 세션 이름으로 사용한다.
         String sessionName = (String) sessionNameLoggedUserParam.getSessionName();
+        // 방에 입장할 때 입력한 닉네임
         String loggedUser = (String) sessionNameLoggedUserParam.getLoggedUser();
-        Boolean createNewSession = (Boolean) sessionNameLoggedUserParam.getCreateNewSession();
+        // 방의 호스트인지 판별하는 변수
+        Boolean isHost = (Boolean) sessionNameLoggedUserParam.getIsHost();
 
-        // Role associated to this user
-        OpenViduRole role = null;
-        if (createNewSession)
+        // 토큰을 요청한 유저에게 부여할 권한
+        // SUBSCRIBER : stream 수신만 가능
+        // PUBLISHER : SUBSCRIBER + stream 전송 가능
+        // MODERATOR : PUBLISHER + 강제로 다른 사람의 연결을 끊을 수 있음
+        OpenViduRole role = OpenViduRole.PUBLISHER;
+        if (isHost) {
             role = OpenViduRole.MODERATOR;
-        else
-            role = OpenViduRole.PUBLISHER;
+        }
 
-        // Optional data to be passed to other users when this user connects to the
-        // video-call.
-        String serverData = "{\"serverData\": \"" + loggedUser + "\"}";
+        // onConnectionCreated 이벤트 발생 시 기존에 접속해있던 다른 유저들에게 전달되는 JSON 형식 추가 정보.
+        String serverData = "{\"clientData\": \"" + loggedUser + "\"," + "\"isHost\" : " + isHost +"}";
 
-        // Build connectionProperties object with the serverData and the role
+        // 서버 데이터와 역할을 담아 connectionProperties를 생성한다.
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).data(serverData).role(role).build();
 
         SessionsTokenResponseDto response = new SessionsTokenResponseDto();
 
+        // 이미 존재하는 세션이면,
         if (this.mapSessions.get(sessionName) != null) {
-            // Session already exists
             System.out.println("Existing session " + sessionName);
             try {
 
@@ -128,18 +143,20 @@ public class SessionsController {
         // New session
         System.out.println("New session " + sessionName);
         try {
-
             // Create a new OpenVidu Session
             Session session = this.openVidu.createSession();
             // Generate a new Connection with the recently created connectionProperties
             String token = session.createConnection(connectionProperties).getToken();
 
-            // Store the session and the token in our collections
+            // 세션 객체를 저장
             this.mapSessions.put(sessionName, session);
+            // 세션에 접속해있는 유저를 저장하는 map 저장하고,
             this.mapSessionNamesTokens.put(sessionName, new ConcurrentHashMap<>());
+            // 현재 접속 요청한 유저를 추가
             this.mapSessionNamesTokens.get(sessionName).put(token, role);
-
-            // Prepare the response with the token
+            // 입찰 정보 저장 deque 생성
+            this.mapBids.put(sessionName, new ArrayDeque<>());
+            // 응답에 토큰 세팅
             response.setToken(token);
 
             // Return the response to the client
@@ -151,7 +168,6 @@ public class SessionsController {
         }
     }
 
-//    @RequestMapping(value = "/removeUser", method = RequestMethod.POST)
     @PostMapping("/removeUser")
     @ApiOperation(value = "User 제거", notes = "session에 접속해있는 User의 token을 제거한다.")
     @ApiResponses({
@@ -161,12 +177,7 @@ public class SessionsController {
     })
     public ResponseEntity<JSONObject> removeUser(@RequestBody @ApiParam(value="세션 이름 및 토큰", required = true) SessionsRemoveUserRequestDto sessionNameToken)
             throws Exception {
-
-//        try {
-//            checkUserLogged(httpSession);
-//        } catch (Exception e) {
-//            return getErrorResponse(e);
-//        }
+        
         System.out.println("Removing user | {sessionName, token}=" + sessionNameToken);
 
         // Retrieve the params from BODY
@@ -205,11 +216,6 @@ public class SessionsController {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private void checkUserLogged(HttpSession httpSession) throws Exception {
-        if (httpSession == null || httpSession.getAttribute("loggedUser") == null) {
-            throw new Exception("User not logged");
-        }
-    }
     // 현재 열려있는 모든 세션을 조회한다.
     @GetMapping
     public ResponseEntity<List<String>> getSessions() throws Exception {
@@ -217,6 +223,7 @@ public class SessionsController {
         return new ResponseEntity<>(sessionNames, HttpStatus.OK);
     }
 
+    // 해당 세션에 있는 유저들을 조회한다.
     @GetMapping({"{sessionName}"})
     public ResponseEntity<List<String>> getSessionUsers(@PathVariable String sessionName) throws Exception {
         List<String> sessionUsers = new ArrayList<>(this.mapSessionNamesTokens.get(sessionName).keySet());
@@ -238,7 +245,7 @@ public class SessionsController {
     }
 
     @GetMapping("/bid/{sessionName}")
-    public ResponseEntity<ArrayDeque<BidInfoDto>> getBid(@PathVariable String sessionName) {
+    public ResponseEntity<ArrayDeque<ResultOrdersSaveDto>> getBid(@PathVariable String sessionName) {
         if (mapBids.containsKey(sessionName)) {
             return new ResponseEntity<>(mapBids.get(sessionName), HttpStatus.OK);
         } else {
@@ -246,32 +253,69 @@ public class SessionsController {
         }
     }
 
-    @PostMapping("/bid")
-    public ResponseEntity<ArrayDeque<BidInfoDto>> updateBid(@RequestBody Map<String, Object> bid) throws Exception {
-        String userName = (String) bid.get("bidder");
-        String priceToBid = (String) bid.get("priceToBid");
+    // 입찰 현황을 갱신한다
+    @PutMapping("/bid")
+    public ResponseEntity<ArrayDeque<ResultOrdersSaveDto>> updateBid(@RequestBody Map<String, Object> bid) throws Exception {
         String sessionName = (String) bid.get("sessionName");
+        String userName = (String) bid.get("bidder");
+        String userNo = (String) bid.get("userNo");
+        String priceToBid = (String) bid.get("priceToBid");
 
-        BidInfoDto newBid = new BidInfoDto(userName, priceToBid);
+        System.out.println("bidder: " + userName + "userNo: " + userNo + " priceToBid: " + priceToBid + " mySessionId: " + sessionName);
+        ResultOrdersSaveDto newBid = new ResultOrdersSaveDto(Long.parseLong(userNo), Long.parseLong(sessionName), Integer.parseInt(priceToBid));
+        
+        // 해당 경매장 입찰 정보를 담을 map이 존재하지 않는다면 경매가 종료된 것이므로 417을 return
         if (!mapBids.containsKey(sessionName)) {
-            mapBids.put(sessionName, new ArrayDeque<>());
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
-        ArrayDeque<BidInfoDto> queue = mapBids.get(sessionName);
-        // 적은 금액에서 큰 금액 순으로 3개까지만 저장한다.
+        // 요청으로 들어온 가격이 서버에 저장된 현재 최고가보다 낮다면 203을 return
+        ArrayDeque<ResultOrdersSaveDto> queue = mapBids.get(sessionName);
+        if (!queue.isEmpty() && queue.getLast().getOrderPrice() > newBid.getOrderPrice()) {
+            return new ResponseEntity<>(null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+        // 적은 금액에서 큰 금액 순으로 저장한다.
         queue.addLast(newBid);
         // 3개를 초과하는 입찰 데이터는 필요 없으므로 제거한다.
         if (queue.size() > 3) {
             queue.removeFirst();
         }
-        System.out.println("bidder: " + userName + " priceToBid: " + priceToBid + " mySessionId: " + sessionName);
 
         return new ResponseEntity<>(queue, HttpStatus.OK);
     }
 
+    // 경매를 종료한다.
+    @PostMapping("/bid")
+    public ResponseEntity<String> finishBid(@RequestBody Map<String, Object> result) throws Exception {
+        String sessionName = (String)result.get("sessionName");
+
+        ArrayDeque<ResultOrdersSaveDto> bidList = mapBids.get(sessionName);
+        if (bidList != null && bidList.size() > 0) {
+            for (ResultOrdersSaveDto bidInfo : bidList) {
+                Long userNo = bidInfo.getUserNo();
+                Long houseNo = Long.parseLong(sessionName);
+                Users user =usersService.findEntityById(userNo);
+                Houses house=housesService.findEntityById(houseNo);
+                // house 상태를 경매 종료로 변경
+                house.setHouseStatus(3);
+                // 경매 결과를 DB에 저장한다.
+                ResultOrders resultOrders=resultOrdersService.save(user, house, bidInfo);
+                user.getResults().add(resultOrders);
+                house.getResults().add(resultOrders);
+            }
+            // 실시간 경매 결과 저장소를 제거한다.
+            mapBids.remove(sessionName);
+        } else {
+            return new ResponseEntity<>("No Bids", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    // Spring boot 서버에서 유지하고 있는 실시간 세션-입찰 정보를 메모리에서 제거한다.(개발/테스트용)
     @DeleteMapping("/bid/{sessionName}")
-    public ResponseEntity<ArrayDeque<BidInfoDto>> removeBid(@PathVariable String sessionName) throws Exception {
+    public ResponseEntity<ArrayDeque<ResultOrdersSaveDto>> removeBid(@PathVariable String sessionName) throws Exception {
         if (mapBids.containsKey(sessionName)) {
-            ArrayDeque<BidInfoDto> result = mapBids.get(sessionName);
+            ArrayDeque<ResultOrdersSaveDto> result = mapBids.get(sessionName);
 
             mapBids.remove(sessionName);
 

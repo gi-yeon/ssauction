@@ -40,6 +40,7 @@ public class Houses {
     @Column(name="house_update_time")
     private Timestamp houseUpdateTime;
 
+    @Setter
     @Column(name = "house_status",nullable = false)
     private int houseStatus;
 

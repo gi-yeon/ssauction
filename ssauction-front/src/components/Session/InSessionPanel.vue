@@ -2,16 +2,28 @@
   <div class="row">
     <div class="col"></div>
     <div class="col">
-      <button class="video" v-if="isVideoOn">비디오 끄기</button>
-      <button class="video" v-else>비디오 켜기</button>
+      <button class="video" @click="$emit('toggleVideo')">
+        <div v-if="isVideoOn">비디오 끄기</div>
+        <div v-else>비디오 켜기</div>
+      </button>
     </div>
     <div class="col">
-      <button class="mic" v-if="isMicOn">마이크 끄기</button>
-      <button class="mic" v-else>마이크 켜기</button>
+      <button class="audio" @click="$emit('toggleAudio')">
+        <div v-if="isAudioOn">마이크 끄기</div>
+        <div v-else>마이크 켜기</div>
+      </button>
     </div>
     <div class="col">
-      <button class="monitor" v-if="isMonitorOn">화면 공유 끄기</button>
-      <button class="monitor" v-else>화면 공유</button>
+      <button class="screen" @click="$emit('toggleScreen')">
+        <div v-if="isMonitor">화면 공유 중지</div>
+        <div v-else>화면 공유</div>
+      </button>
+    </div>
+    <div class="col" v-if="isHost">
+      <button class="startAuction" @click="$emit('startAuction')">
+        <div v-if="!isFinished">경매 시작</div>
+        <div v-else>경매 종료</div>
+      </button>
     </div>
     <div class="col">
       <input
@@ -33,8 +45,10 @@ export default {
   },
   props: {
     isVideoOn: Boolean,
-    isMicOn: Boolean,
-    isMonitorOn: Boolean,
+    isAudioOn: Boolean,
+    isMonitor: Boolean,
+    isHost: Boolean,
+    isFinished: Boolean,
   },
 };
 </script>
