@@ -31,7 +31,7 @@ export default {
   },
   mounted() {
     const URLParams = new URL(window.location).searchParams;
-    console.log(URLParams.get("isInSession"));
+    // console.log(URLParams.get("isInSession"));
     this.isInSession = URLParams.get("isInSession");
 
     //쿠키에서 logininfo를 가져온다.

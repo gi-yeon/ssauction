@@ -22,7 +22,6 @@ app.use(router).use(store).use(VCalendar).use(ElementPlus).mount("#app");
 // access, refresh token 모두가 만료됐다면 재로그인 alert
 axios.interceptors.response.use(
     (response) => {
-        console.log("ok");
         return response;
     },
     async (error) => {
@@ -32,7 +31,8 @@ axios.interceptors.response.use(
         } = error;
         let accessToken = null; //access token
         let refreshToken = null; //refresh token
-        
+        const originalRequest = config;
+
         console.log(status);
         //쿠키에서 token을 가져오는 api 호출하여 토큰 값에 담아줌
         await axios.get("/users/token").then(({ data }) => {
@@ -42,7 +42,6 @@ axios.interceptors.response.use(
 
         //access는 만료, refresh는 존재한다면
         if (status === 401 && accessToken == null && refreshToken != null) {
-            const originalRequest = config;
             //userNo를 가져와서
             const userNo = store.getters["user/userNo"];
             // token refresh 요청
@@ -59,11 +58,16 @@ axios.interceptors.response.use(
             alert("다시 로그인해주세요.")
 
         }
+        //로그인 시 회원 정보가 없다면
+        else if (status != 401 && accessToken == null && refreshToken == null) {
+            alert("이메일을 확인해주세요.");
+        }
+
         //권한이 없다면
         else {
             alert("권한이 없습니다.")
-
         }
+
         return Promise.reject(error);
     }
 );
