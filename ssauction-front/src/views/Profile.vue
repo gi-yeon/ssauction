@@ -1,4 +1,7 @@
 <template>
+
+
+
   <div>
     <br />
     <h1>{{ userNickname }}님의 프로필</h1>

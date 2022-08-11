@@ -28,6 +28,7 @@ public class Board {
     private String boardContent;
     @Column(name = "board_regdate", nullable = false)
     private String boardRegDate;
+    @Enumerated
     @Column(name = "board_type", nullable = false)
     private BoardType boardType;
     @Column(name = "board_reply", nullable = false)

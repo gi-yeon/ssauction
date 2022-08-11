@@ -42,7 +42,7 @@ export default {
     return { hotDeals: null };
   },
   mounted() {
-    // axios.get("/houses/searchAll/1").then((response) => {
+    // axios.get("/houses/searchAll").then((response) => {
     //   console.log(response.data);
     //   this.hotDeals = response.data;
     //   console.log(this.hotDeals);

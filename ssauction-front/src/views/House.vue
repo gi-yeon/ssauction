@@ -1,35 +1,28 @@
 <template>
   <div>
-    <div style="margin-top: 100px">
       <br />
       <h1>경매방 만들기</h1>
       <br />
-      <div class="row" style="padding: 10px">
-        <label class="col-4" for="houseTitle">방 제목</label>
-        <div class="col-8">
-          <el-input
+      <br>
+      <div class="row">
+        <div class="col-4 label">
+        <h4>경매방 이름</h4>
+        </div>
+        <div class="col-2">
+          <input
             id="houseTitle"
             v-model="house.houseTitle"
             type="text"
             required
-          />
-        </div>
-
-        <label class="col-4" for="">경매 날짜</label>
-        <div class="col-8">
-          <el-date-picker
-            v-model="value2"
-            type="date"
-            placeholder="경매 날짜를 선택하세요"
-            :shortcuts="shortcuts"
-            :size="size"
+            class="input_style"
+            style="margin-bottom: 0.5rem;"
+            label="경매방 이름"
           />
         </div>
       </div>
-    </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>경매 일시</h3>
+        <h4>경매 일시</h4>
       </div>
       <div class="col-2 data">
         <v-date-picker
@@ -38,10 +31,12 @@
           locale="ko-KR"
           :model-config="modelConfig"
           is24hr
+          placeholder="경매 날짜를 선택하세요"
+          class="input_style"
+          style="margin-bottom: 0.5rem;"
         >
           <template v-slot="{ inputValue, inputEvents }">
             <input
-              class="bg-white border px-2 py-1 rounded"
               :value="inputValue"
               v-on="inputEvents"
             />
@@ -51,7 +46,7 @@
     </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>매물 이름</h3>
+        <h4>매물 이름</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -59,12 +54,13 @@
           class="form-control"
           type="text"
           required
+          style="margin-bottom: 0.5rem;"
         />
       </div>
     </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>모델 번호</h3>
+        <h4>모델 번호</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -72,14 +68,18 @@
           class="form-control"
           type="text"
           required
+          style="margin-bottom: 0.5rem;"
         />
       </div>
     </div>
+
+
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>카테고리</h3>
+        <h4>카테고리</h4>
       </div>
-      <div class="col-8 data">
+      
+<div class="col-8 data">
         <div class="form-check form-check-inline">
           <input
             class="form-check-input"
@@ -294,31 +294,37 @@
           />
           <label class="form-check-label" for="ctgr21">기타물품</label>
         </div>
+        <div style="text-align: center; display:inline-block;">
+          <p>다중 선택 가능합니다. </p>
+        </div>
       </div>
+
+      
     </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>매물상태</h3>
+        <h4>매물상태</h4>
       </div>
       <div class="col-8 data">
-        <input v-model="item.itemQuality" class="form-control" type="text" />
+        <input v-model="item.itemQuality" class="form-control" type="text" style="margin-bottom: 0.5rem;"/>
       </div>
     </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>매물설명</h3>
+        <h4>매물설명</h4>
       </div>
       <div class="col-8 data">
         <textarea
           v-model="item.itemDesc"
           class="form-control"
           type="text"
+          style="margin-bottom: 0.5rem;"
         ></textarea>
       </div>
     </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>시작가격</h3>
+        <h4>시작가격</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -326,16 +332,27 @@
           class="form-control"
           type="text"
           required
+          style="margin-bottom: 0.5rem;"
         />
       </div>
     </div>
     <div class="row house-input">
       <div class="col-4 label">
-        <h3>사진</h3>
+        <h4>사진</h4>
       </div>
-      <div class="col-8 data">
+      <div class="col-2 data">
         <div class="mb-3">
-          <input type="file" ref="itemImage" @change="imageUpload" multiple />
+          <el-upload
+            class="avatar-uploader"
+            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+          
+          <input type="file" ref="itemImage" @change="imageUpload" multiple style="margin-bottom: 0.5rem;">
         </div>
       </div>
     </div>
@@ -348,6 +365,7 @@
           :previewfile="file"
           :index="index"
           @delete-img="deleteImg"
+          style="margin-bottom: 0.5rem; margin-left:0.5rem"
         />
       </div>
     </div>
@@ -357,40 +375,12 @@
   </div>
 </template>
 
+
 <script>
+
+
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-// import { ref } from "vue";
-
-// const value1 = ref("");
-// const value2 = ref("");
-
-// const shortcuts = [
-//   {
-//     text: "오늘",
-//     value: new Date(),
-//   },
-//   {
-//     text: "내일",
-//     value: () => {
-//       const date = new Date();
-//       date.setTime(date.getTime() + 3600 * 1000 * 24);
-//       return date;
-//     },
-//   },
-//   {
-//     text: "다음 주",
-//     value: () => {
-//       const date = new Date();
-//       date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
-//       return date;
-//     },
-//   },
-// ];
-
-// const disabledDate = (time: Date) => {
-//   return time.getTime() > Date.now();
-// };
 
 export default {
   name: "SsauctionHouse",
@@ -405,9 +395,8 @@ export default {
         itemDesc: null,
         itemSellerNo: null,
         itemDealStatus : "SELL",
-        userNo: this.$store.state.user.userNo,
-        itemDealStatus: "SELL",
-        userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
+        userNo: this.$store.state.user.userNo, // 유저정보를 현재 로그인 된 유저로 설정
+        // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
         itemNo: 1,
@@ -500,27 +489,17 @@ export default {
       console.log(this.$refs.itemImage);
     },
 
-    deleteImg(index) {
-      this.itemImages.splice(index, 1);
-      console.log(this.$refs.itemImage);
-    },
   },
 };
 </script>
 
-<style scoped>
-el-input {
-  width: 500px;
-  height: 50px;
-  border: 0;
-  background-color: rgb(230, 230, 230);
-  border-radius: 20px;
-  color: rgb(94, 94, 94);
-  padding-left: 30px;
-}
 
+<style scoped>
 label {
-  text-align: center;
+  text-align: MiddleLeft;
+  display:inline-block;
+  width:140px;
+  line-height:30px;
 }
 .preview {
   overflow-x: auto;
@@ -534,7 +513,20 @@ label {
 }
 .form-check-input {
   margin-top: 0;
-  margin-right: 0.3rem;
+  margin-right: 0.5rem;
   height: 1.8rem;
+  background-color: rgb(255, 211, 182);
+  width : 30px;
+  height: 30px;
+
+}
+input {
+  width: 500px;
+  height: 50px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
 }
 </style>
