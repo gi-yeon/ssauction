@@ -44,7 +44,6 @@ const actions = {
     axios.post("/users/login", JSON.stringify(loginInfo)).then((res) => {
       //success 메시지가 떴다면
       if (res.data.message === "success") {
-        console.log(res);
         commit('USER_LOGIN', res);
         commit('SAVE_LOGIN_INFO');
         alert("로그인 되었습니다!");
@@ -63,7 +62,6 @@ const actions = {
     axios.post("/users/logout").then((res) => {
       commit('USER_LOGOUT')
       commit('RESET_LOGIN_INFO')
-      console.log(res.data)
 
       alert("로그아웃되었습니다. 다음에 또 만나요 ^____^")
       router.push('/'); //홈으로 이동

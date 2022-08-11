@@ -146,7 +146,6 @@ export default {
           userNickname: this.userNickname,
         };
         axios.post("/users/join", JSON.stringify(obj)).then(({ data }) => {
-          console.log(data);
           if (data === "OK") {
             alert("SSAUCTION에 오신 것을 환영합니다.");
             this.$router.push({ name: "Login" });
