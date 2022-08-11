@@ -19,12 +19,17 @@
 import {reactive} from "vue";
 import axios from '@/utils/axios';
 import {useRouter } from 'vue-router';
-// import { state } from "store/user.vue";
+// npm install universal-cookie
+import { useCookies } from '@vueuse/integrations/useCookies';
+import { useStore } from 'vuex';
+import  jwt_decode from "jwt-decode";
 
 export default {
     name: "BoardRegister",
     setup() {
         const router = useRouter();
+        const cookies = useCookies(['login.userNo', 'login.userNickname', 'accessToken']);
+        const store = useStore();
 
         const article = reactive({
             title: "",
@@ -32,12 +37,14 @@ export default {
         });
 
         const registerArticle = () => {
+            console.log(store.state.user.accessToken);
+            console.log(cookies.get('accessToken'));
             let params = {
                 boardTitle: article.title,
                 boardContent: article.content,
-                boardType: 0,
-                userNo: 1,
-                userNickname: "ssafy"
+                boardType: store.state.board.boardType,
+                userNo: cookies.get('login.userNo'),
+                userNickname: cookies.get('login.userNickname')
             };
             axios.post("http://localhost:8080/board", JSON.stringify(params))
             .then(() => {})

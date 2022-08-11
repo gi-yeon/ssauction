@@ -1,4 +1,11 @@
 <template>
+  <el-table :data="BoardListItem" stripe style="width: 100%">
+    <el-table-column prop="t" ></el-table-column>
+    <el-table-column prop="date" label="Date" width="180" />
+    <el-table-column prop="name" label="Name" width="180" />
+    <el-table-column prop="address" label="Address" />
+  </el-table>
+
     <div class="table">
         <h1>BoardList</h1>
         <div class="register">
@@ -11,9 +18,8 @@
                 <input type="text" name="search" id="search" v-model="state.search">
                 <button @click="getArticles(0)">검색</button>
             </div>
-            <router-link to="regist">
-                <button>글쓰기</button>
-            </router-link>
+            <button v-show="state.isUser" @click="mvBoardRegister">글쓰기</button>
+
         </div>
         <table class="boardtable">
             <colgroup>
@@ -54,7 +60,11 @@
 <script>
 import BoardListItem from "@/components/Board/item/BoardListItem";
 import axios from '@/utils/axios';
+import { useRouter } from 'vue-router';
 import {reactive} from "vue";
+// npm install universal-cookie
+import { useCookies } from '@vueuse/integrations/useCookies';
+import { useStore } from 'vuex';
 
 export default {
     name: "BoardList",
@@ -62,6 +72,9 @@ export default {
         BoardListItem,
     },
     setup() {
+        const router = useRouter();
+        const store = useStore();
+
         const state = reactive({
             startPage : Number,
             endPage: Number,
@@ -73,8 +86,10 @@ export default {
             first: Boolean,
             last: Boolean,
             searchType: "",
-            search: ""
+            search: "",
+            isUser: Boolean
         });
+
 
         const getArticles = (p) => {
             getPage(p, 10, state.searchType, state.search);
@@ -89,17 +104,17 @@ export default {
                 alert("마지막 페이지 리스트 입니다");
                 return;
             }
-            
+            console.log(store.state.board.boardType);
             axios.get("http://localhost:8080/board", {
                 params: {
                     page: p,
                     size: s,
+                    boardType: store.state.board.boardType,
                     searchType: searchT,
                     search: search
                 },
             })
             .then(({data}) => {
-                console.log(data.list);
                 state.currentPage = data.list.number;
                 state.totalPages = data.list.totalPages;
                 state.numberOfElements = data.list.numberOfElements;
@@ -114,11 +129,23 @@ export default {
             })
         }
 
+        const mvBoardRegister = () => {
+            router.push({path: "/board/regist"});
+        }
+
         getPage(0, 10);
         state.searchType = "";
+
+        const cookies = useCookies(['login.userNo']);
+        if(cookies.get('login.userNo') != null)
+            state.isUser = true;
+        else
+            state.isUser = false;
+
         return {
             state,
-            getArticles
+            getArticles,
+            mvBoardRegister
         }
     }
 }

@@ -1,4 +1,6 @@
 <template>
+
+
     <div>
         <input type="text" name="title" id="title" v-model="state.boardTitle" readonly>
         <div></div>
@@ -7,8 +9,8 @@
         </textarea>
 
         <div>
-            <button @click="ModifyArticle">글수정</button>
-            <button @click="DeleteArticle">글삭제</button>
+            <button v-show="state.isWriter" @click="ModifyArticle">글수정</button>
+            <button v-show="state.isWriter" @click="DeleteArticle">글삭제</button>
             <router-link to="/board">
                 <button>목록</button>
             </router-link>
@@ -32,6 +34,8 @@ import axios from '@/utils/axios';
 import {reactive} from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import BoardCommentItem from "@/components/Board/item/BoardCommentItem";
+// npm install universal-cookie
+import { useCookies } from '@vueuse/integrations/useCookies';
 
 
 export default {
@@ -42,6 +46,7 @@ export default {
     setup() {
         const router = useRouter();
         const route = useRoute();
+        const cookies = useCookies(['login.userNo']);
 
         const state = reactive({
             boardNo: Number,
@@ -51,6 +56,7 @@ export default {
             userNickname: String,
             comments: [],
             commentContent: "",
+            isWriter: Boolean
         });
 
         const ModifyArticle = () => {
@@ -60,7 +66,8 @@ export default {
         const DeleteArticle = () => {
             axios.delete("http://localhost:8080/board", {
                 params: {
-                    boardNo: route.params.id
+                    boardNo: route.params.id,
+                    userNo: cookies.get('login.userNo'),
                 },
             })
             .then(() => {
@@ -73,7 +80,7 @@ export default {
         const registerComment = () => {
             let params = {
                 boardNo: state.boardNo,
-                userNo: 1,
+                userNo: cookies.get('login.userNo'),
                 commentContent: state.commentContent
             }
             axios.post("http://localhost:8080/comment", JSON.stringify(params))
@@ -95,6 +102,11 @@ export default {
             state.userNo = data.board.userNo;
             state.userNickname = data.board.userNickname;
             state.comments = data.board.comments;
+
+            if(cookies.get('login.userNo') != null && data.board.userNo == cookies.get('login.userNo') )
+                state.isWriter = true;
+            else
+                state.isWriter = false;
         })
 
         return {
