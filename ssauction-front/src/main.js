@@ -1,4 +1,4 @@
-import { createApp, ref } from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
 
 import ElementPlus from 'element-plus'
@@ -22,7 +22,6 @@ app.use(router).use(store).use(VCalendar).use(ElementPlus).mount("#app");
 // access, refresh token 모두가 만료됐다면 재로그인 alert
 axios.interceptors.response.use(
     (response) => {
-        console.log("ok");
         return response;
     },
     async (error) => {

@@ -59,7 +59,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         "/users/logout", "/users/join", "/users/refresh",
                         "/users/token", "/users/findId/**", "/users/resetPwd/**",
                         "/users/sendSMS/**","/houses/searchAll", "/board/**", "/comment/**",
-                        "/houses/searchHot"
+                        "/houses/searchHot", "/users/checkEmail/**", "/users/checkNickname/**"
                         )
                 .permitAll()
                 // 해당 경로는 ADMIN만 허용 (test용)

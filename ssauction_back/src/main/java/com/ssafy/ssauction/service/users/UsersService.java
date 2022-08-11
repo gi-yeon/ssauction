@@ -39,6 +39,19 @@ public class UsersService {
         return user;
     }
 
+    //이메일 중복체크
+    //중복되면 true, 중복되지 않으면 false 반환
+    public boolean checkEmailDuplicate(String userEmail){
+        return usersRepository.existsByUserEmail(userEmail);
+    }
+
+    //닉네임 중복체크
+    //중복되면 true, 중복되지 않으면 false 반환
+    public boolean checkNicknameDuplicate(String userNickname){
+        return usersRepository.existsByUserNickname(userNickname);
+    }
+
+
     @Transactional
     public void updateInfo(Long userNo, UsersInfoUpdateRequestDto requestDto) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -57,6 +70,7 @@ public class UsersService {
         return "fail";
     }
 
+    //리프레시토큰 db에 저장
     @Transactional
     public Long updateRefreshToken(Long userNo, String refreshToken) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -69,6 +83,7 @@ public class UsersService {
         return new UsersResponseDto(entity);
     }
 
+    //userEmail 넣어주면 로그인 정보 가져옴
     public UsersAuthResponseDto findByUserEmail(String userEmail) {
 
         System.out.println("\n\n\n---------------------------" + userEmail + "--------------------------\n\n\n");
@@ -79,6 +94,7 @@ public class UsersService {
         return new UsersAuthResponseDto(entity);
     }
 
+    //userNo넣어주면 로그인 정보 가져옴
     public UsersAuthResponseDto findByUserNo(Long userNo) {
         Users entity = usersRepository.findByUserNo(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
