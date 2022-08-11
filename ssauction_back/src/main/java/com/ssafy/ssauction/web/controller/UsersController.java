@@ -20,7 +20,9 @@ import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
 import com.ssafy.ssauction.web.dto.users.*;
 
+import kotlin.reflect.jvm.internal.impl.load.java.lazy.types.TypeParameterUpperBoundEraser;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.functors.FalsePredicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,6 @@ import javax.naming.spi.ObjectFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 
 @RequiredArgsConstructor
@@ -72,6 +73,31 @@ public class UsersController {
         }
         return "OK";
     }
+
+    //이메일 중복 확인
+    //중복되면 true, 중복되지 않으면 false 반환
+    @GetMapping("/checkEmail/{userEmail}")
+    public ResponseEntity<?> checkEmailDuplicate(@PathVariable String userEmail) {
+        //false라면, 즉 중복되지 않는다면
+        if (!usersService.checkEmailDuplicate(userEmail)) {
+            return ResponseEntity.ok(SUCCESS);
+        } else {
+            return ResponseEntity.ok(FAIL);
+        }
+
+    }
+
+    //닉네임 중복 확인
+    @GetMapping("/checkNickname/{userNickname}")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable String userNickname) {
+        //false라면, 즉 중복되지 않는다면
+        if (!usersService.checkNicknameDuplicate(userNickname)) {
+            return ResponseEntity.ok(SUCCESS);
+        } else {
+            return ResponseEntity.ok(FAIL);
+        }
+    }
+
 
     @PutMapping("/profile/img/{userNo}")
     public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
@@ -137,7 +163,7 @@ public class UsersController {
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
         //비밀번호가 올바르게 입력됐다면
-       if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
 
             //맵에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
             Map<String, Object> userMap = new HashMap<>();
@@ -170,7 +196,7 @@ public class UsersController {
             refreshCookie.setHttpOnly(true);
             refreshCookie.setSecure(true);
             refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
-           res.addCookie(refreshCookie);
+            res.addCookie(refreshCookie);
 
 
             //success 메시지 담아준다.
@@ -271,16 +297,16 @@ public class UsersController {
 
     //쿠키에서 토큰 가져다 반환
     @GetMapping("/token")
-    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req){
+    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req) {
         Map<String, Object> map = new HashMap<>();
         HttpStatus status = null;
 
         //token 추출해서 map에 넣어준다.
         Cookie[] list = req.getCookies();
-        for(Cookie cookie : list){
-            if(cookie.getName().equals("accessToken")) {
+        for (Cookie cookie : list) {
+            if (cookie.getName().equals("accessToken")) {
                 map.put("accessToken", cookie.getValue());
-            }else if(cookie.getName().equals("refreshToken")){
+            } else if (cookie.getName().equals("refreshToken")) {
                 map.put("refreshToken", cookie.getValue());
             }
         }

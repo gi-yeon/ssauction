@@ -1,8 +1,11 @@
 <template>
+
+
+
   <div>
     <br />
-    <h1>{{ userNickname }}님의 프로필</h1>
-    <div v-show="isLogin">
+    <h1>{{ user.loginUser.userNickname }}님의 프로필</h1>
+    <div v-show="user.isLogin">
       <router-link to="/profile/update">Profile Update</router-link>
       <br />
       <div class="card">
@@ -22,11 +25,17 @@
               <div class="card">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-sm-6">유저번호 : {{ userNo }}</div>
-                    <div class="col-sm-6">유저닉네임 : {{ userNickname }}</div>
+                    <div class="col-sm-6">
+                      유저번호 : {{ user.loginUser.userNo }}
+                    </div>
+                    <div class="col-sm-6">
+                      유저닉네임 : {{ user.loginUser.userNickname }}
+                    </div>
                     <br />
-                    <div class="col-sm-6">유저등급 : {{ userGrade }}</div>
-                    <div class="col-sm-6">유저로그인 : {{ isLogin }}</div>
+                    <div class="col-sm-6">
+                      유저등급 : {{ user.loginUser.userGrade }}
+                    </div>
+                    <div class="col-sm-6">유저로그인 : {{ user.isLogin }}</div>
                     <br />
                     <div class="col-sm-6">유저설명 : {{ userDesc }}</div>
                     <div class="col-sm-6">유저한줄평 : {{ userComment }}</div>
@@ -75,15 +84,17 @@
 
 <script>
 import axios from "@/utils/axios.js";
+import { mapState } from "vuex";
 
 export default {
   name: "SsauctionProfile",
+  computed: {
+    ...mapState(["user"]),
+  },
 
   data() {
     return {
-      userNickname: "",
       userNo: 0,
-      userGrade: 0,
       userDesc: "",
       userComment: "",
       userImgUri: "",
@@ -93,22 +104,17 @@ export default {
   },
 
   mounted() {
-    this.userNickname = this.$store.state.user.nickname;
-    this.userNo = this.$store.state.user.userNo;
-    this.userGrade = this.$store.state.user.grade;
-    this.isLogin = this.$store.state.user.isLogin ? true : false;
+    this.userNo = this.$store.getters["user/userNo"];
     this.getUserInfo();
     this.getItemInfo();
   },
 
   methods: {
     getUserInfo: async function () {
-      console.log(this.userNickname);
-      console.log(this.userNo);
-      console.log(this.isLogin);
       await axios
         .get("/users/profile/" + this.userNo)
         .then(({ data }) => {
+          console.log(data);
           this.userDesc = data.userDesc;
           this.userComment = data.userComment;
           this.userImgUri = data.userImgUri;
@@ -118,9 +124,6 @@ export default {
         });
     },
     getItemInfo: async function () {
-      console.log(this.userNickname);
-      console.log(this.userNo);
-      console.log(this.isLogin);
       await axios
         .get("/houses/profile/" + this.userNo)
         .then(({ data }) => {

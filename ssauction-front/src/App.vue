@@ -6,9 +6,7 @@
         <nav-bar id="navbar" v-if="!isInSession"></nav-bar>
       </el-header>
 
-      <el-aside>
-        <side-bar id="sidebar" v-if="!isInSession"></side-bar>
-      </el-aside>
+      <side-bar id="sidebar" v-if="!isInSession"></side-bar>
 
       <el-main id="container">
         <router-view></router-view>
@@ -33,7 +31,7 @@ export default {
   },
   mounted() {
     const URLParams = new URL(window.location).searchParams;
-    console.log(URLParams.get("isInSession"));
+    // console.log(URLParams.get("isInSession"));
     this.isInSession = URLParams.get("isInSession");
 
     //쿠키에서 logininfo를 가져온다.
@@ -41,6 +39,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 @font-face {
@@ -85,7 +84,7 @@ export default {
   top: 70px;
   overflow-x: hidden;
   bottom: 0;
-  width: 70px;
+  width: 80px;
   height: 100%;
   background-color: rgb(255, 211, 182);
 }

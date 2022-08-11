@@ -5,15 +5,15 @@
     </div>
 
     <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
-    <b
+    <div
       v-if="user.isLogin"
       style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;"
     >
-      {{ user.loginUser.userNickname }}님 반갑습니다😎 </b
+    <p>{{ user.loginUser.userNickname }}님 반갑습니다😎</p>&nbsp; &nbsp;
+    <a v-if="user.isLogin" @click="logout">
+    <img src="@\assets\imgs\logout.png" alt="Logout" class="icon2" /></a
     >&nbsp; &nbsp;
-    <a v-if="user.isLogin" @click="logout" style="margin-right: 15px"
-      ><img src="@\assets\imgs\logout.png" alt="Logout" class="icon2" /></a
-    >&nbsp; &nbsp;
+    </div>
 
     <!-- 로그아웃 한 상태에서는 로그인, 회원가입 버튼만 노출됨 -->
     <div
@@ -29,11 +29,6 @@
       /></router-link>
       &nbsp; &nbsp;
     </div>
-    <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
-    <b v-if="user.isLogin">
-      {{ user.loginUser.userNickname }}님 반갑습니다*^^*
-    </b>
-    <button v-if="user.isLogin" @click="logout">logout</button>
   </div>
 </template>
 
