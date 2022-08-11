@@ -22,13 +22,13 @@ const state = {
 
 const getters = {
   userNickname: (state) => {
-    return `${state.loginUser.nickname}`;
+    return `${state.loginUser.userNickname}`;
   },
   userNo: (state) => {
     return `${state.loginUser.userNo}`;
   },
   userGrade: (state) => {
-    return `${state.loginUser.grade}`;
+    return `${state.loginUser.userGrade}`;
   },
   accessToken: (state) => {
     return `${state.accessToken}`;
@@ -99,8 +99,8 @@ const actions = {
   getUserNo({ commit }, value) {
     commit(USER.SET_USERNO, value);
   },
-  getIsLogin({commit},value){
-    commit(USER.SET_ISLOGIN,value);
+  getIsLogin({ commit }, value) {
+    commit(USER.SET_ISLOGIN, value);
   }
 };
 

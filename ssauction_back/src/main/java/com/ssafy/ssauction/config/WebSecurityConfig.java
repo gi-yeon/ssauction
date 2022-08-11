@@ -58,20 +58,29 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         "/webjars/**", "/swagger.json", "/users/login",
                         "/users/logout", "/users/join", "/users/refresh",
                         "/users/token", "/users/findId/**", "/users/resetPwd/**",
-                        "/users/sendSMS/**","/houses/searchAll/**", "/board/**", "/comment/**")
+                        "/users/sendSMS/**","/houses/searchAll", "/board/**", "/comment/**",
+                        "/houses/searchHot"
+                        )
                 .permitAll()
                 // 해당 경로는 ADMIN만 허용 (test용)
                 .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/houses/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/likes/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/board/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/file/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/comment/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/categories/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/sessions/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()// 그 외 모두 인증된 사용자만 허용
 
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler)
                 .accessDeniedHandler(accessDeniedHandler)
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login")
-                .and()
-                .oauth2Login()
+//                .and()
+//                .logout()
+//                .logoutSuccessUrl("/login")
+//                .and()
+//                .oauth2Login()
                 // .userInfoEndpoint()
                 // .userService(customOAuth2UserService)
                 .and()

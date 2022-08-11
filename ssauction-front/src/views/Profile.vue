@@ -93,10 +93,10 @@ export default {
   },
 
   mounted() {
-    this.userNickname = this.$store.state.user.nickname;
-    this.userNo = this.$store.state.user.userNo;
-    this.userGrade = this.$store.state.user.grade;
-    this.isLogin = this.$store.state.user.isLogin ? true : false;
+    this.userNickname = this.$store.getters["user/userNickname"];
+    this.userNo = this.$store.getters["user/userNo"];
+    this.userGrade = this.$store.getters["user/userGrade"];
+    this.isLogin = this.$store.getters["user/isLogin"];
     this.getUserInfo();
     this.getItemInfo();
   },
