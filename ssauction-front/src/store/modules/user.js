@@ -52,7 +52,7 @@ const actions = {
       }
       //success 메시지가 뜨지 않았다면 (fail)
       else {
-        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        alert("이메일 또는 비밀번호가 일치하지 않습니다.");
         router.push({ name: 'userLogin' });
       }
     })
