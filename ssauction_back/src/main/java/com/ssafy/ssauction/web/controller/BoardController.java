@@ -1,6 +1,7 @@
 package com.ssafy.ssauction.web.controller;
 
 import com.ssafy.ssauction.domain.board.Board;
+import com.ssafy.ssauction.domain.board.BoardType;
 import com.ssafy.ssauction.service.board.BoardService;
 import com.ssafy.ssauction.web.dto.board.BoardDtoReq;
 import com.ssafy.ssauction.web.dto.board.BoardDtoRes;
@@ -29,12 +30,20 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> boardList(@RequestParam("page") int page,
                                                          @RequestParam("size") int size,
+                                                         @RequestParam("boardType") int boardType,
                                                          @RequestParam(value = "searchType", required = false) String searchType,
                                                          @RequestParam(value = "search", required = false) String search) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardNo").descending());
-        resultMap.put("list", boardService.boardList(pageRequest, searchType, search));
+
+        BoardType bt = null;
+        if(boardType == 0)
+            bt = BoardType.BOARD_FREE;
+        else if (boardType == 1)
+            bt = BoardType.BOARD_NOTICE;
+
+        resultMap.put("list", boardService.boardList(pageRequest, bt, searchType, search));
         return new ResponseEntity<>(resultMap, status);
     }
 
@@ -80,7 +89,7 @@ public class BoardController {
         if(boardService.boardModify(boardDtoReq)) {
             status = HttpStatus.OK;
         } else {
-            resultMap.put("message", "존재하지 않는 게시글 입니다");
+            resultMap.put("message", "올바르지 않은 게시글 또는 작성자 입니다.");
             status = HttpStatus.NOT_FOUND;
         }
 
@@ -88,14 +97,15 @@ public class BoardController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Map<String, Object>> boardDelete(@RequestParam long boardNo) {
+    public ResponseEntity<Map<String, Object>> boardDelete(@RequestParam long boardNo,
+                                                           @RequestParam long userNo) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
 
-        if(boardService.boardDelete(boardNo)) {
+        if(boardService.boardDelete(boardNo, userNo)) {
             status = HttpStatus.OK;
         } else {
-            resultMap.put("message", "존재하지 않는 게시글 입니다");
+            resultMap.put("message", "올바르지 않은 게시글 또는 작성자 입니다.");
             status = HttpStatus.NOT_FOUND;
         }
 
