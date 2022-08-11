@@ -12,5 +12,5 @@ import lombok.ToString;
 public class SessionsCreateJoinRequestDto {
     String sessionName;
     String loggedUser;
-    Boolean createNewSession;
+    Boolean isHost;
 }

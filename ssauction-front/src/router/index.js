@@ -11,7 +11,7 @@ import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
 import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
-import ProfileUpdate from "@/views/ProfileUpdate.vue"
+import ProfileUpdate from "@/views/ProfileUpdate.vue";
 import Sessions from "@/views/Sessions.vue";
 
 const routes = [
@@ -107,8 +107,7 @@ const routes = [
         name: "boardRegister",
         component: () => import("@/components/Board/BoardRegister.vue"),
       },
-
-    ]
+    ],
   },
 ];
 const router = createRouter({

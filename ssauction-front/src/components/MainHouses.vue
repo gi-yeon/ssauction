@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import axios from '@/utils/axios';
+import axios from "@/utils/axios";
 export default {
   components: {},
   name: "MainHouses",
@@ -41,7 +41,7 @@ export default {
       houseAuctionRemainingTime: "01:00",
       isSelling: false,
       imgNameList: [],
-      userNo:0
+      userNo: 0,
     };
   },
   props: {
@@ -52,31 +52,28 @@ export default {
       this.imgNameList.push(img.itemImgUri);
     }
     console.log(this.imgNameList);
-    this.userNo=this.$store.state.user.userNo;
+    this.userNo = this.$store.state.user.userNo;
   },
   methods: {
     joinSession() {
       console.log(`houseNo : ${this.hot.house.houseNo}`);
-      // this.$router.push({
-      //   name: "Sessions",
-      //   params: { houseNo: this.hot.house.houseNo },
-      // });
+
       window.open(
         `http://localhost:8083/sessions/${this.hot.house.houseNo}?isInSession=true`,
         "_blank"
       );
       this.$route.push({ name: "sessionRedirect" });
     },
-    like : async function(){
+    like: async function () {
       console.log("like start");
-      const obj={
-        userNo:this.userNo,
-        houseNo:this.hot.house.houseNo
-      }
-      axios.post("/likes", obj).then(({data})=>{
+      const obj = {
+        userNo: this.userNo,
+        houseNo: this.hot.house.houseNo,
+      };
+      axios.post("/likes", obj).then(({ data }) => {
         console.log(data);
-      })
-    }
+      });
+    },
   },
 };
 </script>

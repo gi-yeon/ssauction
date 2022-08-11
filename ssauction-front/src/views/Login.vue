@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 100px">
+  <div>
     <br />
     <h1>로그인</h1>
     <br />
@@ -9,6 +9,7 @@
       type="email"
       v-model="loginInfo.userEmail"
       placeholder="이메일"
+      @keyup.enter="login"
     />
     <br />
     <br />
@@ -18,6 +19,7 @@
       type="password"
       v-model="loginInfo.userPwd"
       placeholder="비밀번호"
+      @keyup.enter="login"
     />
     <br />
     <br />
@@ -28,8 +30,10 @@
     <button class="btn_pink">비밀번호 찾기</button>
     <br />
     <br />
-    <br />
-    <a href="/oauth2/authorization/google"
+    <router-link to="/signUp" class="toSignUp"
+      >회원이 아니신가요? join us😊</router-link
+    >
+    <!-- <a href="/oauth2/authorization/google"
       ><img
         src="@\assets\imgs\google.png"
         alt="구글 로그인"
@@ -40,7 +44,7 @@
         src="@\assets\imgs\naver.png"
         alt="네이버 로그인"
         class="logo_resize"
-    /></a>
+    /></a> -->
     <!-- <br>
     <button class="btn_pink">구글로 회원가입</button> &nbsp;
     <button class="btn_pink">네이버로 회원가입</button> &nbsp; -->
@@ -66,13 +70,6 @@ export default {
   mounted() {},
 
   methods: {
-    findid() {
-      this.$router.push('/findid')
-    },
-
-    resetpwd() {
-      this.$router.push('/resetpwd')
-    },
     login() {
       //user 모듈의 userLogin으로 보낸다.
       this.$store.dispatch("user/userLogin", this.loginInfo);
@@ -123,5 +120,23 @@ input:focus {
 .logo_resize {
   width: 60px;
   height: 60px;
+}
+
+a:link {
+  text-decoration: none;
+  color: grey;
+}
+a:visited {
+  text-decoration: none;
+  color: grey;
+}
+a:hover {
+  text-decoration: none;
+  color: black;
+}
+
+.toSignUp {
+  position: relative;
+  left: 150px;
 }
 </style>
