@@ -1,4 +1,6 @@
 <template>
+
+
     <div>
         <input type="text" name="title" id="title" v-model="state.boardTitle" readonly>
         <div></div>
