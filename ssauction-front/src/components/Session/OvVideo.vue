@@ -1,5 +1,5 @@
 <template>
-  <video autoplay />
+  <video ref="videoel" autoplay />
 </template>
 
 <script>
@@ -11,7 +11,7 @@ export default {
   },
 
   mounted() {
-    this.streamManager.addVideoElement(this.$el);
+    this.streamManager.addVideoElement(this.$refs.videoel);
   },
 };
 </script>

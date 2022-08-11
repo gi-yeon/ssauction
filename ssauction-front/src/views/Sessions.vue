@@ -1,11 +1,15 @@
 <template>
   <div id="main-container" class="container">
     <join-session
-      v-if="!session"
+      v-if="!sessionCamera"
+      :isAudioOn="isAudioOn"
+      :isVideoOn="isVideoOn"
       @joinSession="joinSession"
       @switchModal="switchModal"
+      @toggleVideo="toggleVideo"
+      @toggleAudio="toggleAudio"
     />
-    <div class="row" id="session" v-if="session">
+    <div class="row" id="session" v-if="sessionCamera">
       <div id="session-header">
         <div class="col">
           <h1 id="session-title">{{ mySessionId }}</h1>
@@ -31,8 +35,11 @@
             </div>
           </div>
           <div class="row main-video">
-            <div class="col-md-9" id="main-video">
-              <main-video :stream-manager="mainStreamManager" />
+            <div class="col-md-9">
+              <main-video
+                :stream-manager="mainStreamManager"
+                :key="mainStreamManager"
+              />
             </div>
           </div>
           <div class="row">
@@ -172,12 +179,12 @@
 <script>
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import MainVideo from "@/components/Session/MainVideo.vue";
 import ParticipantVideo from "@/components/Session/ParticipantVideo.vue";
 import ChatMessage from "@/components/Session/ChatMessage.vue";
 import InSessionPanel from "@/components/Session/InSessionPanel.vue";
 import JoinSession from "@/components/Session/JoinSession.vue";
 import SessionTimer from "@/components/Session/SessionTimer.vue";
+import MainVideo from "@/components/Session/MainVideo.vue";
 import VueCookies from "vue-cookies";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -201,10 +208,13 @@ export default {
 
   data() {
     return {
-      OV: undefined,
-      session: undefined,
+      OVCamera: undefined,
+      OVScreen: undefined,
+      sessionCamera: undefined,
+      sessionScreen: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
+      publisherMonitor: undefined,
       subscribers: [],
 
       mySessionId: null,
@@ -284,7 +294,7 @@ export default {
     // 호스트 사이드 로직
     startAuctionFromHost() {
       // 다른 클라이언트들에게 startAuction 메시지를 보내 isFinished를 false로 만든다.
-      this.session
+      this.sessionCamera
         .signal({
           data: JSON.stringify({
             sender: this.myUserName,
@@ -301,7 +311,7 @@ export default {
 
     finishAuctionFromHost() {
       // 다른 클라이언트들에게 endAuction 메시지를 보내 isFinished를 true로 만든다.
-      this.session.signal({
+      this.sessionCamera.signal({
         data: JSON.stringify({
           sender: this.myUserName,
         }),
@@ -333,7 +343,7 @@ export default {
     // 호스트 로직
     // 다른 클라이언트에 현재 기준 시간(호스트 시간)을 전송한다.
     tickTimer(currentTime) {
-      this.session
+      this.sessionCamera
         .signal({
           data: JSON.stringify({
             sender: this.myUserName,
@@ -351,14 +361,16 @@ export default {
     joinSession(userName) {
       this.myUserName = userName;
       // --- Get an OpenVidu object ---
-      this.OV = new OpenVidu();
+      this.OVCamera = new OpenVidu();
+      this.OVScreen = new OpenVidu();
 
       // --- Init a session ---
-      this.session = this.OV.initSession();
+      this.sessionCamera = this.OVCamera.initSession();
+      this.sessionScreen = this.OVScreen.initSession();
 
       // --- Specify the actions when events take place in the session ---
       // 세션과 연결이 되면 아래의 코드가 실행된다.
-      this.session.on("connectionCreated", (event) => {
+      this.sessionCamera.on("connectionCreated", (event) => {
         console.log("connection created");
         console.log(event.connection.data);
         let data = JSON.parse(event.connection.data);
@@ -368,32 +380,64 @@ export default {
       });
 
       // On every new Stream received...
-      this.session.on("streamCreated", ({ stream }) => {
-        const subscriber = this.session.subscribe(stream);
-        console.log("Stream created");
-        console.log(stream);
-        this.subscribers.push(subscriber); // 해당 스트림을 subscribe하고 video player를 삽입한다.
-        // 해당 스트림이 호스트 스트림일 경우 초기 공유화면으로 설정한다.
-        if (this.hostId == subscriber.stream.connection.connectionId) {
-          this.mainStreamManager = subscriber;
+      this.sessionCamera.on("streamCreated", ({ stream }) => {
+        if (stream.typeOfVideo == "CAMERA") {
+          const subscriber = this.sessionCamera.subscribe(stream);
+          console.log("Camera Stream created");
+          console.log(stream);
+          this.subscribers.push(subscriber); // 해당 스트림을 subscribe하고 video player를 삽입한다.
+          // 해당 스트림이 호스트 스트림일 경우 초기 공유화면으로 설정한다.
+          if (this.hostId == subscriber.stream.connection.connectionId) {
+            this.updateMainVideoStreamManager(subscriber);
+          }
         }
       });
 
+      this.sessionScreen.on("streamCreated", ({ stream }) => {
+        if (stream.typeOfVideo == "SCREEN") {
+          const subscriber = this.sessionScreen.subscribe(stream);
+          console.log("Screen Stream created");
+          console.log(stream);
+          console.log("change main video stream to shared screen");
+          this.updateMainVideoStreamManager(subscriber);
+        }
+      });
       // On every Stream destroyed...
-      this.session.on("streamDestroyed", ({ stream }) => {
+      this.sessionCamera.on("streamDestroyed", ({ stream }) => {
         const index = this.subscribers.indexOf(stream.streamManager, 0);
         if (index >= 0) {
           this.subscribers.splice(index, 1);
         }
       });
 
+      this.sessionScreen.on("streamDestroyed", ({ stream }) => {
+        const index = this.subscribers.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          this.subscribers.splice(index, 1);
+        }
+      });
+
+      this.sessionCamera.on("publisherStartSpeaking", (event) => {
+        console.log(
+          "User " + event.connection.connectionId + " start speaking"
+        );
+      });
+
+      this.sessionCamera.on("publisherStopSpeaking", (event) => {
+        console.log("User " + event.connection.connectionId + " stop speaking");
+      });
+
       // On every asynchronous exception...
-      this.session.on("exception", ({ exception }) => {
+      this.sessionCamera.on("exception", ({ exception }) => {
+        console.warn(exception);
+      });
+
+      this.sessionScreen.on("exception", ({ exception }) => {
         console.warn(exception);
       });
 
       // 채팅 메시지 신호 수신
-      this.session.on(`signal:${this.mySessionId}/message`, (event) => {
+      this.sessionCamera.on(`signal:${this.mySessionId}/message`, (event) => {
         console.log(event.data); // Message
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
@@ -401,19 +445,22 @@ export default {
       });
 
       // 경매 시작 신호 수신
-      this.session.on(`signal:${this.mySessionId}/startAuction`, (event) => {
-        console.log(event.data); // Message
-        console.log(event.from); // Connection object of the sender
-        console.log(event.type); // The type of message ("my-chat")
-        this.startAuctionInClient();
-      });
+      this.sessionCamera.on(
+        `signal:${this.mySessionId}/startAuction`,
+        (event) => {
+          console.log(event.data); // Message
+          console.log(event.from); // Connection object of the sender
+          console.log(event.type); // The type of message ("my-chat")
+          this.startAuctionInClient();
+        }
+      );
       // 현재 호스트 시간 수신
-      this.session.on(`signal:${this.mySessionId}/tick`, (event) => {
+      this.sessionCamera.on(`signal:${this.mySessionId}/tick`, (event) => {
         console.log(`currentTime: ${event.data}`);
         this.remainingTime = JSON.parse(event.data).currentTime;
       });
       // 입찰 신호 수신
-      this.session.on(`signal:${this.mySessionId}/bid`, (event) => {
+      this.sessionCamera.on(`signal:${this.mySessionId}/bid`, (event) => {
         console.log(event.data); // Message
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
@@ -421,15 +468,18 @@ export default {
       });
 
       // 경매 종료 신호 수신
-      this.session.on(`signal:${this.mySessionId}/endAuction`, (event) => {
-        console.log(event.data); // Message
-        console.log(event.from); // Connection object of the sender
-        console.log(event.type); // The type of message ("my-chat")
-        this.finishAuctionInClient();
-      });
+      this.sessionCamera.on(
+        `signal:${this.mySessionId}/endAuction`,
+        (event) => {
+          console.log(event.data); // Message
+          console.log(event.from); // Connection object of the sender
+          console.log(event.type); // The type of message ("my-chat")
+          this.finishAuctionInClient();
+        }
+      );
 
       // 경매 결과 신호 수신
-      this.session.on(`signal:${this.mySessionId}/result`, (event) => {
+      this.sessionCamera.on(`signal:${this.mySessionId}/result`, (event) => {
         console.log(event.data); // Message
         console.log(event.from); // Connection object of the sender
         console.log(event.type); // The type of message ("my-chat")
@@ -441,13 +491,13 @@ export default {
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken().then((token) => {
-        console.log(`received token : ${token}`);
-        this.session
+        console.log(`received token for Camera: ${token}`);
+        this.sessionCamera
           .connect(token)
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
-            let publisher = this.OV.initPublisher(undefined, {
+            let publisher = this.OVCamera.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
@@ -464,7 +514,7 @@ export default {
             this.publisher = publisher;
 
             // --- Publish your stream ---
-            this.session.publish(this.publisher);
+            this.sessionCamera.publish(this.publisher);
           })
           .catch((error) => {
             console.log(
@@ -474,6 +524,19 @@ export default {
             );
           });
       });
+
+      this.getToken()
+        .then((token) => {
+          console.log(`received token for Screen: ${token}`);
+          this.sessionScreen.connect(token);
+        })
+        .catch((error) => {
+          console.log(
+            "There was an error connecting to the session:",
+            error.code,
+            error.message
+          );
+        });
 
       window.addEventListener("beforeunload", this.leaveSession);
     },
@@ -498,7 +561,7 @@ export default {
 
     // 채팅 보내기
     submitMessage() {
-      this.session
+      this.sessionCamera
         .signal({
           data: JSON.stringify({
             sender: this.myUserName,
@@ -550,7 +613,7 @@ export default {
           })
         )
         .then(() => {
-          this.session
+          this.sessionCamera
             .signal({
               data: JSON.stringify({
                 sender: this.myUserName,
@@ -594,44 +657,35 @@ export default {
     // 영상 on/off
     toggleVideo() {
       this.isVideoOn = !this.isVideoOn;
-      this.publisher.publishVideo(this.isVideoOn);
+      if (this.publisher) {
+        this.publisher.publishVideo(this.isVideoOn);
+      }
     },
 
     // 마이크 on/off
     toggleAudio() {
       this.isAudioOn = !this.isAudioOn;
-      this.publisher.publishAudio(this.isAudioOn);
+      if (this.publisher) {
+        this.publisher.publishAudio(this.isAudioOn);
+      }
     },
 
     // 화면공유 on/off
     toggleScreen() {
-      let publisher = null;
-
-      this.session.unpublish(this.publisher);
-
-      this.publisher = null;
-
-      let publisherConfig = {
-        audioSource: undefined, // The source of audio. If undefined default microphone
-        videoSource: undefined, // The source of video. If undefined default webcam
-        publishAudio: this.isAudioOn, // Whether you want to start publishing with your audio unmuted or not
-        publishVideo: this.isVideoOn, // Whether you want to start publishing with your video enabled or not
-        resolution: "640x480", // The resolution of your video
-        frameRate: 30, // The frame rate of your video
-        insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-        mirror: false, // Whether to mirror your local video or not
-      };
-
       if (!this.isMonitor) {
-        publisherConfig.videoSource = "screen";
+        let screen = this.OVScreen.initPublisher(undefined, {
+          videoSource: "screen",
+          publishAudio: false,
+        });
+        this.sessionScreen.publish(screen);
+        console.log("update mainVideoStreamManager");
+        this.publisherMonitor = screen;
+        this.updateMainVideoStreamManager(screen);
+      } else {
+        this.sessionScreen.unpublish(this.publisherMonitor);
+        this.mainStreamManager = this.publisher;
       }
       this.isMonitor = !this.isMonitor;
-      publisher = this.OV.initPublisher(undefined, publisherConfig);
-      this.mainStreamManager = publisher;
-      this.publisher = publisher;
-
-      // --- Publish your stream ---
-      this.session.publish(this.publisher); // publisher 객체를 publish하고 video player를 삽입힌다.
     },
 
     // 입찰 모달 닫기
@@ -655,13 +709,13 @@ export default {
     leaveSession() {
       this.closeModal();
       // --- Leave the session by calling 'disconnect' method over the Session object ---
-      if (this.session) this.session.disconnect();
+      if (this.sessionCamera) this.sessionCamera.disconnect();
 
-      this.session = undefined;
+      this.sessionCamera = undefined;
       this.mainStreamManager = undefined;
       this.publisher = undefined;
       this.subscribers = [];
-      this.OV = undefined;
+      this.OVCamera = undefined;
       this.messageHistory = [];
 
       this.currentBidder = null;

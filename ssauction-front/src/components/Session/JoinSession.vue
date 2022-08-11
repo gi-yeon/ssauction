@@ -19,6 +19,16 @@
           <label>Session</label>
           {{ $route.params.houseTitle }}
         </p>
+        <div class="session-setting">
+          <button @click="$emit('toggleAudio')">
+            <div v-if="isAudioOn">마이크 끄기</div>
+            <div v-else>마이크 켜기</div>
+          </button>
+          <button @click="$emit('toggleVideo')">
+            <div v-if="isVideoOn">카메라 끄기</div>
+            <div v-else>카메라 켜기</div>
+          </button>
+        </div>
         <p class="text-center">
           <button
             class="btn btn-lg btn-success"
@@ -35,6 +45,10 @@
 <script>
 export default {
   name: "JoinSession",
+  props: {
+    isAudioOn: Boolean,
+    isVideoOn: Boolean,
+  },
   data() {
     return {
       myUserName: null,
