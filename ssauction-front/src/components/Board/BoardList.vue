@@ -1,4 +1,10 @@
 <template>
+  <el-table :data="BoardListItem" stripe style="width: 100%">
+    <el-table-column prop="date" label="Date" width="180" />
+    <el-table-column prop="name" label="Name" width="180" />
+    <el-table-column prop="address" label="Address" />
+  </el-table>
+
     <div class="table">
         <h1>BoardList</h1>
         <div class="register">
