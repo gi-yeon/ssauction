@@ -22,13 +22,16 @@ const state = {
 
 const getters = {
   userNickname: (state) => {
-    return `${state.loginUser.nickname}`;
+    return `${state.loginUser.userNickname}`;
   },
   userNo: (state) => {
     return `${state.loginUser.userNo}`;
   },
   userGrade: (state) => {
-    return `${state.loginUser.grade}`;
+    return `${state.loginUser.userGrade}`;
+  },
+  isLogin: (state) => {
+    return `${state.isLogin}`;
   },
   accessToken: (state) => {
     return `${state.accessToken}`;
@@ -99,6 +102,9 @@ const actions = {
   getUserNo({ commit }, value) {
     commit(USER.SET_USERNO, value);
   },
+  getIsLogin({ commit }, value) {
+    commit(USER.SET_ISLOGIN, value);
+  }
 };
 
 const mutations = {
@@ -112,6 +118,7 @@ const mutations = {
   [USER.SET_USERNO](state, value) {
     state.userNo = value;
   },
+
   //로그인
   USER_LOGIN(state, payload) {
     state.isLogin = true;
@@ -132,10 +139,10 @@ const mutations = {
   },
   //쿠키에 로그인 정보 저장
   SAVE_LOGIN_INFO(state) {
-    VueCookies.set("login.userNo", state.loginUser.userNo, '30m');
-    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30m');
-    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30m');
-    VueCookies.set("isLogin", state.isLogin, '30m');
+    VueCookies.set("login.userNo", state.loginUser.userNo, '30min');
+    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30min');
+    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30min');
+    VueCookies.set("isLogin", state.isLogin, '30min');
   },
   //쿠키에 있는 로그인 정보 읽어오기
   GET_LOGIN_INFO(state) {
