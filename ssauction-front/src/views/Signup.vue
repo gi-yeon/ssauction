@@ -29,8 +29,6 @@
       placeholder="비밀번호 확인"
     />
     <br>
-    <p v-if="'user_pwd === user_pwd2'">비밀번호가 일치합니다.</p>
-    <p v-else>비밀번호가 일치하지 않습니다.</p>
     <br>
     <input
       id="user_nickname"
@@ -44,7 +42,7 @@
       id="user_phone_no"
       type="String"
       v-model="userPhoneNo"
-      placeholder="전화번호 ex) 01012345678"
+      placeholder="전화번호 (- 제외)"
     />
     <br />
     <br />
