@@ -1,9 +1,8 @@
 <template>
   <div style="margin-top: 100px">
-  <h1>환경 설정</h1>
-  <br>
+    <h1>환경 설정, 계정설정</h1>
+    <br />
   </div>
-
 </template>
 
 <script>

@@ -75,18 +75,14 @@ const actions = {
     commit('GET_LOGIN_INFO')
   },
 
-  //토큰 재발급
-  refreshToken() {
-    axios
-      .post("/users/refresh", JSON.stringify(state.loginUser.userNo))
-      .then((res) => {
-        console.log(res);
-        if (res.data.message === "success") {
-          alert("refresh성공");
-        }
-      });
+  //토큰 재발급 후 state에 다시 넣기
+  setLoginState({ commit }, res) {
+    commit('USER_LOGIN', res)
   },
-
+  //토큰 재발급 후 state로 쿠키생성
+  setLoginCookie({ commit }) {
+    commit('SAVE_LOGIN_INFO')
+  },
 
   getNickname({ commit }, value) {
     commit(USER.SET_NICKNAME, value);
@@ -121,6 +117,8 @@ const mutations = {
     state.loginUser.userNickname = payload.data.userNickname;
     state.loginUser.userGrade = payload.data.userGrade;
   },
+
+
   //로그아웃
   USER_LOGOUT(state) {
     state.isLogin = false;

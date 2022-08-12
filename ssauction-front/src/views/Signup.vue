@@ -213,6 +213,7 @@ export default {
   margin-right: 0px;
   font-size: 0.8rem;
   font-weight: 700;
+  color: orange;
 
   text-align: center;
 

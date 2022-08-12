@@ -59,6 +59,7 @@ public class UsersController {
 
     @GetMapping("/profile/{userNo}")
     public UserInfoResponseDto findById(@PathVariable Long userNo) {
+
         return usersService.getInfo(userNo);
     }
 
@@ -280,6 +281,11 @@ public class UsersController {
             newCookie.setSecure(true);
             newCookie.setMaxAge(60 * 30);
             res.addCookie(newCookie);
+
+            //유저 정보 결과로 넣는다.
+            result.put("userNo", user.getUserNo());
+            result.put("userNickname", user.getUserNickname());
+            result.put("userGrade", user.getUserGrade());
 
             //access token 결과로 넣는다.
             result.put("message", SUCCESS);

@@ -18,7 +18,7 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import MainHouses from "@/components/MainHouses.vue";
+// import MainHouses from "@/components/MainHouses.vue";
 //import axios from "@/utils/axios.js";
 
 function useUser() {
@@ -31,7 +31,7 @@ function useUser() {
 export default {
   name: "SsauctionHome",
   components: {
-    MainHouses,
+    // MainHouses,
   },
   MainHousesdata() {
     return {
