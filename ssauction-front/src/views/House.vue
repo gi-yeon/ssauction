@@ -393,13 +393,13 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        itemSellerNo: null,
+        itemSellerNo: this.$store.state.user.userNo,
         itemDealStatus : "SELL",
-        userNo: this.$store.state.user.userNo, // 유저정보를 현재 로그인 된 유저로 설정
+        userNo: this.$store.state.user.userNo // 유저정보를 현재 로그인 된 유저로 설정
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
-        itemNo: 1,
+        itemNo: -1,
         ctgrName: [],
       },
       house: {
@@ -441,7 +441,7 @@ export default {
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
       const housejson = JSON.stringify(this.house);
       const itemjson = JSON.stringify(this.item);
-
+      console.log(itemjson);
       const ctgrjson = JSON.stringify(this.ctgr);
       const houseblob = new Blob([housejson], { type: "application/json" });
       const itemblob = new Blob([itemjson], { type: "application/json" });
@@ -465,23 +465,27 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((data) => {
+
           console.log(data);
+          // this.itemNo = data.item_no
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
           this.$route.push({ name: "Home" });
+        })
+        .then(() => {
+          axios.post("/categories", ctgrjson).then((data) => {
+          console.log(data);
+         });
+         
+      // this.sendFile();
+      this.itemImages.splice(0);
         })
         .catch((error) => {
           alert(error);
         });
 
       console.log(ctgrjson);
-
-      axios.post("/categories", ctgrjson).then((data) => {
-        console.log(data);
-      });
-      // this.sendFile();
-      this.itemImages.splice(0);
     },
 
     deleteImg(index) {

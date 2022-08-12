@@ -37,7 +37,7 @@ export default {
             state.isWriter = false;
 
         const deleteComment = () => {
-            axios.delete("http://localhost:8080/comment", {
+            axios.delete("comment", {
                 params: {
                     commentsNo: props.commentNo,
                     userNo: cookies.get('login.userNo')
