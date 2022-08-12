@@ -45,7 +45,13 @@ axios.interceptors.response.use(
             //userNo를 가져와서
             const userNo = store.getters["user/userNo"];
             // token refresh 요청
-            await axios.post("/users/refresh", userNo);
+            await axios.post("/users/refresh", userNo).then((res) => {
+                console.log(res);
+                store.dispatch("user/setLoginState", res)
+                store.dispatch("user/setLoginCookie")
+
+             });
+            
 
 
 

@@ -62,7 +62,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         "/houses/searchHot", "/users/checkEmail/**", "/users/checkNickname/**"
                         )
                 .permitAll()
-                // 해당 경로는 ADMIN만 허용 (test용)
                 .antMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/houses/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/likes/**").hasAnyRole("USER", "ADMIN")
