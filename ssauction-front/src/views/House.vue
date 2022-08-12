@@ -1,25 +1,25 @@
 <template>
   <div>
-      <br />
-      <h1>경매방 만들기</h1>
-      <br />
-      <br>
-      <div class="row">
-        <div class="col-4 label">
+    <br />
+    <h1>경매방 만들기</h1>
+    <br />
+    <br />
+    <div class="row">
+      <div class="col-4 label">
         <h4>경매방 이름</h4>
-        </div>
-        <div class="col-2">
-          <input
-            id="houseTitle"
-            v-model="house.houseTitle"
-            type="text"
-            required
-            class="input_style"
-            style="margin-bottom: 0.5rem;"
-            label="경매방 이름"
-          />
-        </div>
       </div>
+      <div class="col-2">
+        <input
+          id="houseTitle"
+          v-model="house.houseTitle"
+          type="text"
+          required
+          class="input_style"
+          style="margin-bottom: 0.5rem"
+          label="경매방 이름"
+        />
+      </div>
+    </div>
     <div class="row house-input">
       <div class="col-4 label">
         <h4>경매 일시</h4>
@@ -33,13 +33,10 @@
           is24hr
           placeholder="경매 날짜를 선택하세요"
           class="input_style"
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         >
           <template v-slot="{ inputValue, inputEvents }">
-            <input
-              :value="inputValue"
-              v-on="inputEvents"
-            />
+            <input :value="inputValue" v-on="inputEvents" />
           </template>
         </v-date-picker>
       </div>
@@ -54,7 +51,7 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
@@ -68,18 +65,17 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
-
 
     <div class="row house-input">
       <div class="col-4 label">
         <h4>카테고리</h4>
       </div>
-      
-<div class="col-8 data">
+
+      <div class="col-8 data">
         <div class="form-check form-check-inline">
           <input
             class="form-check-input"
@@ -294,19 +290,22 @@
           />
           <label class="form-check-label" for="ctgr21">기타물품</label>
         </div>
-        <div style="text-align: center; display:inline-block;">
-          <p>다중 선택 가능합니다. </p>
+        <div style="text-align: center; display: inline-block">
+          <p>다중 선택 가능합니다.</p>
         </div>
       </div>
-
-      
     </div>
     <div class="row house-input">
       <div class="col-4 label">
         <h4>매물상태</h4>
       </div>
       <div class="col-8 data">
-        <input v-model="item.itemQuality" class="form-control" type="text" style="margin-bottom: 0.5rem;"/>
+        <input
+          v-model="item.itemQuality"
+          class="form-control"
+          type="text"
+          style="margin-bottom: 0.5rem"
+        />
       </div>
     </div>
     <div class="row house-input">
@@ -318,7 +317,7 @@
           v-model="item.itemDesc"
           class="form-control"
           type="text"
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         ></textarea>
       </div>
     </div>
@@ -332,7 +331,7 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
@@ -347,12 +346,19 @@
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
-          
-          <input type="file" ref="itemImage" @change="imageUpload" multiple style="margin-bottom: 0.5rem;">
+
+          <input
+            type="file"
+            ref="itemImage"
+            @change="imageUpload"
+            multiple
+            style="margin-bottom: 0.5rem"
+          />
         </div>
       </div>
     </div>
@@ -365,7 +371,7 @@
           :previewfile="file"
           :index="index"
           @delete-img="deleteImg"
-          style="margin-bottom: 0.5rem; margin-left:0.5rem"
+          style="margin-bottom: 0.5rem; margin-left: 0.5rem"
         />
       </div>
     </div>
@@ -377,8 +383,6 @@
 
 
 <script>
-
-
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
 
@@ -394,12 +398,12 @@ export default {
         itemStartPrice: null,
         itemDesc: null,
         itemSellerNo: null,
-        itemDealStatus : "SELL",
+        itemDealStatus: "SELL",
         userNo: this.$store.state.user.userNo, // 유저정보를 현재 로그인 된 유저로 설정
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
-        itemNo: 1,
+        itemNo: 0,
         ctgrName: [],
       },
       house: {
@@ -488,7 +492,6 @@ export default {
       this.itemImages.splice(index, 1);
       console.log(this.$refs.itemImage);
     },
-
   },
 };
 </script>
@@ -497,9 +500,9 @@ export default {
 <style scoped>
 label {
   text-align: MiddleLeft;
-  display:inline-block;
-  width:140px;
-  line-height:30px;
+  display: inline-block;
+  width: 140px;
+  line-height: 30px;
 }
 .preview {
   overflow-x: auto;
@@ -516,9 +519,8 @@ label {
   margin-right: 0.5rem;
   height: 1.8rem;
   background-color: rgb(255, 211, 182);
-  width : 30px;
+  width: 30px;
   height: 30px;
-
 }
 input {
   width: 500px;

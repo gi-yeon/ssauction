@@ -80,7 +80,7 @@ export default {
         .delete("board", {
           params: {
             boardNo: route.params.id,
-            userNo: this.$store.getters["user/userNo"],
+            userNo: state.userNo,
           },
         })
         .then(() => {
@@ -93,7 +93,7 @@ export default {
     const registerComment = () => {
       let params = {
         boardNo: state.boardNo,
-        userNo: this.$store.getters["user/userNo"],
+        userNo: state.userNo,
         commentContent: state.commentContent,
       };
       axios.post("comment", JSON.stringify(params)).then(() => {
@@ -103,7 +103,7 @@ export default {
     };
 
     axios
-      .get("detail", {
+      .get("board/detail", {
         params: {
           boardNo: route.params.id,
         },
@@ -116,10 +116,7 @@ export default {
         state.userNickname = data.board.userNickname;
         state.comments = data.board.comments;
 
-        if (
-          this.$store.getters["user/userNo"] != null &&
-          data.board.userNo == this.$store.getters["user/userNo"]
-        )
+        if (state.userNo != null && data.board.userNo == state.userNo)
           state.isWriter = true;
         else state.isWriter = false;
       });
