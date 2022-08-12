@@ -106,11 +106,11 @@ public class HousesController {
             for (MultipartFile file : files) {                                  //      전송받은 file마다,
                 String originalFileName = file.getOriginalFilename();           //          원본 파일 이름을 알아둔다.
                 if (!originalFileName.isEmpty()) {                              //          원본 파일 이름이 유효하다면,
-                    String saveFileName = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
+                    String saveFileUri = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
                             + originalFileName                                  //              원본 파일 이름을 합친다.
                             .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
-                    storageService.store(file, saveFileName, "item");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
-                    ItemImgs img = itemImgsService.save(item, originalFileName, saveFileName);   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
+                    storageService.store(file, saveFileUri, "item");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
+                    ItemImgs img = itemImgsService.save(item, originalFileName, saveFileUri);   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
                     item.getImages().add(img);
                 }
             }

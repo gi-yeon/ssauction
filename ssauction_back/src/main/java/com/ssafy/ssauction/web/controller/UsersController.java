@@ -5,15 +5,25 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.ssafy.ssauction.auth.JwtTokenProvider;
 
 import com.ssafy.ssauction.domain.houses.Houses;
+import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
+import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.likes.Likes;
 
 import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
+import com.ssafy.ssauction.service.storage.FileSystemStorageService;
 import com.ssafy.ssauction.service.userImages.UserImgsService;
 
 import com.ssafy.ssauction.service.users.UsersService;
+import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
+import com.ssafy.ssauction.web.dto.Houses.MyHouseResponseDto;
+import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
+import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
+import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
+import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
+import com.ssafy.ssauction.web.dto.userImages.UserImgsGetResponseDto;
 import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 
@@ -24,12 +34,16 @@ import kotlin.reflect.jvm.internal.impl.load.java.lazy.types.TypeParameterUpperB
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.functors.FalsePredicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
 
 import javax.naming.spi.ObjectFactory;
@@ -52,15 +66,70 @@ public class UsersController {
 
     private final HousesService housesService;
     private final LikesService likesService;
-
+    private final FileSystemStorageService storageService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @GetMapping("/profile/{userNo}")
-    public UserInfoResponseDto findById(@PathVariable Long userNo) {
 
-        return usersService.getInfo(userNo);
+    @GetMapping("/profile/{userNo}")
+    public ResponseEntity<UserImgsGetResponseDto> findProfileInfoById(@PathVariable Long userNo) {
+        UserImgs img = userImgsService.findEntityById(userNo);
+        String uri = img.getUserImgUri();
+        System.out.println(uri);
+        byte[] transform = null;
+        System.out.println("2 under transform");
+        try {
+            System.out.println("3 before file");
+            File file = new File(System.getProperty("user.dir") + "/imgs/profile/" + uri);
+            System.out.println("3-1 " + file);
+            FileInputStream inputStream = new FileInputStream(file);
+            System.out.println("3-2 " + inputStream);
+            transform = new byte[(int) file.length()];
+            inputStream.read(transform);
+            inputStream.close();
+            System.out.println("4 after file");
+            System.out.println("5 ioexception");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        UserImgsGetResponseDto resDto = UserImgsGetResponseDto.builder()
+                .userMainImg(transform)
+                .infoDto(
+                        UserInfoResponseDto.builder()
+                                .user(usersService.findEntityById(userNo))
+                                .build()
+                )
+                .build();
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(resDto);
+    }
+
+    @PutMapping("/profile/img/{userNo}")
+    public ResponseEntity<String> updateImg(
+            @PathVariable Long userNo,
+            @RequestPart(value = "file") MultipartFile[] files) {
+        boolean isSuccess = false;
+        MultipartFile file=files[0];
+        // FileUpload 관련 설정
+        if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
+            System.out.println(file.getName());
+            System.out.println(file.getContentType());
+            String originalFileName = file.getOriginalFilename();           //          원본 파일 이름을 알아둔다.
+            if (!originalFileName.isEmpty()) {                              //          원본 파일 이름이 유효하다면,
+                String saveFileName = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
+                        + originalFileName                                  //              원본 파일 이름을 합친다.
+                        .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
+                storageService.store(file, saveFileName, "profile");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
+                isSuccess = userImgsService.update(userNo, UserImgsUpdateRequestDto.builder()
+                        .imgName(originalFileName)
+                        .imgUri(saveFileName)
+                        .build());   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
+            }
+        }
+        if (isSuccess)
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/join")
@@ -97,14 +166,6 @@ public class UsersController {
         } else {
             return ResponseEntity.ok(FAIL);
         }
-    }
-
-
-    @PutMapping("/profile/img/{userNo}")
-    public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
-        System.out.println(userNo);
-        System.out.println(requestDto.toString());
-        return userImgsService.update(userNo, requestDto);
     }
 
     // 아이디 찾기

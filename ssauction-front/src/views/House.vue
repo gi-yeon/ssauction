@@ -69,12 +69,10 @@
         />
       </div>
     </div>
-
     <div class="row house-input">
       <div class="col-4 label">
         <h4>카테고리</h4>
       </div>
-
       <div class="col-8 data">
         <div class="form-check form-check-inline">
           <input
@@ -351,7 +349,6 @@
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
-
           <input
             type="file"
             ref="itemImage"
@@ -380,7 +377,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import axios from "@/utils/axios";
@@ -498,7 +494,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 label {

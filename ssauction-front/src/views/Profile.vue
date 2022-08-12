@@ -13,7 +13,11 @@
               <div class="card">
                 <div class="card-body">
                   <div>
-                    <div>유저사진uri : {{ userImgUri }}</div>
+                    <div>유저사진</div>
+                    <img
+                      v-if="hasImg"
+                      v-bind:src="'data:image/png;base64,' + userMainImg"
+                    />
                   </div>
                 </div>
               </div>
@@ -91,9 +95,10 @@ export default {
       userNo: 0,
       userDesc: "",
       userComment: "",
-      userImgUri: "",
+      userMainImg: [],
       sellItem: [],
       buyItem: [],
+      hasImg: false,
     };
   },
 
@@ -104,14 +109,18 @@ export default {
   },
 
   methods: {
+    goToUpdateInfo: function(){
+      this.$router.forward("/update");
+    },
     getUserInfo: async function () {
       await axios
         .get("/users/profile/" + this.userNo)
         .then(({ data }) => {
           console.log(data);
-          this.userDesc = data.userDesc;
-          this.userComment = data.userComment;
-          this.userImgUri = data.userImgUri;
+          this.userDesc = data.infoDto.userDesc;
+          this.userComment = data.infoDto.userComment;
+          this.hasImg = data.userMainImg !== null;
+          if (this.hasImg) this.userMainImg = data.userMainImg;
         })
         .catch(({ data }) => {
           console.log(data);

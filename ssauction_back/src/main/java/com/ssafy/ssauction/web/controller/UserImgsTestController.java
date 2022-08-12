@@ -18,6 +18,6 @@ public class UserImgsTestController {
 
     @GetMapping("/users/imgs/{userNo}")
     public UserImgs findById(@PathVariable Long userNo){
-        return userImgsService.findById(userNo);
+        return userImgsService.findEntityById(userNo);
     }
 }

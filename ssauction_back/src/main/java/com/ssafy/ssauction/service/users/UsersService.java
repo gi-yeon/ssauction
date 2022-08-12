@@ -162,7 +162,6 @@ public class UsersService {
         UserImgs img = userImgsRepository.findByUser(user).get();
         return UserInfoResponseDto.builder()
                 .user(user)
-                .img(img)
                 .build();
     }
 }
