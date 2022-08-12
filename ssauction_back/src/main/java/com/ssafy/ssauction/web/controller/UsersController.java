@@ -24,6 +24,7 @@ import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
 import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsGetResponseDto;
+import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
@@ -69,6 +70,7 @@ public class UsersController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/profile/{userNo}")
     public ResponseEntity<UserImgsGetResponseDto> findProfileInfoById(@PathVariable Long userNo) {

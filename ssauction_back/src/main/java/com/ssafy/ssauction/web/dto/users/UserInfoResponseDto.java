@@ -11,10 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponseDto {
 
-    private String userDesc;
     private String userEmail;
     private String userPhoneNo;
-
+    private String userDesc;
     private String userComment;
 
     @Builder
@@ -23,5 +22,6 @@ public class UserInfoResponseDto {
         this.userComment=user.getUserComment();
         this.userEmail=user.getUserEmail();
         this.userPhoneNo=user.getUserPhoneNo();
+
     }
 }

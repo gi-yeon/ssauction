@@ -56,25 +56,18 @@ public class HousesController {
 
     @GetMapping("/profile/{userNo}")
     public ResponseEntity<MyHouseResponseDto> myAllHouses(@PathVariable Long userNo) {
-        System.out.println("1 here is myallhouses");
         Users user = usersService.findEntityById(userNo);
         List<ItemInfoResponseDto> sellList = new ArrayList<>();
         for (Items item : user.getSellItems()) {
             String uri = item.getImages().get(0).getItemImgUri();
             System.out.println(uri);
             byte[] transform=null;
-            System.out.println("2 under transform");
             try {
-                System.out.println("3 before file");
                 File file=new File(System.getProperty("user.dir")+"/imgs/item/"+uri);
-                System.out.println("3-1 "+file);
                 FileInputStream inputStream=new FileInputStream(file);
-                System.out.println("3-2 "+inputStream);
                 transform=new byte[(int)file.length()];
                 inputStream.read(transform);
                 inputStream.close();
-                System.out.println("4 after file");
-                System.out.println("5 ioexception");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 return null;
