@@ -22,7 +22,7 @@ import {useRouter } from 'vue-router';
 // npm install universal-cookie
 import { useCookies } from '@vueuse/integrations/useCookies';
 import { useStore } from 'vuex';
-import  jwt_decode from "jwt-decode";
+// import  jwt_decode from "jwt-decode";
 
 export default {
     name: "BoardRegister",
@@ -46,7 +46,7 @@ export default {
                 userNo: cookies.get('login.userNo'),
                 userNickname: cookies.get('login.userNickname')
             };
-            axios.post("http://localhost:8080/board", JSON.stringify(params))
+            axios.post("board", JSON.stringify(params))
             .then(() => {})
             .catch(() => {
                 alert("글 등록에 실패하였습니다.");

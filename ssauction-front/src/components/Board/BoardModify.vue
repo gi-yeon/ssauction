@@ -41,14 +41,14 @@ export default {
                 boardContent : state.boardContent
             }
 
-            axios.put("http://localhost:8080/board", JSON.stringify(params))
+            axios.put("board", JSON.stringify(params))
             .then(() => {
                 alert("수정이 완료되었습니다.");
             })
             router.push({name: "boardDetail", params: {id: state.boardNo}});
         }
 
-        axios.get("http://localhost:8080/board/detail", {
+        axios.get("board/detail", {
             params: {
                 boardNo: route.params.id
             },

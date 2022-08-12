@@ -105,7 +105,7 @@ export default {
                 return;
             }
             console.log(store.state.board.boardType);
-            axios.get("http://localhost:8080/board", {
+            axios.get("board", {
                 params: {
                     page: p,
                     size: s,

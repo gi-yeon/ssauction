@@ -64,7 +64,7 @@ export default {
         }
 
         const DeleteArticle = () => {
-            axios.delete("http://localhost:8080/board", {
+            axios.delete("board", {
                 params: {
                     boardNo: route.params.id,
                     userNo: cookies.get('login.userNo'),
@@ -83,14 +83,14 @@ export default {
                 userNo: cookies.get('login.userNo'),
                 commentContent: state.commentContent
             }
-            axios.post("http://localhost:8080/comment", JSON.stringify(params))
+            axios.post("comment", JSON.stringify(params))
             .then(() => {
                 alert("댓글을 등록하였습니다.");
                 router.go();
             })
         }
 
-        axios.get("http://localhost:8080/board/detail", {
+        axios.get("board/detail", {
             params: {
                 boardNo: route.params.id
             },

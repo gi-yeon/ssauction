@@ -59,7 +59,7 @@ const actions = {
 
   //로그아웃
   userLogout({ commit }) {
-    axios.post("/users/logout").then((res) => {
+    axios.post("/users/logout").then(() => {
       commit('USER_LOGOUT')
       commit('RESET_LOGIN_INFO')
 
@@ -134,10 +134,10 @@ const mutations = {
   },
   //쿠키에 로그인 정보 저장
   SAVE_LOGIN_INFO(state) {
-    VueCookies.set("login.userNo", state.loginUser.userNo, '30m');
-    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30m');
-    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30m');
-    VueCookies.set("isLogin", state.isLogin, '30m');
+    VueCookies.set("login.userNo", state.loginUser.userNo, '30min');
+    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30min');
+    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30min');
+    VueCookies.set("isLogin", state.isLogin, '30min');
   },
   //쿠키에 있는 로그인 정보 읽어오기
   GET_LOGIN_INFO(state) {
