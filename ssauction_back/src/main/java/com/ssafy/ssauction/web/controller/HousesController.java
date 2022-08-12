@@ -95,7 +95,7 @@ public class HousesController {
 
     // swagger 2.x 버전에서는 여러 개의 파일을 한 번에 전송하는 요청을 지원하지 않는다ㅠㅠ
     @PostMapping
-    public ResponseEntity<String> createHouse(
+    public ResponseEntity<Long> createHouse(
             @RequestPart(value = "itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
             @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
             @RequestPart(value = "files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
@@ -123,7 +123,7 @@ public class HousesController {
             }
         }
 
-        return new ResponseEntity<>("created", HttpStatus.OK);
+        return new ResponseEntity<>(item.getItemNo(), HttpStatus.OK);
     }
 
     @GetMapping("/searchAll/{sellerNo}")
