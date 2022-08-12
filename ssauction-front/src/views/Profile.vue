@@ -1,12 +1,9 @@
 <template>
-
-
-
   <div>
     <br />
     <h1>{{ user.loginUser.userNickname }}님의 프로필</h1>
     <div v-show="user.isLogin">
-      <router-link to="/profile/update">Profile Update</router-link>
+      <button @click="goToUpdateInfo">수정하기</button>
       <br />
       <div class="card">
         <div class="card-body">
@@ -25,9 +22,6 @@
               <div class="card">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-sm-6">
-                      유저번호 : {{ user.loginUser.userNo }}
-                    </div>
                     <div class="col-sm-6">
                       유저닉네임 : {{ user.loginUser.userNickname }}
                     </div>

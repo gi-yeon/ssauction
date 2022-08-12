@@ -59,7 +59,7 @@ const actions = {
 
   //로그아웃
   userLogout({ commit }) {
-    axios.post("/users/logout").then((res) => {
+    axios.post("/users/logout").then(() => {
       commit('USER_LOGOUT')
       commit('RESET_LOGIN_INFO')
 
@@ -75,18 +75,14 @@ const actions = {
     commit('GET_LOGIN_INFO')
   },
 
-  //토큰 재발급
-  refreshToken() {
-    axios
-      .post("/users/refresh", JSON.stringify(state.loginUser.userNo))
-      .then((res) => {
-        console.log(res);
-        if (res.data.message === "success") {
-          alert("refresh성공");
-        }
-      });
+  //토큰 재발급 후 state에 다시 넣기
+  setLoginState({ commit }, res) {
+    commit('USER_LOGIN', res)
   },
-
+  //토큰 재발급 후 state로 쿠키생성
+  setLoginCookie({ commit }) {
+    commit('SAVE_LOGIN_INFO')
+  },
 
   getNickname({ commit }, value) {
     commit(USER.SET_NICKNAME, value);
@@ -121,6 +117,8 @@ const mutations = {
     state.loginUser.userNickname = payload.data.userNickname;
     state.loginUser.userGrade = payload.data.userGrade;
   },
+
+
   //로그아웃
   USER_LOGOUT(state) {
     state.isLogin = false;
@@ -134,10 +132,10 @@ const mutations = {
   },
   //쿠키에 로그인 정보 저장
   SAVE_LOGIN_INFO(state) {
-    VueCookies.set("login.userNo", state.loginUser.userNo, '30m');
-    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30m');
-    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30m');
-    VueCookies.set("isLogin", state.isLogin, '30m');
+    VueCookies.set("login.userNo", state.loginUser.userNo, '30min');
+    VueCookies.set("login.userNickname", state.loginUser.userNickname, '30min');
+    VueCookies.set("login.userGrade", state.loginUser.userGrade, '30min');
+    VueCookies.set("isLogin", state.isLogin, '30min');
   },
   //쿠키에 있는 로그인 정보 읽어오기
   GET_LOGIN_INFO(state) {
