@@ -30,12 +30,9 @@ const getters = {
   userGrade: (state) => {
     return `${state.loginUser.userGrade}`;
   },
-  accessToken: (state) => {
-    return `${state.accessToken}`;
-  },
-  refreshToken: (state) => {
-    return `${state.refreshToken}`;
-  },
+  isLogin: (state) => {
+    return `${state.isLogin}`;
+  }
 };
 
 const actions = {

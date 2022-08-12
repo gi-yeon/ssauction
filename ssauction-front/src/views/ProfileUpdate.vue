@@ -39,10 +39,13 @@
 
 <script>
 import axios from "@/utils/axios.js";
+import { mapState } from "vuex";
 
 export default {
   name: "SsauctionProfileUpdate",
-
+  compputed: {
+    ...mapState(["user"]),
+  },
   data() {
     return {
       userNickname: "",
