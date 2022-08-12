@@ -397,9 +397,9 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        itemSellerNo: this.$store.state.user.userNo,
+        // itemSellerNo: null,
         itemDealStatus: "SELL",
-        userNo: this.$store.state.user.userNo, // 유저정보를 현재 로그인 된 유저로 설정
+        userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
