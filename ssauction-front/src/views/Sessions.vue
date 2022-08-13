@@ -1,9 +1,10 @@
 <template>
-  <div id="main-container" class="container">
+  <div id="session-container" class="container">
     <join-session
       v-if="!sessionCamera"
       :isAudioOn="isAudioOn"
       :isVideoOn="isVideoOn"
+      :sessionName="sessionName"
       @joinSession="joinSession"
       @switchModal="switchModal"
       @toggleVideo="toggleVideo"
@@ -14,87 +15,133 @@
         <div class="col">
           <h1 id="session-title">{{ mySessionId }}</h1>
         </div>
-        <div class="col"></div>
       </div>
       <div class="row">
-        <div class="col-9">
+        <div class="col-md-9" id="session-main-container">
           <div class="row">
-            <div id="video-container">
+            <div id="session-video-container">
               <participant-video
-                id="publisher"
+                class="session-publisher float-left m-1"
                 :stream-manager="publisher"
+                :key="publisher"
+                ref="publisher"
                 @click="updateMainVideoStreamManager(publisher)"
                 style="display: inline-block"
               />
               <participant-video
-                v-for="sub in subscribers"
-                :key="sub.stream.connection.connectionId"
+                class="session-participant"
+                v-for="sub in subscribersCamera"
+                :key="sub"
                 :stream-manager="sub"
+                ref="subscribersCamera"
                 @click="updateMainVideoStreamManager(sub)"
               />
             </div>
           </div>
-          <div class="row main-video">
-            <div class="col-md-9">
+          <div class="row">
+            <div class="session-main-video">
               <main-video
                 :stream-manager="mainStreamManager"
                 :key="mainStreamManager"
               />
             </div>
           </div>
-          <div class="row">
-            <in-session-panel
-              :isVideoOn="isVideoOn"
-              :isAudioOn="isAudioOn"
-              :isMonitor="isMonitor"
-              :isHost="isHost"
-              :isFinished="isFinished"
-              @leaveSession="leaveSession"
-              @toggleVideo="toggleVideo"
-              @toggleAudio="toggleAudio"
-              @toggleScreen="toggleScreen"
-              @startAuction="startAuctionFromHost"
-            />
+        </div>
+        <div class="col-md-3 session-side-container">
+          <div class="row mb-3">
+            <div class="row mb-3" id="timer">
+              <session-timer
+                ref="timer"
+                :remainingTime="remainingTime"
+                :isHost="isHost"
+                @finishAuction="finishAuctionFromHost"
+                @tickTimer="tickTimer"
+              ></session-timer>
+              <div>
+                <button @click="openBid = !openBid" :disabled="isFinished">
+                  입찰하기
+                </button>
+              </div>
+            </div>
+            <div class="row">최고 입찰자 : {{ currentBidder }}</div>
+            <div class="row">최고 금액 : {{ currentPrice }}</div>
+          </div>
+          <div class="row" id="session-chat-panel">
+            <div class="row mb-3" id="session-chat-history">
+              <el-tabs type="border-card">
+                <el-tab-pane label="채팅"
+                  ><div id="chat-history">
+                    <chat-message
+                      v-for="(m, index) in messageHistory"
+                      :key="index"
+                      :sender="m.sender"
+                      :message="m.message"
+                    /></div
+                ></el-tab-pane>
+                <el-tab-pane label="참여자">
+                  <div id="participant-list">
+                    <div class="participant-name">{{ myUserName }} (나)</div>
+                    <div v-for="sub in subscribersCamera" :key="sub + 'c'">
+                      <div class="participant-name">{{ getClientId(sub) }}</div>
+                      <div v-if="isHost">
+                        <button
+                          class="kickout"
+                          @click="kickoutFromHost(sub.stream.connection)"
+                        >
+                          강퇴
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+            <div class="row mb-1" id="chat-control-panel">
+              <el-select
+                v-model="toWhisper"
+                placeholder="메시지를 보낼 상대를 선택하세요"
+                clearable
+              >
+                <el-option
+                  v-for="sub in subscribersCamera"
+                  :key="sub"
+                  :label="getClientId(sub)"
+                  :value="sub.stream.connection"
+                />
+              </el-select>
+            </div>
+            <div class="input-group" id="chat-input">
+              <textarea
+                v-model="message"
+                class="form-control"
+                type="text"
+                v-on:keyup.enter="submitMessage"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                @click="submitMessage"
+              >
+                전송
+              </button>
+            </div>
           </div>
         </div>
-        <div class="col-md-3" id="timer-bid-chat">
-          <div class="row" id="timer">
-            <session-timer
-              ref="timer"
-              :remainingTime="remainingTime"
-              :isHost="isHost"
-              @finishAuction="finishAuctionFromHost"
-              @tickTimer="tickTimer"
-            ></session-timer>
-            <div><button @click="openBid = !openBid">입찰하기</button></div>
-          </div>
-          <div class="row">최고 입찰자 : {{ currentBidder }}</div>
-          <div class="row">최고 금액 : {{ currentPrice }}</div>
-          <div class="row" id="chat-history">
-            <chat-message
-              v-for="(m, index) in messageHistory"
-              :key="index"
-              :sender="m.sender"
-              :message="m.message"
-            />
-          </div>
-          <div id="chat-control-panel"></div>
-          <div class="input-group" id="chat-input">
-            <textarea
-              v-model="message"
-              class="form-control"
-              type="text"
-              v-on:keyup.enter="submitMessage"
-            />
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              @click="submitMessage"
-            >
-              전송
-            </button>
-          </div>
-        </div>
+        <footer>
+          <in-session-panel
+            :isVideoOn="isVideoOn"
+            :isAudioOn="isAudioOn"
+            :isHost="isHost"
+            :isFreeze="isFreeze"
+            :isFinished="isFinished"
+            @leaveSession="leaveSession"
+            @toggleVideo="toggleVideo"
+            @toggleAudio="toggleAudio"
+            @startAuction="startAuctionFromHost"
+            @setFreeze="setFreezeFromHost"
+            @undoFreeze="undoFreezeFromHost"
+          />
+        </footer>
       </div>
     </div>
     <!-- 입찰 모달 modal  -->
@@ -156,7 +203,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <button @click="makeBid">입찰</button>
+            <button @click="makeBid" :disabled="isFinished">입찰</button>
           </div>
           <div class="col"><button @click="closeModal">닫기</button></div>
         </div>
@@ -165,10 +212,13 @@
     <Teleport to="body">
       <div v-if="isFinished" class="result-modal">
         <div class="row">
-          <div>{{ this.currentPrice }}</div>
+          <h1>최종 가격 : {{ this.currentPrice }}</h1>
         </div>
         <div class="row">
-          <h1>{{ this.currentBidder }}에게 최종 낙찰 되었습니다!</h1>
+          <h1 v-if="this.currentBidder">
+            {{ this.currentBidder }}에게 최종 낙찰 되었습니다!
+          </h1>
+          <h1 v-else>유찰되었습니다.</h1>
         </div>
         <div class="row"><button @click="leaveSession">OK</button></div>
       </div>
@@ -186,6 +236,7 @@ import JoinSession from "@/components/Session/JoinSession.vue";
 import SessionTimer from "@/components/Session/SessionTimer.vue";
 import MainVideo from "@/components/Session/MainVideo.vue";
 import VueCookies from "vue-cookies";
+import { mapState } from "vuex";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -200,35 +251,44 @@ export default {
     SessionTimer,
   },
   mounted() {
-    this.mySessionId = this.$route.params.houseNo;
     const URLParams = new URL(window.location).searchParams;
     console.log(`isHost: ${URLParams.get("isHost")}`);
+    this.mySessionId = URLParams.get("sessionId");
     this.isHost = URLParams.get("isHost") === "true" ? true : false;
+    this.userNo = this.$store.getters["user/userNo"];
   },
 
   data() {
     return {
       OVCamera: undefined,
-      OVScreen: undefined,
+      // OVScreen: undefined,
       sessionCamera: undefined,
-      sessionScreen: undefined,
+      // sessionScreen: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
+      publisherId: undefined,
       publisherMonitor: undefined,
-      subscribers: [],
+      subscribersCamera: [],
+      // subscribersScreen: [],
 
+      cameraToken: null,
+      // screenToken: null,
       mySessionId: null,
+      sessionName: null,
       myUserName: null,
+      userNo: null,
       mode: "basic",
       message: null,
       messageHistory: [],
+      toWhisper: null,
       now: null,
       isHost: false,
+      isFreeze: false,
 
       // 마이크, 카메라 설정
       isVideoOn: true,
       isAudioOn: true,
-      isMonitor: false,
+      // isMonitor: false,
       openBid: false,
       isManual: false,
 
@@ -241,8 +301,9 @@ export default {
       remainingTime: 0,
     };
   },
-
   computed: {
+    ...mapState(["user"]),
+
     priceToKor() {
       let hanA = new Array(
         "",
@@ -291,13 +352,56 @@ export default {
   },
 
   methods: {
+    setFreezeFromHost(connection) {
+      let connections = [];
+      if (connection) {
+        connections.push(connection);
+      }
+      this.sessionCamera.signal({
+        data: JSON.stringify({
+          sender: "system :",
+          message: "방장이 방을 얼렸습니다.",
+        }),
+        to: connections,
+        type: this.mySessionId + "/setFreeze",
+      });
+    },
+
+    undoFreezeFromHost() {
+      this.sessionCamera.signal({
+        data: JSON.stringify({
+          sender: "system :",
+          message: "음성 및 채팅 제한이 해제되었습니다.",
+        }),
+        to: [],
+        type: this.mySessionId + "/undoFreeze",
+      });
+    },
+
+    setFreezeInClient(data) {
+      this.isFreeze = true;
+      this.messageHistory.push(JSON.parse(data));
+      if (this.publisher && !this.isHost) {
+        this.publisher.publishAudio(false);
+      }
+    },
+
+    undoFreezeInClient(data) {
+      this.isFreeze = false;
+      this.messageHistory.push(JSON.parse(data));
+      if (this.publisher && !this.isHost) {
+        this.publisher.publishAudio(this.isAudioOn);
+      }
+    },
+
     // 호스트 사이드 로직
     startAuctionFromHost() {
       // 다른 클라이언트들에게 startAuction 메시지를 보내 isFinished를 false로 만든다.
       this.sessionCamera
         .signal({
           data: JSON.stringify({
-            sender: this.myUserName,
+            sender: "system :",
+            message: "경매가 시작되었습니다.",
           }),
           to: [],
           type: this.mySessionId + "/startAuction",
@@ -305,15 +409,16 @@ export default {
         .then(() => {
           console.log();
         });
-      this.$refs.timer.resetTimer();
-      this.$refs.timer.initTimer();
+      this.$refs.timer.timerReset();
+      this.$refs.timer.timerStart();
     },
 
     finishAuctionFromHost() {
       // 다른 클라이언트들에게 endAuction 메시지를 보내 isFinished를 true로 만든다.
       this.sessionCamera.signal({
         data: JSON.stringify({
-          sender: this.myUserName,
+          sender: "system :",
+          message: "경매가 종료되었습니다.",
         }),
         to: [],
         type: this.mySessionId + "/endAuction",
@@ -329,15 +434,18 @@ export default {
           console.log(data);
         });
     },
+
     // 경매 시작
     // 클라이언트 사이드 로직
-    startAuctionInClient() {
+    startAuctionInClient(data) {
       this.isFinished = false;
+      this.messageHistory.push(JSON.parse(data));
     },
     // 경매 종료
     // 클라이언트 사이드 로직
-    finishAuctionInClient() {
+    finishAuctionInClient(data) {
       this.isFinished = true;
+      this.messageHistory.push(JSON.parse(data));
     },
 
     // 호스트 로직
@@ -362,11 +470,19 @@ export default {
       this.myUserName = userName;
       // --- Get an OpenVidu object ---
       this.OVCamera = new OpenVidu();
-      this.OVScreen = new OpenVidu();
+      // this.OVScreen = new OpenVidu();
+
+      // 음성 인식 관련 설정
+      this.OVCamera.setAdvancedConfiguration({
+        publisherSpeakingEventsOptions: {
+          interval: 100, // Frequency of the polling of audio streams in ms (default 100)
+          threshold: -50, // Threshold volume in dB (default -50)
+        },
+      });
 
       // --- Init a session ---
       this.sessionCamera = this.OVCamera.initSession();
-      this.sessionScreen = this.OVScreen.initSession();
+      // this.sessionScreen = this.OVScreen.initSession();
 
       // --- Specify the actions when events take place in the session ---
       // 세션과 연결이 되면 아래의 코드가 실행된다.
@@ -381,39 +497,39 @@ export default {
 
       // On every new Stream received...
       this.sessionCamera.on("streamCreated", ({ stream }) => {
-        if (stream.typeOfVideo == "CAMERA") {
-          const subscriber = this.sessionCamera.subscribe(stream);
-          console.log("Camera Stream created");
-          console.log(stream);
-          this.subscribers.push(subscriber); // 해당 스트림을 subscribe하고 video player를 삽입한다.
-          // 해당 스트림이 호스트 스트림일 경우 초기 공유화면으로 설정한다.
-          if (this.hostId == subscriber.stream.connection.connectionId) {
-            this.updateMainVideoStreamManager(subscriber);
-          }
+        if (this.isHost && this.isFreeze) {
+          this.setFreezeFromHost(stream.connection);
         }
+        if (
+          this.publisher &&
+          stream.creationTime > this.publisher.stream.creationTime
+        ) {
+          this.messageHistory.push({
+            sender: "system :",
+            message:
+              JSON.parse(stream.connection.data).clientData +
+              "이(가) 입장했습니다.",
+          });
+        }
+
+        const subscriber = this.sessionCamera.subscribe(stream);
+        console.log("Camera Stream created");
+        console.log(subscriber);
+        this.subscribersCamera.push(subscriber); // 해당 스트림을 subscribe하고 video player를 삽입한다.
       });
 
-      this.sessionScreen.on("streamCreated", ({ stream }) => {
-        if (stream.typeOfVideo == "SCREEN") {
-          const subscriber = this.sessionScreen.subscribe(stream);
-          console.log("Screen Stream created");
-          console.log(stream);
-          console.log("change main video stream to shared screen");
-          this.updateMainVideoStreamManager(subscriber);
-        }
-      });
       // On every Stream destroyed...
       this.sessionCamera.on("streamDestroyed", ({ stream }) => {
-        const index = this.subscribers.indexOf(stream.streamManager, 0);
+        if (stream.typeOfVideo != "CAMERA") return;
+        this.messageHistory.push({
+          sender: "system :",
+          message:
+            JSON.parse(stream.connection.data).clientData +
+            "이(가) 퇴장했습니다.",
+        });
+        const index = this.subscribersCamera.indexOf(stream.streamManager, 0);
         if (index >= 0) {
-          this.subscribers.splice(index, 1);
-        }
-      });
-
-      this.sessionScreen.on("streamDestroyed", ({ stream }) => {
-        const index = this.subscribers.indexOf(stream.streamManager, 0);
-        if (index >= 0) {
-          this.subscribers.splice(index, 1);
+          this.subscribersCamera.splice(index, 1);
         }
       });
 
@@ -421,18 +537,30 @@ export default {
         console.log(
           "User " + event.connection.connectionId + " start speaking"
         );
+        this.sendHighlight(event.connection.connectionId);
       });
 
       this.sessionCamera.on("publisherStopSpeaking", (event) => {
         console.log("User " + event.connection.connectionId + " stop speaking");
+        this.sendUndoHighlight(event.connection.connectionId);
       });
+
+      // 말하고 있는 사람 하이라이트 표시 신호 수신
+      this.sessionCamera.on(`signal:${this.mySessionId}/highlight`, (event) => {
+        console.log(event.data); // Message
+        this.highlightSpeaker(event.data);
+      });
+
+      this.sessionCamera.on(
+        `signal:${this.mySessionId}/undohighlight`,
+        (event) => {
+          console.log(event.data); // Message
+          this.undoHighlightSpeaker(event.data);
+        }
+      );
 
       // On every asynchronous exception...
       this.sessionCamera.on("exception", ({ exception }) => {
-        console.warn(exception);
-      });
-
-      this.sessionScreen.on("exception", ({ exception }) => {
         console.warn(exception);
       });
 
@@ -444,14 +572,24 @@ export default {
         this.appendMessage(event);
       });
 
+      // 방 얼리기
+      this.sessionCamera.on(`signal:${this.mySessionId}/setFreeze`, (event) => {
+        this.setFreezeInClient(event.data);
+      });
+
+      // 방 얼리기 해제
+      this.sessionCamera.on(
+        `signal:${this.mySessionId}/undoFreeze`,
+        (event) => {
+          this.undoFreezeInClient(event.data);
+        }
+      );
+
       // 경매 시작 신호 수신
       this.sessionCamera.on(
         `signal:${this.mySessionId}/startAuction`,
         (event) => {
-          console.log(event.data); // Message
-          console.log(event.from); // Connection object of the sender
-          console.log(event.type); // The type of message ("my-chat")
-          this.startAuctionInClient();
+          this.startAuctionInClient(event.data);
         }
       );
       // 현재 호스트 시간 수신
@@ -474,7 +612,7 @@ export default {
           console.log(event.data); // Message
           console.log(event.from); // Connection object of the sender
           console.log(event.type); // The type of message ("my-chat")
-          this.finishAuctionInClient();
+          this.finishAuctionInClient(event.data);
         }
       );
 
@@ -486,11 +624,16 @@ export default {
         this.showResult(event);
       });
 
+      this.sessionCamera.on(`signal:${this.mySessionId}/kickout`, () => {
+        this.kickoutInClient();
+      });
+
       // --- Connect to the session with a valid user token ---
 
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken().then((token) => {
+        this.cameraToken = token;
         console.log(`received token for Camera: ${token}`);
         this.sessionCamera
           .connect(token)
@@ -508,11 +651,8 @@ export default {
               mirror: false, // Whether to mirror your local video or not
             });
 
-            if (this.isHost) {
-              this.mainStreamManager = publisher;
-            }
+            this.mainStreamManager = publisher;
             this.publisher = publisher;
-
             // --- Publish your stream ---
             this.sessionCamera.publish(this.publisher);
           })
@@ -524,19 +664,6 @@ export default {
             );
           });
       });
-
-      this.getToken()
-        .then((token) => {
-          console.log(`received token for Screen: ${token}`);
-          this.sessionScreen.connect(token);
-        })
-        .catch((error) => {
-          console.log(
-            "There was an error connecting to the session:",
-            error.code,
-            error.message
-          );
-        });
 
       window.addEventListener("beforeunload", this.leaveSession);
     },
@@ -550,6 +677,7 @@ export default {
             JSON.stringify({
               sessionName: this.mySessionId,
               loggedUser: this.myUserName,
+              userNo: this.userNo,
               isHost: this.isHost,
             })
           )
@@ -559,15 +687,106 @@ export default {
       });
     },
 
-    // 채팅 보내기
-    submitMessage() {
+    // 지금 말하고 있는 사람 주위에 테두리를 만든다.
+    highlightSpeaker(data) {
+      console.log(this.$refs);
+      const speakerId = JSON.parse(data).connectionId;
+      if (speakerId == this.publisher.stream.connection.connectionId) {
+        this.$refs.publisher.$el.style.border = "2px solid white";
+      }
+
+      // $refs.subscribersCamera 배열을 선형순회하는 건 오래 걸리므로
+      // 인덱스를 통해 접근하는 방법을 생각해봤지만,
+      // v-for에 refs를 적용해 만들어진 배열이 원본 배열의 순서를 보장하지 않으므로
+      // 일단 포기..
+      if (
+        this.$refs.subscribersCamera &&
+        this.$refs.subscribersCamera.length > 0
+      ) {
+        for (let sub of this.$refs.subscribersCamera) {
+          console.log("connectionId");
+          if (speakerId == sub.streamManager.stream.connection.connectionId) {
+            sub.$el.style.border = "2px solid red";
+          }
+        }
+      }
+    },
+
+    // 말을 하다가 마친 사람 주위에 있던 테두리를 없앤다.
+    undoHighlightSpeaker(data) {
+      const speakerId = JSON.parse(data).connectionId;
+      if (speakerId == this.publisher.stream.connection.connectionId) {
+        this.$refs.publisher.$el.style.border = "";
+      }
+
+      if (
+        this.$refs.subscribersCamera &&
+        this.$refs.subscribersCamera.length > 0
+      ) {
+        for (let sub of this.$refs.subscribersCamera) {
+          console.log("connectionId");
+          if (speakerId == sub.streamManager.stream.connection.connectionId) {
+            sub.$el.style.border = "";
+          }
+        }
+      }
+    },
+
+    sendHighlight(connectionId) {
       this.sessionCamera
         .signal({
           data: JSON.stringify({
-            sender: this.myUserName,
-            message: this.message,
+            connectionId: connectionId,
           }),
           to: [],
+          type: this.mySessionId + "/highlight",
+        })
+        .then(() => {
+          console.log();
+        });
+    },
+
+    sendUndoHighlight(connectionId) {
+      this.sessionCamera
+        .signal({
+          data: JSON.stringify({
+            connectionId: connectionId,
+          }),
+          to: [],
+          type: this.mySessionId + "/undohighlight",
+        })
+        .then(() => {
+          console.log();
+        });
+    },
+
+    // 채팅 보내기
+    submitMessage() {
+      if (!this.isHost && this.isFreeze) {
+        alert(
+          "호스트가 방을 얼렸습니다. 호스트가 해제하기 전까지 메시지를 보낼 수 없습니다."
+        );
+        return;
+      }
+      let toArray = [];
+      let sender = this.myUserName;
+      if (this.toWhisper) {
+        toArray.push(this.toWhisper);
+        toArray.push(this.publisher.stream.connection);
+        sender +=
+          "이(가) " + JSON.parse(this.toWhisper.data).clientData + "에게";
+      } else {
+        sender += "이(가) 모두에게";
+      }
+      sender += " : ";
+
+      this.sessionCamera
+        .signal({
+          data: JSON.stringify({
+            sender: sender,
+            message: this.message,
+          }),
+          to: toArray,
           type: this.mySessionId + "/message",
         })
         .then(() => {
@@ -664,29 +883,17 @@ export default {
 
     // 마이크 on/off
     toggleAudio() {
+      if (!this.isHost && this.isFreeze) {
+        alert("방장이 방을 얼렸습니다. 음성이 제한됩니다.");
+        return;
+      }
       this.isAudioOn = !this.isAudioOn;
       if (this.publisher) {
         this.publisher.publishAudio(this.isAudioOn);
       }
     },
 
-    // 화면공유 on/off
-    toggleScreen() {
-      if (!this.isMonitor) {
-        let screen = this.OVScreen.initPublisher(undefined, {
-          videoSource: "screen",
-          publishAudio: false,
-        });
-        this.sessionScreen.publish(screen);
-        console.log("update mainVideoStreamManager");
-        this.publisherMonitor = screen;
-        this.updateMainVideoStreamManager(screen);
-      } else {
-        this.sessionScreen.unpublish(this.publisherMonitor);
-        this.mainStreamManager = this.publisher;
-      }
-      this.isMonitor = !this.isMonitor;
-    },
+    // },
 
     // 입찰 모달 닫기
     closeModal() {
@@ -706,50 +913,123 @@ export default {
       this.openBid = !this.openBid;
     },
 
-    leaveSession() {
+    leaveSession(reason) {
       this.closeModal();
+      console.log("leaveSession");
+      console.log(this.cameraToken);
+      let data = {
+        sessionName: this.mySessionId,
+        cameraToken: this.cameraToken,
+        // screenToken: this.screenToken,
+        userNo: this.userNo,
+      };
+      if (reason == "kick-out") {
+        data.reason = reason;
+        alert("퇴장당했습니다.");
+      } else {
+        data.reason = "normal";
+      }
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (this.sessionCamera) this.sessionCamera.disconnect();
 
-      this.sessionCamera = undefined;
-      this.mainStreamManager = undefined;
-      this.publisher = undefined;
-      this.subscribers = [];
-      this.OVCamera = undefined;
-      this.messageHistory = [];
-
-      this.currentBidder = null;
-      this.currentPrice = "0";
-      this.priceToBid = "0";
-      this.isFinished = false;
+      axios
+        .post("sessions/removeUser", JSON.stringify(data))
+        .then(() => {
+          this.clearData();
+        })
+        .catch(() => {
+          console.log("에러 발생");
+        });
 
       window.removeEventListener("beforeunload", this.leaveSession);
     },
 
+    clearData() {
+      this.OVCamera = undefined;
+      // this.OVScreen = undefined;
+      this.sessionCamera = undefined;
+      // this.sessionScreen = undefined;
+      this.mainStreamManager = undefined;
+      this.publisher = undefined;
+      this.publisherId = undefined;
+      // this.publisherMonitor = undefined;
+      this.subscribersCamera = [];
+      // this.subscribersScreen = [];
+
+      this.cameraToken = null;
+      // this.screenToken = null;
+      this.mySessionId = null;
+      this.myUserName = null;
+      this.userNo = null;
+      this.message = null;
+      this.messageHistory = [];
+      this.toWhisper = null;
+      this.now = null;
+      this.isHost = false;
+      this.isFreeze = false;
+
+      this.openBid = false;
+      this.isManual = false;
+
+      this.top3List = [];
+      this.currentBidder = null;
+      this.currentPrice = "0";
+      this.priceToBid = "0";
+      this.isFinished = false;
+      this.hostId = null;
+      this.remainingTime = 0;
+    },
     updateMainVideoStreamManager(stream) {
-      if (this.mainStreamManager === stream) return;
+      // if (this.mainStreamManager === stream) return;
       this.mainStreamManager = stream;
+    },
+
+    setWhisper(event) {
+      console.log("setWhisper");
+      console.log(event);
+    },
+
+    getClientId(sub) {
+      return JSON.parse(sub.stream.connection.data).clientData;
+    },
+
+    kickoutFromHost(connection) {
+      const kickoutList = [];
+      kickoutList.push(connection);
+      console.log("kickout");
+      if (this.isHost) {
+        // 서버에 블랙리스트 등록 먼저 해야 함
+        this.sessionCamera.signal({
+          data: JSON.stringify({
+            sender: "system :",
+            message: "강제 퇴장.",
+          }),
+          to: kickoutList,
+          type: this.mySessionId + "/kickout",
+        });
+      }
+    },
+
+    kickoutInClient() {
+      this.leaveSession("kick-out");
     },
   },
 };
 </script>
 <style scoped>
 #buttonLeaveSession {
-  float: right;
   margin-top: 20px;
 }
-#video-container {
+#session-video-container {
   overflow-x: auto;
   white-space: nowrap;
   height: auto;
+  text-align: left;
 }
 #chat-history {
   height: 80%;
   background-color: white;
   overflow-y: auto;
-}
-#chat-input {
-  background-color: black;
 }
 .bid-modal {
   position: fixed;
@@ -779,5 +1059,33 @@ export default {
   margin-top: 0;
   margin-right: 0.3rem;
   height: 1.8rem;
+}
+
+#session-container {
+  background-color: black;
+}
+
+#session-chat-panel {
+  height: 70%;
+}
+
+#session-chat-history {
+  height: 80%;
+}
+
+#chat-control-panel {
+  height: 8%;
+}
+#chat-input {
+  height: 12%;
+}
+
+footer {
+  bottom: 0;
+  padding: 1em;
+  background-color: black;
+}
+textarea {
+  resize: none;
 }
 </style>

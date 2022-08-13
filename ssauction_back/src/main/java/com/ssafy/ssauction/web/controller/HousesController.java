@@ -99,6 +99,7 @@ public class HousesController {
             @RequestPart(value = "itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
             @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
             @RequestPart(value = "files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
+        System.out.println(itemDto);
         Users user = usersService.findEntityById(itemDto.getUserNo());          //  itemDto에서 현재 사용자의 UserNo를 통해 현재 user를 찾는다.
         //      나중에 JWT 인증 정보로 대체해야 한다.
         System.out.println(itemDto.toString());

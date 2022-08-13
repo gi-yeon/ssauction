@@ -1,11 +1,6 @@
 <template>
   <div>
     <h1>{{ timerStr }}</h1>
-    <h1>{{ remainingTime }}</h1>
-    <button @click="timerStart">시작</button>
-    <button @click="timerReset">리셋</button>
-    <button @click="timerPause">일시정지</button>
-    <button @click="timerStop">정지</button>
   </div>
 </template>
 
