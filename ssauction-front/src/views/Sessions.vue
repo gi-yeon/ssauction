@@ -1,5 +1,5 @@
 <template>
-  <div id="session-container" class="container">
+  <div id="session-container" class="container" style="height: 90%">
     <join-session
       v-if="!sessionCamera"
       :isAudioOn="isAudioOn"
@@ -10,8 +10,8 @@
       @toggleVideo="toggleVideo"
       @toggleAudio="toggleAudio"
     />
-    <div class="row" id="session" v-if="sessionCamera">
-      <div id="session-header">
+    <div class="row" id="session" style="height: 100%" v-if="sessionCamera">
+      <div class="row" id="session-header" style="height: 8%">
         <div class="col">
           <h1 id="session-title">{{ mySessionId }}</h1>
         </div>
@@ -465,8 +465,11 @@ export default {
         });
     },
 
+    joinSession() {
+      this.sessionCamera = true;
+    },
     // 세션 연결
-    joinSession(userName) {
+    joinSession_original(userName) {
       this.myUserName = userName;
       // --- Get an OpenVidu object ---
       this.OVCamera = new OpenVidu();
@@ -913,7 +916,11 @@ export default {
       this.openBid = !this.openBid;
     },
 
-    leaveSession(reason) {
+    leaveSession() {
+      this.sessionCamera = false;
+    },
+
+    leaveSession_original(reason) {
       this.closeModal();
       console.log("leaveSession");
       console.log(this.cameraToken);
@@ -1087,5 +1094,14 @@ footer {
 }
 textarea {
   resize: none;
+}
+.row {
+  --bs-gutter-x: 0rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(var(--bs-gutter-y) * -1);
+  margin-right: calc(var(--bs-gutter-x) * -0.5);
+  margin-left: calc(var(--bs-gutter-x) * -0.5);
 }
 </style>
