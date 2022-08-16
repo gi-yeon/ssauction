@@ -26,8 +26,8 @@
     <button @click="login" width="500px" class="btn_yellow">로그인</button>
     <br />
     <br />
-    <button class="btn_pink">아이디 찾기</button> &nbsp;
-    <button class="btn_pink">비밀번호 찾기</button>
+    <button class="btn_pink" @click="toFindId">아이디 찾기</button> &nbsp;
+    <button class="btn_pink" @click="toResetPwd">비밀번호 찾기</button>
     <br />
     <br />
     <router-link to="/signUp" class="toSignUp"
@@ -70,6 +70,12 @@ export default {
   mounted() {},
 
   methods: {
+    toFindId() {
+      this.$router.push("/findid");
+    },
+    toResetPwd() {
+      this.$router.push("/resetpwd");
+    },
     login() {
       //user 모듈의 userLogin으로 보낸다.
       this.$store.dispatch("user/userLogin", this.loginInfo);

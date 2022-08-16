@@ -116,6 +116,7 @@ export default {
         state.userNickname = data.board.userNickname;
         state.comments = data.board.comments;
 
+
         if (state.userNo != null && data.board.userNo == state.userNo)
           state.isWriter = true;
         else state.isWriter = false;

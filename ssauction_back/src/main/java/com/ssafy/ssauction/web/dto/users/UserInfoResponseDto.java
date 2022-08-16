@@ -14,24 +14,14 @@ public class UserInfoResponseDto {
     private String userEmail;
     private String userPhoneNo;
     private String userDesc;
-
     private String userComment;
 
-
-    @Override
-    public String toString() {
-        return "UserInfoResponseDto{" +
-                "userEmail='" + userEmail + '\'' +
-                ", userPhoneNo='" + userPhoneNo + '\'' +
-                ", userDesc='" + userDesc + '\'' +
-                ", userComment='" + userComment + '\'' +
-                '}';
-    }
     @Builder
-    public UserInfoResponseDto(Users user, UserImgs img){
-        this.userEmail=user.getUserEmail();
-        this.userPhoneNo=user.getUserPhoneNo();
+    public UserInfoResponseDto(Users user){
         this.userDesc=user.getUserDesc();
         this.userComment=user.getUserComment();
+        this.userEmail=user.getUserEmail();
+        this.userPhoneNo=user.getUserPhoneNo();
+
     }
 }
