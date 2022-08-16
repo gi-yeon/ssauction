@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Service
 public class UserImgsService {
@@ -23,14 +25,17 @@ public class UserImgsService {
     }
 
     @Transactional
-    public Long update(Long userNo, UserImgsUpdateRequestDto requestDto){
-        Users user=usersRepository.findById(userNo).get();
-        UserImgs img=userImgsRepository.findByUser(user).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다."));
-        img.update(requestDto.getImgName(),requestDto.getImgUri());
-        return userNo;
+    public boolean update(Long userNo, UserImgsUpdateRequestDto requestDto){
+        try {
+            UserImgs img = userImgsRepository.findById(userNo).get();
+            img.update(requestDto.getImgName(), requestDto.getImgUri());
+            return true;
+        }catch(NoSuchElementException|IllegalArgumentException e){
+            return false;
+        }
     }
 
-    public UserImgs findById(Long userNo) {
+    public UserImgs findEntityById(Long userNo) {
         return userImgsRepository.findById(userNo).get();
     }
 }

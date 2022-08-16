@@ -261,6 +261,7 @@ export default {
 };
 </script>
 
+
 <style>
 .profileInput {
   margin-left: 10px;
@@ -301,3 +302,4 @@ export default {
   width: 100px;
 }
 </style>;
+
