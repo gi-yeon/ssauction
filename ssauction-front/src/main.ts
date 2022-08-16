@@ -62,9 +62,9 @@ axios.interceptors.response.use(
         //token이 아예 없다면 재로그인 해야함
         else if (status === 401 && accessToken == null && refreshToken == null) {
             alert("로그인해주세요.")
+
             router.push("/login")
             
-
         }
         //로그인 시 회원 정보가 없다면
         else if (status != 401 && accessToken == null && refreshToken == null) {

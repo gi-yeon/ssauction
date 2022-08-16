@@ -65,6 +65,7 @@ const actions = {
 
   },
 
+
   //회원탈퇴 후 로그아웃
   deleteUserLogout({ commit }) {
     axios.post("/users/logout").then(() => {

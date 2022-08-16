@@ -5,7 +5,6 @@ import com.ssafy.ssauction.auth.JwtTokenProvider;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
 import com.ssafy.ssauction.domain.userImages.UserImgs;
-import com.ssafy.ssauction.domain.users.Authority;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
@@ -52,6 +51,7 @@ public class UsersController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
 
     //프로필 가져오기
     @GetMapping("/profile/{userNo}")
@@ -182,7 +182,6 @@ public class UsersController {
             return ResponseEntity.ok(FAIL);
         }
     }
-
 
     // 아이디 찾기
     // 전화번호를 이용해 아이디(이메일) 찾기 구현
