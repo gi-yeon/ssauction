@@ -55,7 +55,7 @@ public class UsersService {
     @Transactional
     public void updateInfo(Long userNo, UsersInfoUpdateRequestDto requestDto) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-        users.updateProfile(requestDto.getUserComment(), requestDto.getUserDesc());
+        users.updateProfile(requestDto.getUserNickname(), requestDto.getUserPhoneNo(), requestDto.getUserComment(), requestDto.getUserDesc());
     }
 
     @Transactional
@@ -136,6 +136,20 @@ public class UsersService {
             return null;
         }
         return userId + "님의 비밀번호가 변경되었습니다.";
+    }
+
+    //프로필수정에서 비밀번호 변경
+    @Transactional
+    public boolean profileUpdatePwd(Long userNo, UsersUpdatePwdDto resetPwdDto) {
+        Users users;
+        try {
+            users = usersRepository.findById(userNo).get();
+            users.updatePwd(passwordEncoder.encode(resetPwdDto.getUserPwd()));
+            return true;
+        } catch (NoSuchElementException e) {
+            System.out.println("없음");
+            return false;
+        }
     }
 
     public UsersResponseDto findUser(UsersLoginDto requestDto) {

@@ -140,7 +140,9 @@ public class Users implements UserDetails {
         this.authority=authority;
     }
 
-    public void updateProfile(String userComment, String userDesc) {
+    public void updateProfile(String userNickname, String userPhoneNo, String userComment, String userDesc) {
+        this.userNickname = userNickname;
+        this.userPhoneNo = userPhoneNo;
         this.userComment = userComment;
         this.userDesc = userDesc;
         this.userUpdateDate = new Timestamp(System.currentTimeMillis());

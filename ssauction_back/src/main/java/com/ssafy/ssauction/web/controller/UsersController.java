@@ -1,13 +1,11 @@
 package com.ssafy.ssauction.web.controller;
 
 
-import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.ssafy.ssauction.auth.JwtTokenProvider;
 
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
 
-import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
@@ -20,9 +18,7 @@ import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
 import com.ssafy.ssauction.web.dto.users.*;
 
-import kotlin.reflect.jvm.internal.impl.load.java.lazy.types.TypeParameterUpperBoundEraser;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections.functors.FalsePredicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import javax.naming.spi.ObjectFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,6 +94,33 @@ public class UsersController {
         }
     }
 
+    //비밀번호 확인
+    @PostMapping("/pwdCheck")
+    public ResponseEntity<?> pwdCheck(@RequestBody PasswordChckRequestDto requestDto){
+        Long userNo = requestDto.getUserNo();
+        String userPwd = requestDto.getUserPwd();
+
+        //userEmail로 DB에 저장된 user정보 불러옴
+        UsersAuthResponseDto user = usersService.findByUserNo(userNo);
+
+        //비밀번호가 올바르게 입력됐다면
+        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+            return ResponseEntity.ok(SUCCESS);
+        }else{
+            return ResponseEntity.ok(FAIL);
+        }
+    }
+
+    //회원정보 수정에서 비밀번호 재설정
+    @PutMapping("/profile/resetPwd/{userNo}")
+    public ResponseEntity<?> update(@PathVariable Long userNo, @RequestBody UsersUpdatePwdDto resetPwdDto) {
+         if(usersService.profileUpdatePwd(userNo, resetPwdDto)){
+             return ResponseEntity.ok(SUCCESS);
+         }else{
+             return ResponseEntity.ok(FAIL);
+         }
+    }
+
 
     @PutMapping("/profile/img/{userNo}")
     public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
@@ -121,10 +143,9 @@ public class UsersController {
         return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
 
+
     @PutMapping("/profile/info/{userNo}")
     public ResponseEntity<String> updateInfo(@PathVariable Long userNo, @RequestBody UsersInfoUpdateRequestDto requestDto) {
-        System.out.println(userNo);
-        System.out.println(requestDto.toString());
         try {
             usersService.updateInfo(userNo, requestDto);
         } catch (NoSuchElementException e) {
@@ -145,6 +166,7 @@ public class UsersController {
         System.out.println("\n\n" + userNo + "\n\n");
         try {
             Long delete = usersService.delete(userNo);
+            System.out.println(SUCCESS);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
