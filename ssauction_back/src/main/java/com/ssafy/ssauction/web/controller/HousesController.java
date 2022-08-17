@@ -3,6 +3,7 @@ package com.ssafy.ssauction.web.controller;
 import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
+import com.ssafy.ssauction.domain.items.DealStatus;
 import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.Timestamp;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -113,7 +115,7 @@ public class HousesController {
 
     @PutMapping("/update/{houseNo}")
     public ResponseEntity<String> updateHouse(@PathVariable Long houseNo,
-//                                              @RequestPart(value = "houseUpdateDto") HouseUpdateRequestDto requestDto,
+                                              @RequestPart(value = "houseUpdateDto") HouseUpdateRequestDto requestDto,
                                               @RequestPart(value = "deleteDto") ItemImgsDeleteRequestDto deleteDto,
                                               @RequestPart(value = "files") MultipartFile[] files,
                                               @RequestPart(value="sortDto") ItemImgsSortRequestDto sortDto)
@@ -130,7 +132,15 @@ public class HousesController {
             itemImgsService.updateMain(img, i==0?true:false);
             System.out.println(""+i+" "+img.getImgNo()+" "+img.getIsMain());
         }
-
+        private Long itemNo;
+        private Long houseNo;
+        private String itemName;
+        private int startPrice;
+        private String modelNo;
+        private Timestamp regTime;
+        private Timestamp auctionTime;
+        private DealStatus dealStatus;
+        private String desc;
         for (MultipartFile file : files) {
             // FileUpload 관련 설정
             if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
