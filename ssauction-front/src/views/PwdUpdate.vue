@@ -8,7 +8,7 @@
 
     <div>
       <!-- 기존 비밀번호  -->
-      <label for="userPwd" class="profileLabel"
+      <label for="userPwd" class="pwdUpdateLabel"
         ><button class="pwdLabelBtn" disabled>기존 비밀번호</button></label
       >
       <input
@@ -22,7 +22,7 @@
       <br />
       <br />
       <!-- 새 비밀번호 -->
-      <label for="newPwd" class="profileLabel"
+      <label for="newPwd" class="pwdUpdateLabel"
         ><button class="pwdLabelBtn" disabled>새로운 비밀번호</button></label
       >
       <input
@@ -38,7 +38,7 @@
       <br />
 
       <!-- 비밀번호 확인 -->
-      <label for="newPwdCheck" class="profileLabel"
+      <label for="newPwdCheck" class="pwdUpdateLabel"
         ><button class="pwdLabelBtn" disabled>비밀번호 확인</button></label
       >
       <input
@@ -129,7 +129,6 @@ export default {
 
 <style>
 .pwdLabelBtn {
-  margin: 10px;
   width: 130px;
   border-radius: 4px;
 }
@@ -137,11 +136,14 @@ export default {
   margin-left: 10px;
   margin-right: 10px;
   height: 50px;
-  width: 200px;
+  width: 400px !important;
   border: solid;
   border-width: medium;
   border-color: grey;
   border-radius: 5px;
   background-color: white;
+}
+.pwdUpdateLabel {
+  width: 150px;
 }
 </style>
