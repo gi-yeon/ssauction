@@ -377,10 +377,11 @@ public class UsersController {
 
     //쿠키에서 토큰 가져다 반환
     @GetMapping("/token")
-    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req) {
+    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req, HttpServletResponse res) {
         Map<String, Object> map = new HashMap<>();
         HttpStatus status = null;
-
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        res.setHeader("Access-Control-Allow-Origin", "*");
         //token 추출해서 map에 넣어준다.
         Cookie[] list = req.getCookies();
         for (Cookie cookie : list) {
