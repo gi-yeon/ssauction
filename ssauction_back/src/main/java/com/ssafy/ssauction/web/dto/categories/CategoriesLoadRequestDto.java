@@ -4,10 +4,12 @@ import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.items.Items;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 
 @Getter
+@NoArgsConstructor
 public class CategoriesLoadRequestDto {
     private String[] ctgrName;
 

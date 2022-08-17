@@ -16,7 +16,7 @@
 
     <div class="row" id="comming-soon-container">
       <div class="my-3" style="height: 20%">
-        <div class="wave2">
+        <!-- <div class="wave2">
           <span>C</span>
           <span>O</span>
           <span>M</span>
@@ -28,7 +28,7 @@
           <span>O</span>
           <span>O</span>
           <span>N</span>
-        </div>
+        </div> -->
         <input
           class="searchInput"
           type="string"
@@ -44,14 +44,26 @@
       <div style="height: 60%">
         <div class="card">
           <div class="card-body">
-            <main-houses
-              v-for="(hot, index) in hotDeals"
-              class="housecard"
-              :key="index"
-              :hot="hot"
-              @click="toggleDetail(hot)"
-            />
+            <div class="row">
+              <main-houses
+                v-for="(hot, index) in hotDeals"
+                :key="index"
+                :hot="hot"
+                @click="toggleDetail(hot)"
+              />
+            </div>
           </div>
+          <!-- <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+          </nav> -->
           <div class="example-pagination-block">
             <el-pagination
               layout="prev, pager, next"
@@ -80,7 +92,13 @@
       >
         <div class="row">
           <h1>{{ houseToDetail.houseTitle }}</h1>
-          <button>찜하기</button>
+          <b-button
+            style="color: red; background-color: white"
+            variant="link"
+            @click="addCarrotZzim"
+            v-if="!isZzimCarrot && !isOwn"
+            ><b-icon icon="heart"></b-icon
+          ></b-button>
         </div>
         <div class="row">
           <div class="col detail-image"></div>
@@ -312,7 +330,7 @@ export default {
   margin: 10px;
   overflow-x: auto;
   white-space: nowrap;
-  height: 25%;
+  /* height: 25%; */
   border: 1px solid pink;
   border-width: medium;
   border-radius: 5px;
@@ -322,7 +340,7 @@ export default {
   border: 1px solid skyblue;
   border-width: medium;
   border-radius: 5px;
-  height: 70%;
+  /* height: 70%; */
 }
 .example-showcase .el-dropdown-link {
   cursor: pointer;
