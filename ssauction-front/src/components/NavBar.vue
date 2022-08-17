@@ -7,12 +7,10 @@
     <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
     <div
       v-if="user.isLogin"
-      style="d-flex justify-content-end; padding-top: 20px; padding-right:5px;"
+      style="padding-top: 20px; padding-right:5px;"
     >
-    <p>{{ user.loginUser.userNickname }}님 반갑습니다😎</p>&nbsp; &nbsp;
-    <a v-if="user.isLogin" @click="logout">
-    <img src="@\assets\imgs\logout.png" alt="Logout" class="icon2" /></a
-    >&nbsp; &nbsp;
+    <p style="float:left">{{ user.loginUser.userNickname }}님 반갑습니다💸</p>&nbsp; &nbsp;
+    <img v-if="user.isLogin" @click="logout" src="@\assets\imgs\logout.png" alt="Logout" class="icon2">&nbsp; &nbsp;
     </div>
 
     <!-- 로그아웃 한 상태에서는 로그인, 회원가입 버튼만 노출됨 -->

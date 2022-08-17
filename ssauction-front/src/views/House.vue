@@ -1,47 +1,39 @@
 <template>
   <div>
-      <br />
-      <h1>경매방 만들기</h1>
-      <br />
-      <br>
-      <div class="row">
-        <div class="col-4 label">
+    <br />
+    <h1>경매방 만들기</h1>
+    <br />
+    <br />
+    <div class="row">
+      <div class="col-4 label">
         <h4>경매방 이름</h4>
-        </div>
-        <div class="col-2">
-          <input
-            id="houseTitle"
-            v-model="house.houseTitle"
-            type="text"
-            required
-            class="input_style"
-            style="margin-bottom: 0.5rem;"
-            label="경매방 이름"
-          />
-        </div>
       </div>
+      <div class="col-2">
+        <input
+          id="houseTitle"
+          v-model="house.houseTitle"
+          type="text"
+          required
+          class="input_style"
+          style="margin-bottom: 0.5rem"
+          label="경매방 이름"
+        />
+      </div>
+    </div>
     <div class="row house-input">
       <div class="col-4 label">
         <h4>경매 일시</h4>
       </div>
-      <div class="col-2 data">
-        <v-date-picker
-          v-model="house.houseDate"
-          mode="dateTime"
-          locale="ko-KR"
-          :model-config="modelConfig"
-          is24hr
-          placeholder="경매 날짜를 선택하세요"
-          class="input_style"
-          style="margin-bottom: 0.5rem;"
-        >
-          <template v-slot="{ inputValue, inputEvents }">
-            <input
-              :value="inputValue"
-              v-on="inputEvents"
-            />
-          </template>
-        </v-date-picker>
+      <div class="col-6 data">
+        <div class="row house-input">
+          <el-date-picker
+            v-model="house.houseAucTime"
+            type="datetime"
+            placeholder="Pick a Date"
+            format="YYYY/MM/DD hh:mm:ss"
+            value-format="YYYY-MM-DD hh:mm:ss"
+          />
+        </div>
       </div>
     </div>
     <div class="row house-input">
@@ -54,7 +46,7 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
@@ -68,18 +60,16 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
-
-
     <div class="row house-input">
       <div class="col-4 label">
         <h4>카테고리</h4>
       </div>
-      
-<div class="col-8 data">
+
+      <div class="col-8 data align-left">
         <div class="form-check form-check-inline">
           <input
             class="form-check-input"
@@ -294,19 +284,22 @@
           />
           <label class="form-check-label" for="ctgr21">기타물품</label>
         </div>
-        <div style="text-align: center; display:inline-block;">
-          <p>다중 선택 가능합니다. </p>
+        <div style="text-align: center; display: inline-block">
+          <p>다중 선택 가능합니다.</p>
         </div>
       </div>
-
-      
     </div>
     <div class="row house-input">
       <div class="col-4 label">
         <h4>매물상태</h4>
       </div>
       <div class="col-8 data">
-        <input v-model="item.itemQuality" class="form-control" type="text" style="margin-bottom: 0.5rem;"/>
+        <input
+          v-model="item.itemQuality"
+          class="form-control"
+          type="text"
+          style="margin-bottom: 0.5rem"
+        />
       </div>
     </div>
     <div class="row house-input">
@@ -318,7 +311,7 @@
           v-model="item.itemDesc"
           class="form-control"
           type="text"
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         ></textarea>
       </div>
     </div>
@@ -332,7 +325,7 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
@@ -347,12 +340,19 @@
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
-          
-          <input type="file" ref="itemImage" @change="imageUpload" multiple style="margin-bottom: 0.5rem;">
+
+          <input
+            type="file"
+            ref="itemImage"
+            @change="imageUpload"
+            multiple
+            style="margin-bottom: 0.5rem"
+          />
         </div>
       </div>
     </div>
@@ -365,23 +365,19 @@
           :previewfile="file"
           :index="index"
           @delete-img="deleteImg"
-          style="margin-bottom: 0.5rem; margin-left:0.5rem"
+          style="margin-bottom: 0.5rem; margin-left: 0.5rem"
         />
       </div>
     </div>
-    <div class="row house-input p-5">
-      <button @click="createHouse">경매방 생성</button>
+    <div class="row justify-content-center house-input p-5">
+      <button class="btn_pink2" @click="createHouse">경매방 생성</button>
     </div>
   </div>
 </template>
 
-
 <script>
-
-
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-
 export default {
   name: "SsauctionHouse",
   components: { ItemImagePreview },
@@ -393,20 +389,16 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        itemSellerNo: null,
-        itemDealStatus : "SELL",
-        userNo: this.$store.state.user.userNo, // 유저정보를 현재 로그인 된 유저로 설정
+        itemDealStatus: "SELL",
+        userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
-        itemNo: 1,
         ctgrName: [],
       },
       house: {
         houseTitle: null,
-        // Datepicker 관련 구현이 아직 완벽하지 않아
-        // houseAucTime, houseStatus 값을 우선 하드코딩된 값으로 대체했다.
-        houseAucTime: "2022-02-22T22:22:22",
+        houseAucTime: null,
         houseStatus: 0,
       },
       houseDate: new Date(),
@@ -432,17 +424,22 @@ export default {
     createHouse() {
       // this.house.houseAucTime = this.houseAucTime;
       console.log(this.house);
-
       console.log(this.item);
+      console.log("ctgr");
       console.log(this.ctgr);
-
+      this.house.houseAucTime =
+        this.house.houseAucTime.split(" ")[0] +
+        "T" +
+        this.house.houseAucTime.split(" ")[1];
       // file은 multipart/form-data 형식으로 전송되어야 한다.
       // multipart/form-data 형식으로 요청하면 JSON을 바로 body에 넣는 방식을 사용할 수 없다.
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
       const housejson = JSON.stringify(this.house);
       const itemjson = JSON.stringify(this.item);
-
       const ctgrjson = JSON.stringify(this.ctgr);
+
+      console.log(itemjson);
+
       const houseblob = new Blob([housejson], { type: "application/json" });
       const itemblob = new Blob([itemjson], { type: "application/json" });
       const ctgrblob = new Blob([ctgrjson], { type: "application/json" });
@@ -453,7 +450,6 @@ export default {
       formData.append("itemDto", itemblob);
       formData.append("houseDto", houseblob);
       formData.append("ctgrDto", ctgrblob);
-
       // Spring에서 여러 file을 자동으로 배열로 받기 위해서는 Json 리스트를 그대로 전달하면 안된다.
       // 같은 이름을 가진 여러 개의 file을 전송한다.
       for (let img of this.itemImages) {
@@ -464,42 +460,37 @@ export default {
         .post("/houses", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then((data) => {
+        .then(({ data }) => {
           console.log(data);
+          this.itemNo = data;
+          console.log(this.itemNo);
+          this.itemNo = data.item_no;
+          console.log(this.itemNo);
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
-          this.$route.push({ name: "Home" });
+
+          this.$router.push({ name: "Home" });
         })
         .catch((error) => {
           alert(error);
         });
-
-      console.log(ctgrjson);
-
-      axios.post("/categories", ctgrjson).then((data) => {
-        console.log(data);
-      });
-      // this.sendFile();
-      this.itemImages.splice(0);
     },
 
     deleteImg(index) {
       this.itemImages.splice(index, 1);
       console.log(this.$refs.itemImage);
     },
-
   },
 };
 </script>
 
-
 <style scoped>
 label {
-  text-align: MiddleLeft;
-  display:inline-block;
-  width:140px;
-  line-height:30px;
+  text-align: Left;
+  display: inline-block;
+  width: 140px;
+  line-height: 30px;
 }
 .preview {
   overflow-x: auto;
@@ -516,9 +507,8 @@ label {
   margin-right: 0.5rem;
   height: 1.8rem;
   background-color: rgb(255, 211, 182);
-  width : 30px;
+  width: 30px;
   height: 30px;
-
 }
 input {
   width: 500px;
@@ -528,5 +518,38 @@ input {
   border-radius: 20px;
   color: rgb(94, 94, 94);
   padding-left: 30px;
+}
+.btn_pink2 {
+  width: 150px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgb(255, 211, 182, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+textarea {
+  outline: none;
+  resize: none;
+  padding: 20px;
+  background-color: rgba(158, 158, 158, 0.212);
+  border: none;
+  border-radius: 10px;
+  width: 500px;
+}
+
+textarea:focus {
+  outline: none;
 }
 </style>

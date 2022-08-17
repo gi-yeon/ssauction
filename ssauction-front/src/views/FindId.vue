@@ -12,7 +12,7 @@
     <br>
     <br>
     <!-- <h1>{{ phoneNo }}</h1> -->
-    <button class="btn_pink" @click="findId">인증번호 전송</button>
+    <button class="btn_pink3" @click="findId">인증번호 전송</button>
 
     <div v-if="modalSmsCode == true">
       <br/>
@@ -21,7 +21,7 @@
           <input id="user_smsCode" type="string" v-model="smsCode" placeholder="인증번호 입력">
         </div>
       <br>
-        <button class="btn_pink" @click="verifyCode">아이디 찾기</button>
+        <button class="btn_pink3" @click="verifyCode">아이디 찾기</button>
     </div>
   </div>
   </div>

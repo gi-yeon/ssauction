@@ -40,17 +40,11 @@ public class ItemImgs {
     @Setter
     private Items item;
 
-    @Override
-    public String toString() {
-        return "ItemImgs{" +
-                "imgNo=" + imgNo +
-                ", itemImgName='" + itemImgName + '\'' +
-                ", itemImgUri='" + itemImgUri + '\'' +
-                ", itemImgRegDate=" + itemImgRegDate +
-                ", itemImgUpdateDate=" + itemImgUpdateDate +
-                '}';
+    public void update(String itemImgName, String itemImgUri) {
+        this.itemImgName = itemImgName;
+        this.itemImgUri = itemImgUri;
+        this.itemImgUpdateDate = new Timestamp(System.currentTimeMillis());
     }
-
     @Builder
     public ItemImgs(String itemImgName, String itemImgUri, boolean isMain,Items item) {
         this.itemImgName = itemImgName;

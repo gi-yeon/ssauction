@@ -1,121 +1,192 @@
 <template>
+  <div>
+    <input
+      style="margin-top: 20px"
+      type="text"
+      name="title"
+      id="title"
+      v-model="state.boardTitle"
+      readonly
+    />
 
+    <div></div>
+    <textarea
+      style="margin-top: 20px"
+      name="boardContent"
+      id="boardContent"
+      cols="60"
+      rows="10"
+      v-model="state.boardContent"
+      readonly
+    >
+    </textarea>
 
-    <div>
-        <input type="text" name="title" id="title" v-model="state.boardTitle" readonly>
-        <div></div>
-        <textarea name="boardContent" id="boardContent" cols="30" rows="10" v-model="state.boardContent" readonly>
-
-        </textarea>
-
-        <div>
-            <button v-show="state.isWriter" @click="ModifyArticle">글수정</button>
-            <button v-show="state.isWriter" @click="DeleteArticle">글삭제</button>
-            <router-link to="/board">
-                <button>목록</button>
-            </router-link>
-        </div>
-            <board-comment-item v-for="(comment, index) in state.comments"
-            :key="index"
-            v-bind="comment"
-            ></board-comment-item>
-            <div>
-                <textarea name="commentRegister" id="commentRegister" cols="30" rows="2" v-model="state.commentContent"></textarea>
-                <button @click="registerComment">댓글 달기</button>
-            </div>
-        <div>
-            
-        </div>
+    <div style="margin-top: 20px">
+      <button class="btn_pink" v-show="state.isWriter" @click="ModifyArticle">
+        글수정</button
+      >&nbsp;&nbsp;
+      <button class="btn_pink" v-show="state.isWriter" @click="DeleteArticle">
+        글삭제</button
+      >&nbsp;&nbsp;
+      <router-link to="/board">
+        <button class="btn_yellow">목록</button>
+      </router-link>
     </div>
+    <board-comment-item
+      style="margin-top: 20px"
+      v-for="(comment, index) in state.comments"
+      :key="index"
+      v-bind="comment"
+    ></board-comment-item>
+    <div>
+      <textarea
+        style="margin-top: 20px"
+        name="commentRegister"
+        id="commentRegister"
+        cols="50"
+        rows="2"
+        v-model="state.commentContent"
+      ></textarea
+      >&nbsp;&nbsp;
+      <button class="btn_pink2" @click="registerComment">댓글 달기</button>
+    </div>
+    <div></div>
+  </div>
 </template>
 
 <script>
-import axios from '@/utils/axios';
-import {reactive} from "vue";
-import { useRouter, useRoute } from 'vue-router';
+import axios from "@/utils/axios";
+import { reactive } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import BoardCommentItem from "@/components/Board/item/BoardCommentItem";
 // npm install universal-cookie
-import { useCookies } from '@vueuse/integrations/useCookies';
-
 
 export default {
-    name: "BoardDetail",
-    components: {
-        BoardCommentItem,
-    },
-    setup() {
-        const router = useRouter();
-        const route = useRoute();
-        const cookies = useCookies(['login.userNo']);
+  name: "BoardDetail",
+  components: {
+    BoardCommentItem,
+  },
+  setup() {
+    const router = useRouter();
+    const route = useRoute();
 
-        const state = reactive({
-            boardNo: Number,
-            boardTitle: String,
-            boardContent: String,
-            userNo: Number,
-            userNickname: String,
-            comments: [],
-            commentContent: "",
-            isWriter: Boolean
+    const state = reactive({
+      boardNo: Number,
+      boardTitle: String,
+      boardContent: String,
+      userNo: Number,
+      userNickname: String,
+      comments: [],
+      commentContent: "",
+      isWriter: Boolean,
+    });
+
+    const ModifyArticle = () => {
+      router.push({ name: "boardModify", params: { id: state.boardNo } });
+    };
+
+    const DeleteArticle = () => {
+      axios
+        .delete("board", {
+          params: {
+            boardNo: route.params.id,
+            userNo: state.userNo,
+          },
+        })
+        .then(() => {
+          alert("게시글을 삭제하였습니다.");
         });
 
-        const ModifyArticle = () => {
-            router.push({name: "boardModify", params: {id: state.boardNo}});
-        }
+      router.push({ path: "/board" });
+    };
 
-        const DeleteArticle = () => {
-            axios.delete("http://localhost:8080/board", {
-                params: {
-                    boardNo: route.params.id,
-                    userNo: cookies.get('login.userNo'),
-                },
-            })
-            .then(() => {
-                alert("게시글을 삭제하였습니다.");
-            })
+    const registerComment = () => {
+      let params = {
+        boardNo: state.boardNo,
+        userNo: state.userNo,
+        commentContent: state.commentContent,
+      };
+      console.log("comment");
+      console.log(state.commentContent);
+      axios.post("comment", JSON.stringify(params)).then(() => {
+        alert("댓글을 등록하였습니다.");
+        router.go();
+      });
+    };
 
-            router.push({path: "/board"});
-        }
+    axios.get("board/detail/" + route.params.id).then(({ data }) => {
+      state.boardNo = data.board.boardNo;
+      state.boardTitle = data.board.boardTitle;
+      state.boardContent = data.board.boardContent;
+      state.userNo = data.board.userNo;
+      state.userNickname = data.board.userNickname;
+      state.comments = data.board.comments;
 
-        const registerComment = () => {
-            let params = {
-                boardNo: state.boardNo,
-                userNo: cookies.get('login.userNo'),
-                commentContent: state.commentContent
-            }
-            axios.post("http://localhost:8080/comment", JSON.stringify(params))
-            .then(() => {
-                alert("댓글을 등록하였습니다.");
-                router.go();
-            })
-        }
+      if (state.userNo != null && data.board.userNo == state.userNo)
+        state.isWriter = true;
+      else state.isWriter = false;
+    });
 
-        axios.get("http://localhost:8080/board/detail", {
-            params: {
-                boardNo: route.params.id
-            },
-        })
-        .then(({data}) => {
-            state.boardNo = data.board.boardNo;
-            state.boardTitle = data.board.boardTitle;
-            state.boardContent = data.board.boardContent;
-            state.userNo = data.board.userNo;
-            state.userNickname = data.board.userNickname;
-            state.comments = data.board.comments;
-
-            if(cookies.get('login.userNo') != null && data.board.userNo == cookies.get('login.userNo') )
-                state.isWriter = true;
-            else
-                state.isWriter = false;
-        })
-
-        return {
-            state,
-            ModifyArticle,
-            DeleteArticle,
-            registerComment
-        }
-    }
-
-}
+    return {
+      state,
+      ModifyArticle,
+      DeleteArticle,
+      registerComment,
+    };
+  },
+};
 </script>
+
+<style>
+.title {
+  width: 400px;
+  border: 20px;
+  /* background-color: rgba(255, 211, 182, 0.741); */
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
+textarea {
+  outline: none;
+  resize: none;
+  padding: 20px;
+  background-color: rgba(158, 158, 158, 0.212);
+  border: none;
+  border-radius: 10px;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.btn_pink {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_pink2 {
+  width: 80px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgb(255, 211, 182, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+</style>

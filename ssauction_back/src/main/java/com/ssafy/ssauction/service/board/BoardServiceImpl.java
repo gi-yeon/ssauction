@@ -52,7 +52,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardDtoRes boardDetail(long boardNo) {
         BoardDtoRes boardDtoRes = new BoardDtoRes();
         Board board = boardRepository.findById(boardNo).orElse(null);
-
+        System.out.println(board.toString());
         if(board != null) {
             boardDtoRes.setBoardNo(board.getBoardNo());
             boardDtoRes.setBoardTitle(board.getBoardTitle());
@@ -64,15 +64,15 @@ public class BoardServiceImpl implements BoardService {
             boardDtoRes.setUserNickname(board.getUserNickname());
 
             List<CommentsDtoRes> commentsRes = new ArrayList<>();
-            List<Comments> comments = commentsRepository.findByBoardNo(boardNo);
-
+            List<Comments> comments = board.getComments();
+            System.out.println(comments.toString());
             for (Comments comment : comments) {
                 CommentsDtoRes commentRes = new CommentsDtoRes();
 
                 commentRes.setCommentNo(comment.getCommentNo());
                 commentRes.setCommentContent(comment.getCommentContent());
                 commentRes.setCommentRegDate(comment.getCommentRegDate());
-                commentRes.setBoardNo(comment.getBoardNo());
+                commentRes.setBoardNo(comment.getBoard().getBoardNo());
                 commentRes.setUserNo(comment.getUserNo());
 
                 Users user = usersRepository.findById(commentRes.getUserNo()).orElse(null);

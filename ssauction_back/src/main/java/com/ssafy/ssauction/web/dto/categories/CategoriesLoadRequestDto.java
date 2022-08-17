@@ -9,19 +9,16 @@ import java.util.Arrays;
 
 @Getter
 public class CategoriesLoadRequestDto {
-    private Long itemNo;
     private String[] ctgrName;
 
     @Builder
-    public CategoriesLoadRequestDto(Long itemNo, String[] ctgrName) {
-        this.itemNo=itemNo;
+    public CategoriesLoadRequestDto( String[] ctgrName) {
         this.ctgrName=ctgrName;
     }
 
     @Override
     public String toString() {
         return "CategoriesSaveRequestDto{" +
-                "itemNo=" + itemNo +
                 ", ctgrName=" + Arrays.toString(ctgrName) +
                 '}';
     }

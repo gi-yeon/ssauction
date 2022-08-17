@@ -40,6 +40,21 @@ public class Board {
     private String userNickname;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
-    @JoinColumn(name="board_no")
+    @JoinColumn(name="board")
     private List<Comments> comments = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "boardNo=" + boardNo +
+                ", boardTitle='" + boardTitle + '\'' +
+                ", boardContent='" + boardContent + '\'' +
+                ", boardRegDate='" + boardRegDate + '\'' +
+                ", boardType=" + boardType +
+                ", boardReply=" + boardReply +
+                ", userNo=" + userNo +
+                ", userNickname='" + userNickname + '\'' +
+                ", comments=" + comments +
+                '}';
+    }
 }
