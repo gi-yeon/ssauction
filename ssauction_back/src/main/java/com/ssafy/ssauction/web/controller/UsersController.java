@@ -264,7 +264,7 @@ public class UsersController {
                 Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
                 refreshCookie.setPath("/");
                 refreshCookie.setHttpOnly(true);
-                refreshCookie.setSecure(true);
+                refreshCookie.setSecure(false);
                 refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
                 res.addCookie(refreshCookie);
 
