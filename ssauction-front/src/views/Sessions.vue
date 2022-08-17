@@ -664,9 +664,10 @@ export default {
         `signal:${this.mySessionId}/setstarttime`,
         (event) => {
           console.log(event.data); // Message
-          if (!this.isHost) {
-            this.setStartTime(event.data.message);
-          }
+
+          // if (!isHost) {
+          //   this.setStartTime(event.data.message);
+          // }
         }
       );
 

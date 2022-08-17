@@ -20,12 +20,11 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";
-import SessionsVue from "@/views/Sessions.vue";
 import { useStore } from "vuex";
 
 export default {
   name: "App",
-  components: { NavBar, SideBar, SessionsVue },
+  components: { NavBar, SideBar },
   data() {
     return {
       isInSession: false,
@@ -97,7 +96,7 @@ export default {
 #container {
   position: fixed;
   left: 70px;
-  right: 70px;
+  right: 0px;
   top: 70px;
   bottom: 0;
 }

@@ -573,4 +573,41 @@ img {
   display: block;
   margin: auto;
 }
+.sellImgContainer {
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  /* object-fit: contain; */
+}
+.col-sm-6 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.col-sm-12 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.btn btn-light btn-sm col-sm-8 {
+  border: solid grey;
+}
+.img-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin: auto;
+}
+.sell-container {
+  width: 300px;
+  height: 300px;
+  /* border-radius: 90%; */
+  overflow: hidden;
+  margin: auto;
+}
+img {
+  display: block;
+  margin: auto;
+}
 </style>

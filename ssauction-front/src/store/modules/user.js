@@ -12,6 +12,8 @@ const state = {
     userNickname: "",
     userGrade: ""
   },
+  // accessToken: "",
+  // refreshToken: "",
   //로그인 여부
   isLogin: false,
 };
@@ -131,6 +133,8 @@ const mutations = {
     state.loginUser.userNo = payload.data.userNo;
     state.loginUser.userNickname = payload.data.userNickname;
     state.loginUser.userGrade = payload.data.userGrade;
+    // state.accessToken = payload.data.accessToken;
+    // state.refreshToken = payload.data.refreshToken;
   },
 
   //닉네임 업데이트
@@ -142,8 +146,8 @@ const mutations = {
   //로그아웃
   USER_LOGOUT(state) {
     state.isLogin = false;
-    state.accessToken = null;
-    state.refreshToken = null;
+    // state.accessToken = null;
+    // state.refreshToken = null;
     state.loginUser = {
       userNo: "",
       userNickname: "",
@@ -156,6 +160,8 @@ const mutations = {
     VueCookies.set("login.userNickname", state.loginUser.userNickname, '30min');
     VueCookies.set("login.userGrade", state.loginUser.userGrade, '30min');
     VueCookies.set("isLogin", state.isLogin, '30min');
+    // VueCookies.set("accessToken", state.accessToken, '30min');
+    // VueCookies.set("refreshToken", state.refreshToken, '3d');
   },
 
 
@@ -186,6 +192,9 @@ const mutations = {
     VueCookies.remove("login.userNickname");
     VueCookies.remove("login.userGrade");
     VueCookies.remove("isLogin");
+    // VueCookies.remove("accessToken");
+    // VueCookies.remove("refreshToken");
+
   },
 };
 

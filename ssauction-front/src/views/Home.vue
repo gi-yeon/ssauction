@@ -1,32 +1,89 @@
 <template>
   <div class="container" style="height: 100%">
     <div id="hotdeal-container">
-      <div>
-        <h1>Hot Deals</h1>
+      <div class="wave1">
+        <span>H</span>
+        <span>O</span>
+        <span>T</span>
+        <span>&nbsp;</span>
+        <span>D</span>
+        <span>E</span>
+        <span>A</span>
+        <span>L</span>
+        <span>S</span>
       </div>
     </div>
 
     <div class="row" id="comming-soon-container">
       <div class="my-3" style="height: 20%">
-        <h1>Comming Soon...</h1>
+        <!-- <div class="wave2">
+          <span>C</span>
+          <span>O</span>
+          <span>M</span>
+          <span>I</span>
+          <span>N</span>
+          <span>G</span>
+          <span>&nbsp;</span>
+          <span>S</span>
+          <span>O</span>
+          <span>O</span>
+          <span>N</span>
+        </div> -->
         <input
+          class="searchInput"
           type="string"
           v-model="houseSearchWord"
           placeholder="경매 제목으로 검색하세요"
           @keyup.enter="getHouses(0, houseSearchWord, 5, 0)"
         />
+        <button class="searchBtn" @click="getHouses(0, houseSearchWord, 5, 0)">
+          검색
+        </button>
       </div>
 
       <div style="height: 60%">
-        <main-houses
-          v-for="(hot, index) in hotDeals"
-          class="housecard"
-          :key="index"
-          :hot="hot"
-          @click="toggleDetail(hot)"
-        />
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <main-houses
+                v-for="(hot, index) in hotDeals"
+                :key="index"
+                :hot="hot"
+                @click="toggleDetail(hot)"
+              />
+            </div>
+          </div>
+          <!-- <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+          </nav> -->
+          <div class="example-pagination-block">
+            <el-pagination
+              layout="prev, pager, next"
+              :current-page="houseCurrentPage"
+              :total="totalPages"
+              @current-change="
+                getHouses(houseCurrentPage, houseSearchWord, 5, 0)
+              "
+              @prev-click="
+                getHouses(houseCurrentPage - 1, houseSearchWord, 5, 0)
+              "
+              @next-click="
+                getHouses(houseCurrentPage + 1, houseSearchWord, 5, 0)
+              "
+            />
+          </div>
+        </div>
       </div>
     </div>
+
     <Teleport to="body">
       <div
         v-if="showModal"
@@ -34,8 +91,14 @@
         style="text-align: center; background-color: white"
       >
         <div class="row">
-          <h1>{{ houseToDetail.house.houseTitle }}</h1>
-          <button>찜하기</button>
+          <h1>{{ houseToDetail.houseTitle }}</h1>
+          <b-button
+            style="color: red; background-color: white"
+            variant="link"
+            @click="addCarrotZzim"
+            v-if="!isZzimCarrot && !isOwn"
+            ><b-icon icon="heart"></b-icon
+          ></b-button>
         </div>
         <div class="row">
           <div class="col detail-image">
@@ -184,15 +247,125 @@ export default {
 };
 </script>
 <style>
+@keyframes anime_textup {
+  0% {
+    top: 0;
+  }
+  20% {
+    top: -0.2rem;
+  }
+  40% {
+    top: 0;
+  }
+  60% {
+    top: 0;
+  }
+  80% {
+    top: 0;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.wave1 span {
+  font-size: 35px;
+  color: rgb(255, 99, 99);
+  position: relative;
+  animation: anime_textup 1.5s infinite;
+}
+
+.wave1 span:nth-of-type(1) {
+  animation-delay: 0.1s;
+}
+
+.wave1 span:nth-of-type(2) {
+  animation-delay: 0.2s;
+}
+
+.wave1 span:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+.wave1 span:nth-of-type(4) {
+  animation-delay: 0.4s;
+}
+
+.wave1 span:nth-of-type(5) {
+  animation-delay: 0.5s;
+}
+.wave1 span:nth-of-type(6) {
+  animation-delay: 0.6s;
+}
+.wave1 span:nth-of-type(7) {
+  animation-delay: 0.7s;
+}
+.wave1 span:nth-of-type(8) {
+  animation-delay: 0.8s;
+}
+.wave1 span:nth-of-type(9) {
+  animation-delay: 0.9s;
+}
+.wave2 span {
+  font-size: 35px;
+  color: rgb(40, 40, 200);
+  position: relative;
+  animation: anime_textup 1.5s infinite;
+}
+
+.wave2 span:nth-of-type(1) {
+  animation-delay: 0.1s;
+}
+
+.wave2 span:nth-of-type(2) {
+  animation-delay: 0.2s;
+}
+
+.wave2 span:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+.wave2 span:nth-of-type(4) {
+  animation-delay: 0.4s;
+}
+
+.wave2 span:nth-of-type(5) {
+  animation-delay: 0.5s;
+}
+.wave2 span:nth-of-type(6) {
+  animation-delay: 0.6s;
+}
+.wave2 span:nth-of-type(7) {
+  animation-delay: 0.7s;
+}
+.wave2 span:nth-of-type(8) {
+  animation-delay: 0.8s;
+}
+.wave2 span:nth-of-type(9) {
+  animation-delay: 0.9s;
+}
+.wave2 span:nth-of-type(10) {
+  animation-delay: 1s;
+}
+.wave1 span:nth-of-type(11) {
+  animation-delay: 1.1s;
+}
+
 #hotdeal-container {
+  margin: 10px;
   overflow-x: auto;
   white-space: nowrap;
-  height: 25%;
-  background-color: pink;
+  /* height: 25%; */
+  border: 1px solid pink;
+  border-width: medium;
+  border-radius: 5px;
 }
 #comming-soon-container {
-  background-color: skyblue;
-  height: 70%;
+  margin: 10px;
+  border: 1px solid skyblue;
+  border-width: medium;
+  border-radius: 5px;
+  /* height: 70%; */
 }
 .example-showcase .el-dropdown-link {
   cursor: pointer;
@@ -208,5 +381,22 @@ export default {
   transform: translate(-50%, -50%);
   background-color: white;
   width: auto;
+}
+.searchInput {
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 40px;
+  width: 400px;
+  border: solid;
+  border-width: thin;
+  border-color: rgb(153, 197, 255);
+  border-radius: 5px;
+  background-color: white;
+}
+.searchBtn {
+  margin: 10px;
+  border-color: skyblue;
+  background-color: rgb(153, 197, 255);
+  border-radius: 5px;
 }
 </style>

@@ -1,10 +1,12 @@
 package com.ssafy.ssauction.web.controller;
 
+import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
 import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
+import com.ssafy.ssauction.service.categories.CategoriesService;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.storage.StorageService;
@@ -14,6 +16,7 @@ import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsResponseDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
+import com.ssafy.ssauction.web.dto.categories.CategoriesLoadRequestDto;
 import com.ssafy.ssauction.web.dto.itemImg.ImgInfo;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsDeleteRequestDto;
 import com.ssafy.ssauction.web.dto.itemImg.ItemImgsResponseDto;
@@ -39,7 +42,7 @@ public class HousesController {
 
     private final ItemImgsService itemImgsService;
     private final StorageService storageService;
-
+    private final CategoriesService categoriesService;
     @GetMapping("/profile/{userNo}")
     public ResponseEntity<MyHouseResponseDto> myAllHouses(@PathVariable Long userNo) {
         Users user = usersService.findEntityById(userNo);                                       //유저 정보 가져오기
@@ -122,7 +125,6 @@ public class HousesController {
         Items item = house.getItem();
 
         itemImgsService.delete(item, deleteDto);
-
 //        for (MultipartFile file : files) {
 //            // FileUpload 관련 설정
 //            if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
@@ -150,7 +152,8 @@ public class HousesController {
     @PostMapping
     public ResponseEntity<Long> createHouse(
             @RequestPart(value = "itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
-            @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,
+            @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
+            @RequestPart(value = "ctgrDto") CategoriesLoadRequestDto ctgrDto,
             @RequestPart(value = "files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
         System.out.println(itemDto);
         Users user = usersService.findEntityById(itemDto.getUserNo());          //  itemDto에서 현재 사용자의 UserNo를 통해 현재 user를 찾는다.
@@ -158,7 +161,11 @@ public class HousesController {
         System.out.println(itemDto.toString());
         Items item = itemsService.save(user, itemDto);                          //  item에 유저 정보와 item 정보를 등록한다.
         user.getSellItems().add(item);                                          //  user.SellItems에도 해당 item의 정보를 추가한다.
-
+        for(String str:ctgrDto.getCtgrName()){   // for문을 이용해 복수의 카테고리를 하나씩 저장해주기
+            System.out.println(str);
+            Categories categories = categoriesService.save(item, str);
+            item.getCategories().add(categories);
+        }
         Houses house = housesService.save(item, houseDto);                      //  house에 item 정보와 house 정보를 등록한다.
         item.setHouse(house);                                                   //  item.house에도 해당 house의 정보를 추가한다.
 

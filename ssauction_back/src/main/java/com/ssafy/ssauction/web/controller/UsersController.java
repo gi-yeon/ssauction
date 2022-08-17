@@ -251,12 +251,15 @@ public class UsersController {
                 result.put("userNickname", user.getUserNickname());
                 result.put("userGrade", user.getUserGrade());
                 result.put("userAuthority", user.getAuthority());
+                result.put("accessToken", accessToken);
+                result.put("refreshToken", refreshToken);
 
                 //access token 쿠키에 담아줌
                 Cookie cookie = new Cookie("accessToken", accessToken);
                 cookie.setPath("/");
                 cookie.setHttpOnly(true);
                 cookie.setSecure(true);
+
                 cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
                 res.addCookie(cookie);
 
@@ -279,11 +282,6 @@ public class UsersController {
                 status = HttpStatus.ACCEPTED;
 
             }
-//        } else {
-//            //실패
-//            result.put("message", FAIL);
-//            status = HttpStatus.ACCEPTED;
-//        }
         return new ResponseEntity<Map<String, Object>>(result, status);
 
     }
@@ -377,10 +375,11 @@ public class UsersController {
 
     //쿠키에서 토큰 가져다 반환
     @GetMapping("/token")
-    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req) {
+    public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req, HttpServletResponse res) {
         Map<String, Object> map = new HashMap<>();
         HttpStatus status = null;
-
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        res.setHeader("Access-Control-Allow-Origin", "*");
         //token 추출해서 map에 넣어준다.
         Cookie[] list = req.getCookies();
         for (Cookie cookie : list) {
