@@ -253,22 +253,11 @@ public class UsersController {
                 result.put("userAuthority", user.getAuthority());
 
                 //access token 쿠키에 담아줌
-                Cookie cookie = new Cookie("accessToken", accessToken);
-                cookie.setPath("/");
-                cookie.setHttpOnly(true);
-                cookie.setSecure(true);
-                cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
-                res.addCookie(cookie);
-
-                //refresh token 쿠키에 담아줌
-                Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-                refreshCookie.setPath("/");
-                refreshCookie.setHttpOnly(true);
-                refreshCookie.setSecure(true);
-                refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
-                res.addCookie(refreshCookie);
-
-                res.setHeader("Set-Cookie","cookieName=value;SameSite=None;secure;");
+                ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken).path("/").secure(true).sameSite("None").httpOnly(false).domain("52.78.53.155/").build();
+                res.setHeader("Set-Cookie", cookie.toString());
+                ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken).path("/").secure(true).sameSite("None").httpOnly(false).domain("52.78.53.155/").build();
+                res.addHeader("Set-Cookie",refreshCookie.toString());
+                
                 //success 메시지 담아준다.
                 result.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED; //202
