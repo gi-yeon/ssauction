@@ -3,7 +3,6 @@
     <br />
     <h1>{{ user.loginUser.userNickname }}님의 프로필</h1>
     <div v-show="user.isLogin">
-      <button @click="goToUpdateInfo">수정하기</button>
       <br />
       <b-modal id="modal-3" scrollable title="Update item" size="lg">
         <div class="flex m-10">
@@ -282,20 +281,28 @@ export default defineComponent({
   mounted() {
     this.userNo = this.$store.getters["user/userNo"];
     this.getUserInfo();
+    this.getUserImg();
     this.getItemInfo();
   },
 
   methods: {
-    goToUpdateInfo: function () {
-      this.$router.forward("/update");
-    },
     getUserInfo: async function () {
       await axios
         .get("/users/profile/" + this.userNo)
         .then(({ data }) => {
           console.log(data);
-          this.userDesc = data.infoDto.userDesc;
-          this.userComment = data.infoDto.userComment;
+          this.userDesc = data.userDesc;
+          this.userComment = data.userComment;
+        })
+        .catch(({ data }) => {
+          console.log(data);
+        });
+    },
+    getUserImg: async function () {
+      await axios
+        .get("/users/profile/img/" + this.userNo)
+        .then(({ data }) => {
+          console.log(data);
           this.hasImg = data.userMainImg !== null;
           if (this.hasImg) this.userMainImg = data.userMainImg;
         })
@@ -303,6 +310,7 @@ export default defineComponent({
           console.log(data);
         });
     },
+
     getItemInfo: async function () {
       await axios
         .get("/houses/profile/" + this.userNo)

@@ -9,12 +9,15 @@ import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.web.dto.users.*;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.swing.text.StyledEditorKit;
 
 @RequiredArgsConstructor
 @Service
@@ -55,20 +58,9 @@ public class UsersService {
     @Transactional
     public void updateInfo(Long userNo, UsersInfoUpdateRequestDto requestDto) {
         Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-        users.updateProfile(requestDto.getUserComment(), requestDto.getUserDesc());
+        users.updateProfile(requestDto.getUserNickname(), requestDto.getUserPhoneNo(), requestDto.getUserComment(), requestDto.getUserDesc());
     }
 
-    @Transactional
-    public String updateNickname(Long userNo, UsersNameUpdateRequestDto requestDto) {
-        Users users = usersRepository.findById(userNo).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-        try {
-            Users others = usersRepository.findByUserEmail(requestDto.getUserNickname()).get();
-        } catch (NoSuchElementException e) {
-            users.updateNickname(requestDto.getUserNickname());
-            return "success";
-        }
-        return "fail";
-    }
 
     //리프레시토큰 db에 저장
     @Transactional
@@ -105,10 +97,16 @@ public class UsersService {
         return usersRepository.findById(userNo).get();
     }
 
+    //회원 탈퇴
     @Transactional
-    public Long delete(Long userNo) {
-        usersRepository.deleteById(userNo);
-        return userNo;
+    public boolean deleteUser(Long userNo) {
+        try {
+            Users users = usersRepository.findById(userNo).get();
+            users.updateAuthorities(Authority.ROLE_RESIGN);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     // 아이디 찾기
@@ -136,6 +134,20 @@ public class UsersService {
             return null;
         }
         return userId + "님의 비밀번호가 변경되었습니다.";
+    }
+
+    //프로필수정에서 비밀번호 변경
+    @Transactional
+    public boolean profileUpdatePwd(Long userNo, UsersUpdatePwdDto resetPwdDto) {
+        Users users;
+        try {
+            users = usersRepository.findById(userNo).get();
+            users.updatePwd(passwordEncoder.encode(resetPwdDto.getUserPwd()));
+            return true;
+        } catch (NoSuchElementException e) {
+            System.out.println("없음");
+            return false;
+        }
     }
 
     public UsersResponseDto findUser(UsersLoginDto requestDto) {
