@@ -15,5 +15,5 @@ import java.util.List;
 @ToString
 public class MyHouseResponseDto {
     private List<ItemInfoResponseDto> sellItemsList;
-    private List<Items> boughtItemsList;
+    private List<ItemInfoResponseDto> buyItemsList;
 }
