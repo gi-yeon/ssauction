@@ -268,7 +268,7 @@ public class UsersController {
                 refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
                 res.addCookie(refreshCookie);
 
-
+                res.setHeader("Set-Cookie","cookieName=value;SameSite=None;secure;");
                 //success 메시지 담아준다.
                 result.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED; //202
