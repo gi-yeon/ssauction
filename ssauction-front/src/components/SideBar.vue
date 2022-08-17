@@ -26,12 +26,12 @@
       <span>나의 프로필</span>
     </el-menu-item>
 
-    <el-menu-item index="3" style="height:80px;">
+    <!-- <el-menu-item index="3" style="height:80px;">
       <router-link to="zzim"
         ><img src="@\assets\imgs\zzim.png" alt="Zzim" class="icon"
       /></router-link>&nbsp;
       <span>찜 목록</span>
-    </el-menu-item>
+    </el-menu-item> -->
 
     <el-menu-item index="4" style="height:80px;">
       <router-link to="house"

@@ -1,9 +1,12 @@
 <template>
   <div>
+    <h2>{{ user.loginUser.userNickname }}님의 프로필</h2>
     <br />
-    <h1>{{ user.loginUser.userNickname }}님의 프로필</h1>
+
+
     <div v-show="user.isLogin">
       <br />
+      <!-- 수정 모달 -->
       <b-modal id="modal-3" scrollable title="Update item" size="lg">
         <div class="flex m-10">
           <draggable
@@ -16,8 +19,10 @@
               v-for="(element, idx) in updateImgs"
               :key="element"
             >
-              <img v-bind:src="'data:image/png;base64,' + element.img" />
-              <img src="@\assets\imgs\logout.png" alt="">
+              <img
+                class="resize"
+                v-bind:src="'data:image/png;base64,' + element.img"
+              />
               <button @click="deleteImgs(idx)">delete</button>
             </div>
           </draggable>
@@ -67,38 +72,170 @@
           </b-button>
         </template>
       </b-modal>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">UserProfile</h5>
+      
+      <div class="box" style="margin: 10px">
+        <div
+          class="p-2"
+          style="padding: 0.5rem; padding-bottom: 0rem"
+        >
+          <!-- <h4 class="card-title" style="display: inline-block">기본 정보</h4> -->
+          <br />
           <div class="row">
-            <div class="col-sm-4">
-              <div class="card">
-                <div class="card-body">
-                  <div class="img-container">
-                    <div>유저사진</div>
-                    <img
-                      v-if="hasImg"
-                      v-bind:src="'data:image/png;base64,' + userMainImg"
-                    />
-                  </div>
-                </div>
+            <div class="col-sm-4" style="text-align: center">
+              <!-- <div class="card"> -->
+              <!-- <div
+                  class="card-body"
+                  style="
+                    padding: 0.5rem;
+                    padding-bottom: 0rem;
+                    text-align: center;
+                  "
+                > -->
+              <div class="img-container">
+                <img
+                  class="userImgContainer"
+                  v-if="hasImg"
+                  v-bind:src="'data:image/png;base64,' + userMainImg"
+                />
+                <!-- </div> -->
+                <!-- </div> -->
               </div>
             </div>
             <div class="col-sm-8">
-              <div class="card">
-                <div class="card-body">
+              <div>
+                <div
+                  
+                  style="padding: 0.5rem; padding-bottom: 0.5rem"
+                >
                   <div class="row">
-                    <div class="col-sm-6">
-                      유저닉네임 : {{ user.loginUser.userNickname }}
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-left: 1rem"
+                    >
+                      <button
+                        type="button"
+                        class="labelbutton btn-sm col-sm-4"
+                        disabled
+                      >
+                        아이디 (이메일)
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ userEmail }}
+                      </button>
                     </div>
                     <br />
-                    <div class="col-sm-6">
-                      유저등급 : {{ user.loginUser.userGrade }}
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-right: 1rem"
+                    >
+                      <button
+                        type="button"
+                        class="labelbutton btn-sm col-sm-4"
+                        disabled
+                      >
+                        닉네임
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ user.loginUser.userNickname }}
+                      </button>
                     </div>
-                    <div class="col-sm-6">유저로그인 : {{ user.isLogin }}</div>
                     <br />
-                    <div class="col-sm-6">유저설명 : {{ userDesc }}</div>
-                    <div class="col-sm-6">유저한줄평 : {{ userComment }}</div>
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-left: 1rem"
+                    >
+                      <button
+                        type="button"
+                        class="labelbutton btn-sm col-sm-4"
+                        disabled
+                      >
+                        휴대폰 번호
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ userPhoneNo }}
+                      </button>
+                    </div>
+                    <br />
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-right: 1rem"
+                    >
+                      <button
+                        type="button"
+                        class="labelbutton btn-sm col-sm-4"
+                        disabled
+                      >
+                        유저 등급
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ user.loginUser.userGrade }}
+                      </button>
+                    </div>
+                    <br />
+                    <div
+                      class="col-sm-12"
+                      style="
+                        padding: 0rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
+                      "
+                    >
+                      <button
+                        type="button"
+                        class="labelbutton btn-sm col-sm-2"
+                        disabled
+                      >
+                        상태 메시지
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-10"
+                        disabled
+                      >
+                        {{ userComment }}
+                      </button>
+                    </div>
+                    <br />
+                    <div
+                      class="col-sm-12"
+                      style="
+                        padding: 0rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
+                      "
+                    >
+                      <button
+                        type="button"
+                        class="labelbutton btn-sm col-sm-2"
+                        disabled
+                      >
+                        자기 소개
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-10"
+                        disabled
+                      >
+                        {{ userDesc }}
+                      </button>
+                    </div>
+                    <br />
                   </div>
                 </div>
               </div>
@@ -107,62 +244,74 @@
         </div>
       </div>
       <br />
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Sell Items</h5>
+
+<p>
+  <button class="togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#sellingItem" aria-expanded="false" aria-controls="sellingItem">
+    판매 내역
+  </button>&nbsp; &nbsp;
+  <button class="togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#purchasedItem" aria-expanded="false" aria-controls="purchasedItem">
+    구매 내역
+  </button>
+</p>
+
+
+<div class="collapse" id="sellingItem" style="margin-top: 20px;">
+  <div class="box" style="margin: 10px">
+        <div
+          class="p-2"
+          style="padding: 0.5rem; padding-bottom: 0rem"
+        >
+          <h4 class="card-title">판매 내역</h4>
+          <br />
           <div class="row">
             <div
               v-b-modal.modal-1
-              class="col-sm-4"
+              class="col-sm-3"
               v-for="index in sellItem"
               :key="index"
               @click="getItemDetail(index)"
             >
-              <b-modal scrollable id="modal-1" title="Selling item" size="lg">
+            <!-- 판매물품 모달 -->
+              <b-modal scrollable id="modal-1" title="판매 물품" size="lg">
                 <Carousel :images="images" />
-                <p class="my-4">Hello from modal!</p>
                 <br />
-                {{ info.itemName }}
+                <h3>매물 이름 : {{ info.itemName }}</h3>
                 <br />
-                {{ info.modelNo }}
+                모델 번호 : {{ info.modelNo }}
                 <br />
-                {{ info.startPrice }}
+                시작 가격 : {{ info.startPrice }}원
                 <br />
-                {{ info.regTime }}
+                경매 일시 : {{ index.item.auctionTime.substr(0, 10) }} {{ index.item.auctionTime.substr(11, 5) }}
                 <br />
-                {{ info.auctionTime }}
+                매물 상태 : {{ info.dealStatus }}
                 <br />
-                {{ info.dealStatus }}
-                <br />
-                {{ info.desc }}
+                매물 설명 : {{ info.desc }}
                 <template v-slot:footer="{ ok }">
                   <b-button
                     v-b-modal.modal-3
                     @click="ok"
-                    variant="primary"
                     data-baz="buz"
-                    >Update</b-button
+                    >수정하기</b-button
                   >
                 </template>
               </b-modal>
               <div>
-                <div class="card">
-                  <div class="card-body">
-                    <div class="sell-container">
+                <div style="margin: 10px">
+                  <div
+                    
+                    style="padding: 0.5rem; padding-bottom: 0rem"
+                  >
+                    <div class="sell-container text-align:left">
                       <img
+                        class="sellImgContainer"
                         v-bind:src="
                           'data:image/png;base64,' + index.itemImgs[0].img
                         "
                       />
-
-                      <br />
-                      {{ index.item.itemName }}
-                      <br />
-                      {{ index.item.modelNo }}
-                      <br />
-                      {{ index.item.startPrice }}
-                      <br />
-                      {{ index.item.regTime }}
+                      <br>
+                      {{ index.item.itemName }}  {{ index.item.startPrice }}원
+                      <br>
+                      {{ index.item.regTime.substr(0, 10) }}
                     </div>
                   </div>
                 </div>
@@ -170,14 +319,18 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Purchase Items</h5>
+  </div>
+</div>
+&nbsp; &nbsp;
+<div class="collapse" id="purchasedItem">
+  <div class="box" style="margin: 10px">
+        <div style="padding: 0.5rem; padding-bottom: 0rem">
+          <h4 class="card-title">구매 내역</h4>
+          <br />
           <div class="row">
             <div
               v-b-modal.modal-2
-              class="col-sm-4"
+              class="col-sm-3"
               v-for="index in buyItem"
               :key="index"
               @click="getItemDetail(index)"
@@ -216,23 +369,23 @@
                 </template>
               </b-modal>
               <div>
-                <div class="card">
-                  <div class="card-body">
+                <div >
+                  <div
+                    
+                    style="padding: 0.5rem; padding-bottom: 0rem"
+                  >
                     <div class="sell-container">
                       <img
+                        class="sellImgContainer"
                         v-bind:src="
                           'data:image/png;base64,' + index.itemImgs[0].img
                         "
                       />
-
                       <br />
                       {{ index.item.itemName }}
                       <br />
-                      {{ index.item.modelNo }}
-                      <br />
-                      {{ index.item.startPrice }}
-                      <br />
-                      {{ index.item.regTime }}
+                      {{ index.item.startPrice }}원 /
+                      {{ index.item.regTime.substr(0, 10) }}
                     </div>
                   </div>
                 </div>
@@ -240,8 +393,12 @@
             </div>
           </div>
         </div>
-      </div>
+  </div>
+</div>
+
     </div>
+
+
   </div>
 </template>
 
@@ -264,6 +421,8 @@ export default defineComponent({
   data() {
     return {
       userNo: 0,
+      userEmail: "",
+      userPhoneNo: "",
       userDesc: "",
       userComment: "",
       userMainImg: [],
@@ -294,6 +453,9 @@ export default defineComponent({
           console.log(data);
           this.userDesc = data.userDesc;
           this.userComment = data.userComment;
+          this.userImgUri = data.userImgUri;
+          this.userEmail = data.userEmail;
+          this.userPhoneNo = data.userPhoneNo;
         })
         .catch(({ data }) => {
           console.log(data);
@@ -313,6 +475,7 @@ export default defineComponent({
     },
 
     getItemInfo: async function () {
+      console.log(this.userNo);
       await axios
         .get("/houses/profile/" + this.userNo)
         .then(({ data }) => {
@@ -385,8 +548,75 @@ export default defineComponent({
 </script>
 
 <style>
-.resize {
-  height: 300px;
-  width: 300px;
+.userImgContainer {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+.sellImgContainer {
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  /* object-fit: contain; */
+}
+.col-sm-6 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.col-sm-12 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.btn btn-light btn-sm col-sm-8 {
+  border: solid grey;
+}
+.img-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin: auto;
+}
+.sell-container {
+  width: 300px;
+  height: 300px;
+  /* border-radius: 90%; */
+  overflow: hidden;
+  margin: auto;
+}
+img {
+  display: block;
+  margin: auto;
+}
+
+.box {
+  margin-left: 0px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.togglebtn {
+  width: 100px;
+  height: 50px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.549);
+  border-radius: 45px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+  font-size : 18px; 
+}
+
+.labelbutton {
+  border: 0;
+  background-color: rgb(255, 211, 182);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
 </style>

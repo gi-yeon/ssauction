@@ -43,10 +43,10 @@
         class="detail-modal"
         style="text-align: center; background-color: white"
       >
-        <div class="row">
+        <!-- <div class="row">
           <h1>{{ houseToDetail.houseTitle }}</h1>
           <button>찜하기</button>
-        </div>
+        </div> -->
         <div class="row">
           <div class="col detail-image"></div>
           <div class="col detail-info">
