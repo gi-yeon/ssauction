@@ -18,7 +18,8 @@ export default {
   },
   data() {
     return {
-      userNo: 0,
+      userNo: null,
+
       likes: [],
     };
   },

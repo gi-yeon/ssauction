@@ -349,6 +349,7 @@
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
+
           <input
             type="file"
             ref="itemImage"
@@ -372,6 +373,7 @@
         />
       </div>
     </div>
+    <div class="row" style="height: 320px"></div>
     <div class="row house-input p-5">
       <button @click="createHouse">경매방 생성</button>
     </div>
@@ -381,7 +383,7 @@
 <script>
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-
+import { mapState } from "vuex";
 export default {
   name: "SsauctionHouse",
   components: { ItemImagePreview },
@@ -393,10 +395,8 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        // itemSellerNo: null,
         itemDealStatus: "SELL",
         userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
-        // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
         itemNo: -1,
@@ -404,9 +404,7 @@ export default {
       },
       house: {
         houseTitle: null,
-        // Datepicker 관련 구현이 아직 완벽하지 않아
-        // houseAucTime, houseStatus 값을 우선 하드코딩된 값으로 대체했다.
-        houseAucTime: "2022-02-22T22:22:22",
+        houseAucTime: null,
         houseStatus: 0,
       },
       houseDate: new Date(),
@@ -436,6 +434,10 @@ export default {
       console.log(this.item);
       console.log(this.ctgr);
 
+      this.house.houseAucTime =
+        this.house.houseAucTime.split(" ")[0] +
+        "T" +
+        this.house.houseAucTime.split(" ")[1];
       // file은 multipart/form-data 형식으로 전송되어야 한다.
       // multipart/form-data 형식으로 요청하면 JSON을 바로 body에 넣는 방식을 사용할 수 없다.
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
@@ -470,6 +472,7 @@ export default {
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
+
           this.$router.push({ name: "Home" });
         })
         .then(() => {

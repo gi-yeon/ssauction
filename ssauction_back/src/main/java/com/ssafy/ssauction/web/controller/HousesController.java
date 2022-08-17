@@ -6,16 +6,22 @@ import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
 import com.ssafy.ssauction.service.houses.HousesService;
+import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.storage.StorageService;
 import com.ssafy.ssauction.service.users.UsersService;
-import com.ssafy.ssauction.web.dto.Houses.*;
+import com.ssafy.ssauction.web.dto.Houses.HousesItemsResponseDto;
+import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
+import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
+import com.ssafy.ssauction.web.dto.Houses.MyHouseResponseDto;
+import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsResponseDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
-import com.ssafy.ssauction.service.itemImg.ItemImgsService;
-import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
 import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
-import com.ssafy.ssauction.web.dto.itemImg.*;
+import com.ssafy.ssauction.web.dto.itemImg.ImgInfo;
+import com.ssafy.ssauction.web.dto.itemImg.ItemImgsDeleteRequestDto;
+import com.ssafy.ssauction.web.dto.itemImg.ItemImgsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -36,6 +39,7 @@ public class HousesController {
     private final UsersService usersService;
     private final HousesService housesService;
     private final ItemsService itemsService;
+
     private final ItemImgsService itemImgsService;
     private final StorageService storageService;
 
@@ -151,6 +155,7 @@ public class HousesController {
             @RequestPart(value = "itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
             @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
             @RequestPart(value = "files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
+        System.out.println(itemDto);
         Users user = usersService.findEntityById(itemDto.getUserNo());          //  itemDto에서 현재 사용자의 UserNo를 통해 현재 user를 찾는다.
         //      나중에 JWT 인증 정보로 대체해야 한다.
         System.out.println(itemDto.toString());
@@ -178,27 +183,20 @@ public class HousesController {
         return new ResponseEntity<>(item.getItemNo(), HttpStatus.OK);
     }
 
-    @GetMapping("/searchAll/{sellerNo}")
-    public ResponseEntity<List<HousesItemsResponseDto>> searchAllBySeller(@PathVariable Long sellerNo) {
-        Users user = usersService.findEntityById(sellerNo);
-        List<Items> itemList = user.getSellItems();
-        HousesResponseDto hr = null;
-        List<ItemImgsResponseDto> iir = null;
-        List<HousesItemsResponseDto> result = new ArrayList<>();
-        for (Items item : itemList) {
-            ItemsResponseDto ir = new ItemsResponseDto(item);
-            Houses house = item.getHouse();
-            if (house != null) {
-                hr = new HousesResponseDto(house);
-                List<ItemImgs> itemImgs = item.getImages();
-                iir = new ArrayList<>();
-                for (ItemImgs i : itemImgs) {
-                    iir.add(new ItemImgsResponseDto(i));
-                }
-            }
-            result.add(new HousesItemsResponseDto(ir, iir, hr));
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @GetMapping("/searchAll")
+    public ResponseEntity<Map<String, Object>> searchAll(@RequestParam("page") int page,
+                                                                  @RequestParam("size") int size,
+                                                                  @RequestParam(value = "search", required = false) String search,
+                                                                @RequestParam(value="houseStatus", required=false) int houseStatus) {
+        Map<String, Object> resultMap = new HashMap<>();
+        System.out.println("page : " + page + " size: " + size + " search : " + search + " houseStatus : " + houseStatus);
+        HttpStatus status = HttpStatus.OK;
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        resultMap.put("list", housesService.houseList(pageRequest, search, houseStatus));
+        System.out.println(resultMap.get("list"));
+        return new ResponseEntity<>(resultMap, status);
+
     }
 
     @GetMapping("{itemNo}")
