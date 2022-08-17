@@ -32,21 +32,24 @@ public class CommentsServiceImpl implements CommentsService {
         System.out.println(map.get("boardNo").getClass().getSimpleName());
         System.out.println(map.get("userNo").getClass().getSimpleName());
         String boardNo = String.valueOf(map.get("boardNo"));
-        String userNo = String.valueOf(map.get("boardNo"));
+        String userNo = String.valueOf(map.get("userNo"));
+        System.out.println(Long.valueOf(boardNo));
+        System.out.println(Long.valueOf(userNo));
         Board board = boardRepository.findById(Long.valueOf(boardNo)).orElse(null);
         Users user = usersRepository.findById(Long.valueOf(userNo)).orElse(null);
-
+        System.out.println(board==null?true:false);
+        System.out.println(user==null?true:false);
         if(board == null || user == null)
             return null;
-
+        System.out.println((String)map.get("commentContent"));
         Comments comment = new Comments();
         comment.setCommentContent((String)map.get("commentContent"));
-        comment.setBoardNo(Long.valueOf(boardNo));
+        comment.setBoard(board);
         comment.setUserNo(Long.valueOf(userNo));
 
         SimpleDateFormat sDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         comment.setCommentRegDate(sDate.format(new Date()));
-
+        board.getComments().add(comment);
         return commentsRepository.save(comment);
     }
 

@@ -1,5 +1,6 @@
 package com.ssafy.ssauction.domain.houses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.likes.Likes;
@@ -29,6 +30,7 @@ public class Houses {
     private String houseTitle;
 
     @Column(name = "house_auc_time", nullable = false)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm")
     private Timestamp houseAucTime;
 
     @Column(name="house_desc",length = 200)
