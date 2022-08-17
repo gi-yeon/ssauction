@@ -61,8 +61,10 @@ axios.interceptors.response.use(
         }
         //token이 아예 없다면 재로그인 해야함
         else if (status === 401 && accessToken == null && refreshToken == null) {
-            alert("다시 로그인해주세요.")
+            alert("로그인해주세요.")
 
+            router.push("/login")
+            
         }
         //로그인 시 회원 정보가 없다면
         else if (status != 401 && accessToken == null && refreshToken == null) {
@@ -72,6 +74,7 @@ axios.interceptors.response.use(
         //권한이 없다면
         else {
             alert("권한이 없습니다.")
+            router.push("/")
         }
 
         return Promise.reject(error);

@@ -470,7 +470,7 @@ export default {
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
-          this.$route.push({ name: "Home" });
+          this.$router.push({ name: "Home" });
         })
         .then(() => {
           axios.post("/categories", ctgrjson).then((data) => {
