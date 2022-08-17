@@ -154,7 +154,6 @@ public class UsersController {
         } else {
             return ResponseEntity.ok(FAIL);
         }
-
     }
 
     //닉네임 중복 확인

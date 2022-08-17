@@ -3,17 +3,16 @@ import App from "./App.vue";
 
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
+import BootstrapVue3 from 'bootstrap-vue-3'
 import router from "./router";
 import 'v-calendar/dist/style.css';
 import VCalendar from 'v-calendar';
 import store from "./store";
 import axios from "axios";
-
-
-
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 const app = createApp(App);
-app.use(router).use(store).use(VCalendar).use(ElementPlus).mount("#app");
+app.use(router).use(store).use(VCalendar).use(BootstrapVue3).use(ElementPlus).mount("#app");
 
 
 // axios interceptor
