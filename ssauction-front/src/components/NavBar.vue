@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div class="brand" style="d-flex justify-content-start padding-left:15px">
-      SSAUCTION
-    </div>
+    <router-link to="/"
+      ><div
+        class="brand"
+        style="d-flex justify-content-start padding-left:15px"
+      >
+        SSAUCTION
+      </div></router-link
+    >
 
     <!--로그인 한 상태에서 보여주는 인사메시지, 로그아웃버튼-->
     <div v-if="user.isLogin" style="padding-top: 20px; padding-right: 5px">

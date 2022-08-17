@@ -593,7 +593,6 @@ export default defineComponent({
 }
 .sell-container {
   height: 300px;
-  /* border-radius: 90%; */
   overflow: hidden;
   margin: auto;
 }
