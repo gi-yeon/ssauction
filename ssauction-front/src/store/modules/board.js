@@ -14,7 +14,7 @@ const boardStore = {
         }
     },
     actions: {
-        setBoardType({commit}, boardType) {
+        setBoardType({ commit }, boardType) {
             commit("SET_BOARD_TYPE", boardType);
         }
     }

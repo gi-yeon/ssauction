@@ -1,11 +1,4 @@
 <template>
-  <el-table :data="BoardListItem" stripe style="width: 100%">
-    <el-table-column prop="t"></el-table-column>
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="address" label="Address" />
-  </el-table>
-
   <div class="table">
     <h1>BoardList</h1>
     <div class="register">
@@ -61,7 +54,7 @@ import axios from "@/utils/axios";
 import { useRouter } from "vue-router";
 import { reactive } from "vue";
 // npm install universal-cookie
-import { useCookies } from "@vueuse/integrations/useCookies";
+
 import { useStore } from "vuex";
 
 export default {
@@ -103,7 +96,7 @@ export default {
       }
       console.log(store.state.board.boardType);
       axios
-        .get("http://localhost:8080/board", {
+        .get("board", {
           params: {
             page: p,
             size: s,
@@ -138,8 +131,7 @@ export default {
     getPage(0, 10);
     state.searchType = "";
 
-    const cookies = useCookies(["login.userNo"]);
-    if (cookies.get("login.userNo") != null) state.isUser = true;
+    if (state.userNo != null) state.isUser = true;
     else state.isUser = false;
 
     return {

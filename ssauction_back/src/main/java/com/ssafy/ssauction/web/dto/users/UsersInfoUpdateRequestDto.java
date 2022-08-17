@@ -7,20 +7,26 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UsersInfoUpdateRequestDto {
+    private String userNickname;
+    private String userPhoneNo;
     private String userComment;
     private String userDesc;
 
     @Override
     public String toString() {
         return "UsersInfoUpdateRequestDto{" +
-                "userComment='" + userComment + '\'' +
+                "userNickname='" + userNickname + '\'' +
+                ", userPhoneNo='" + userPhoneNo + '\'' +
+                ", userComment='" + userComment + '\'' +
                 ", userDesc='" + userDesc + '\'' +
                 '}';
     }
 
     @Builder
-    UsersInfoUpdateRequestDto(String userComment, String userDesc){
-        this.userComment=userComment;
-        this.userDesc=userDesc;
+    UsersInfoUpdateRequestDto(String userNickname, String userPhoneNo, String userComment, String userDesc) {
+        this.userNickname = userNickname;
+        this.userPhoneNo = userPhoneNo;
+        this.userComment = userComment;
+        this.userDesc = userDesc;
     }
 }

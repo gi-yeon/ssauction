@@ -20,6 +20,9 @@ public class UserImgs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long img_no;
+    @Column(name = "user_img_main", length = 50)
+    private String userImgMain;
+
     @Column(name = "user_img_name", length = 50)
     private String userImgName;
 
@@ -36,14 +39,16 @@ public class UserImgs {
     @JoinColumn(name = "user_no")
     private Users user;
 
-    public void update(String userImgName, String userImgUri){
-        this.userImgName=userImgName;
-        this.userImgUri=userImgUri;
-        this.userImgUpdateDate=new Timestamp(System.currentTimeMillis());
+    public void update(String userImgName, String userImgUri) {
+        this.userImgName = userImgName;
+        this.userImgUri = userImgUri;
+        this.userImgUpdateDate = new Timestamp(System.currentTimeMillis());
     }
+
     @Builder
-    public UserImgs(Users user, String userImgName, String userImgUri, Timestamp userImgRegDate, Timestamp userImgUpdateDate) {
+    public UserImgs(Users user, String userImgMain, String userImgName, String userImgUri, Timestamp userImgRegDate, Timestamp userImgUpdateDate) {
         this.user = user;
+        this.userImgMain = userImgMain;
         this.userImgName = userImgName;
         this.userImgUri = userImgUri;
         this.userImgRegDate = new Timestamp(System.currentTimeMillis());

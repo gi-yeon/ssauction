@@ -25,15 +25,20 @@
         <h4>경매 일시</h4>
       </div>
       <div class="col-2 data">
-        <div class="row" house-input>
-          <el-date-picker
-            v-model="house.houseAucTime"
-            type="datetime"
-            placeholder="Pick a Date"
-            format="YYYY/MM/DD hh:mm:ss"
-            value-format="YYYY-MM-DD hh:mm:ss"
-          />
-        </div>
+        <v-date-picker
+          v-model="house.houseDate"
+          mode="dateTime"
+          locale="ko-KR"
+          :model-config="modelConfig"
+          is24hr
+          placeholder="경매 날짜를 선택하세요"
+          class="input_style"
+          style="margin-bottom: 0.5rem"
+        >
+          <template v-slot="{ inputValue, inputEvents }">
+            <input :value="inputValue" v-on="inputEvents" />
+          </template>
+        </v-date-picker>
       </div>
     </div>
     <div class="row house-input">
@@ -64,12 +69,10 @@
         />
       </div>
     </div>
-
     <div class="row house-input">
       <div class="col-4 label">
         <h4>카테고리</h4>
       </div>
-
       <div class="col-8 data">
         <div class="form-check form-check-inline">
           <input
@@ -396,7 +399,7 @@ export default {
         userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
       },
       ctgr: {
-        itemNo: 1,
+        itemNo: -1,
         ctgrName: [],
       },
       house: {
@@ -440,7 +443,7 @@ export default {
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
       const housejson = JSON.stringify(this.house);
       const itemjson = JSON.stringify(this.item);
-
+      console.log(itemjson);
       const ctgrjson = JSON.stringify(this.ctgr);
       const houseblob = new Blob([housejson], { type: "application/json" });
       const itemblob = new Blob([itemjson], { type: "application/json" });
@@ -465,22 +468,26 @@ export default {
         })
         .then((data) => {
           console.log(data);
+          // this.itemNo = data.item_no
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
-          // this.$route.push({ name: "Home" });
+
+          this.$router.push({ name: "Home" });
+        })
+        .then(() => {
+          axios.post("/categories", ctgrjson).then((data) => {
+            console.log(data);
+          });
+
+          // this.sendFile();
+          this.itemImages.splice(0);
         })
         .catch((error) => {
           alert(error);
         });
 
       console.log(ctgrjson);
-
-      axios.post("/categories", ctgrjson).then((data) => {
-        console.log(data);
-      });
-      // this.sendFile();
-      this.itemImages.splice(0);
     },
 
     deleteImg(index) {
@@ -491,4 +498,38 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+label {
+  text-align: MiddleLeft;
+  display: inline-block;
+  width: 140px;
+  line-height: 30px;
+}
+.preview {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.form-check {
+  margin-top: 0.5rem;
+  margin-right: 1.5rem;
+  font-size: 1.3rem;
+}
+.form-check-input {
+  margin-top: 0;
+  margin-right: 0.5rem;
+  height: 1.8rem;
+  background-color: rgb(255, 211, 182);
+  width: 30px;
+  height: 30px;
+}
+input {
+  width: 500px;
+  height: 50px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+</style>

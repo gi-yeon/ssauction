@@ -11,23 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponseDto {
 
+    private String userEmail;
+    private String userPhoneNo;
     private String userDesc;
-
     private String userComment;
 
-    private String userImgUri;
-    @Override
-    public String toString() {
-        return "UserInfoResponseDto{" +
-                "userDesc='" + userDesc + '\'' +
-                ", userComment='" + userComment + '\'' +
-                ", userImgUri='" + userImgUri + '\'' +
-                '}';
-    }
     @Builder
-    public UserInfoResponseDto(Users user, UserImgs img){
+    public UserInfoResponseDto(Users user){
         this.userDesc=user.getUserDesc();
         this.userComment=user.getUserComment();
-        this.userImgUri=img.getUserImgUri();
+        this.userEmail=user.getUserEmail();
+        this.userPhoneNo=user.getUserPhoneNo();
+
     }
 }
