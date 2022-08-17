@@ -256,7 +256,7 @@ public class UsersController {
                 Cookie cookie = new Cookie("accessToken", accessToken);
                 cookie.setPath("/");
                 cookie.setHttpOnly(true);
-                cookie.setSecure(true);
+                cookie.setSecure(false);
                 cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
                 res.addCookie(cookie);
 
