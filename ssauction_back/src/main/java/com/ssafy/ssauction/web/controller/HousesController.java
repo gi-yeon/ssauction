@@ -192,6 +192,10 @@ public class HousesController {
                                                                                     @RequestParam("size") int size,
                                                                                     @RequestParam(value = "search", required = false) String search,
                                                                                     @RequestParam(value="houseStatus", required=false) int houseStatus) {
+        System.out.println("search : " + search + " houseStatus : " + houseStatus);
+        if (search == null || search.length() == 0) {
+            search = "";
+        }
         List<HousesItemsBinaryResponseDto> result = new ArrayList<>();
         List<Houses> housesList = housesService.findEntityByHouseStatusAndHouseTitleContaining(houseStatus, search);
         for (Houses house : housesList) {
@@ -211,6 +215,7 @@ public class HousesController {
                     inputStream.read(transform);                                                    //바이트 값으로 변환
                     inputStream.close();
                 } catch (Exception e) {
+                    e.printStackTrace();
                     return null;
                 }
                 if (transform != null) {

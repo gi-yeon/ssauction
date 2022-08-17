@@ -65,20 +65,11 @@
             </ul>
           </nav> -->
           <div class="example-pagination-block">
-            <el-pagination
+            <!-- <el-pagination
               layout="prev, pager, next"
               :current-page="houseCurrentPage"
               :total="totalPages"
-              @current-change="
-                getHouses(houseCurrentPage, houseSearchWord, 5, 0)
-              "
-              @prev-click="
-                getHouses(houseCurrentPage - 1, houseSearchWord, 5, 0)
-              "
-              @next-click="
-                getHouses(houseCurrentPage + 1, houseSearchWord, 5, 0)
-              "
-            />
+            /> -->
           </div>
         </div>
       </div>
@@ -186,9 +177,11 @@ export default {
           `/houses/searchAll?page=${page}&search=${word}&size=${size}&houseStatus=${houseStatus}`
         )
         .then((response) => {
-          console.log(response.data);
+          console.log(response);
           this.hotDeals = response.data;
-          this.hotDeals.splice(4);
+          if (this.hotDeals.size < 4) {
+            this.hotDeals.splice(4);
+          }
           // 페이지네이션을 위한 코드
 
           // this.totalElements = response.data.list.totalElements;

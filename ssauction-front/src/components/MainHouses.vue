@@ -4,23 +4,18 @@
       <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem">
         <div class="mainsell-container">
           <img
-            class="itemimg d-block m-3"
+            class="sellImgContainer"
             :src="'data:image/png;base64,' + hot.itemImgList[0].img"
             alt=""
           />
           <br />
-          {{ this.hot.houseTitle }}
+          {{ this.hot.house.houseTitle }}
           <br />
-          <div v-if="isSelling">{{ participantNum }}</div>
-          <div v-if="!isSelling">
-            {{ getAuctionStartTime(this.hot.houseAucTime) }}
+          <div>
+            {{ getAuctionStartTime(this.hot.house.houseAucTime) }}
           </div>
-          <div v-if="isSelling">
-            <div class="col">{{ houseAuctionCurrentPrice }}</div>
-            <div class="col">{{ houseAuctionRemainingTime }}</div>
-          </div>
-          <div v-if="!isSelling">
-            <div>{{ this.hot.houseDesc }}</div>
+          <div>
+            <div>{{ this.hot.house.houseDesc }}</div>
           </div>
           <div><button @click="like">찜하기</button></div>
         </div>
@@ -90,6 +85,7 @@ export default {
   /* border-radius: 90%; */
   overflow: hidden;
   margin: auto;
+  height: 300px;
 }
 /* .sellImgContainer {
   width: 70%;
