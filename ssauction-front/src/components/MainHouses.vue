@@ -10,10 +10,6 @@
       <!-- </div> -->
       <div class="col-4">
         <div class="row">{{ this.hot.houseTitle }}</div>
-        <img
-          class="resize"
-          v-bind:src="'data:image/png;base64,' + index.itemImgs[0].img"
-        />
         <!-- <div class="row">{{ this.hot.item.sellerNickname }}</div> -->
         <div class="row" v-if="isSelling">{{ participantNum }}</div>
         <div class="row" v-if="!isSelling">
