@@ -20,11 +20,10 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";
-import SessionsVue from "@/views/Sessions.vue";
 
 export default {
   name: "App",
-  components: { NavBar, SideBar, SessionsVue },
+  components: { NavBar, SideBar },
   data() {
     return {
       isInSession: false,

@@ -74,7 +74,6 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import MainHouses from "@/components/MainHouses.vue";
 import axios from "@/utils/axios.js";
-import { ArrowDown } from "@element-plus/icons-vue";
 
 function useUser() {
   const store = useStore();
@@ -87,7 +86,6 @@ export default {
   name: "SsauctionHome",
   components: {
     MainHouses,
-    ArrowDown,
   },
   MainHousesdata() {
     return {
