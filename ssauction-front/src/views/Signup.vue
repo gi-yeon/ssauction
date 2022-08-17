@@ -36,11 +36,11 @@
       :state="pwdCheckValidation"
     />
     <br />
-    <p v-if="pwdCheck.length == 0" style="color: grey">
+    <p v-if="pwdCheck.length == 0" style="color: grey; margin-top:10px; font-size: 13px;">
       비밀번호를 입력해주세요.
     </p>
-    <p v-else-if="userPwd === pwdCheck">비밀번호가 일치합니다.</p>
-    <p v-else style="color: red">비밀번호가 일치하지 않습니다.</p>
+    <p v-else-if="userPwd === pwdCheck" style="color: grey; margin-top:10px; font-size: 13px;">비밀번호가 일치합니다.</p>
+    <p v-else style="color: red; margin-top:10px; font-size: 13px;">비밀번호가 일치하지 않습니다.</p>
 
     <!--닉네임--->
     <input
@@ -66,21 +66,9 @@
     />
     <br />
     <br />
-    <button @click="submit" width="500px" class="btn_yellow">회원가입</button>
+    <button @click="submit" width="500px" class="btn_yellow3">회원가입</button>
     <br />
     <br />
-    <!-- <a href=""
-      ><img
-        src="@\assets\imgs\google.png"
-        alt="구글 로그인"
-        class="logo_resize" /></a
-    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href=""
-      ><img
-        src="@\assets\imgs\naver.png"
-        alt="네이버 로그인"
-        class="logo_resize"
-    /></a> -->
   </div>
 </template>
 
@@ -213,7 +201,7 @@ export default {
   margin-right: 0px;
   font-size: 0.8rem;
   font-weight: 700;
-  color: orange;
+  color: rgba(228, 148, 0, 0.885);
 
   text-align: center;
 

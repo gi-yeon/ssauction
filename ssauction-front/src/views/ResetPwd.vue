@@ -7,7 +7,7 @@
     휴대폰 인증을 통해 비밀번호를 변경할 수 있습니다. 
   </p>
 
-  <div class="box">
+  <div class="box" style="margin-top: 50px">
     <div>
       <input id="user_email" type="string" v-model="userEmail" placeholder="이메일">
       <br>
@@ -15,7 +15,7 @@
       <input id="user_phoneNo" type="string" v-model="phoneNo" placeholder="전화번호 (- 제외)">
     </div>
       <br>
-      <button class="btn_pink" @click="ResetPwd">인증번호 전송</button>
+      <button class="btn_pink3" @click="ResetPwd">인증번호 전송</button>
       
     <div v-if="modalSmsCode == true">
     <br/>
@@ -24,7 +24,7 @@
         <input id="user_smsCode" type="string" v-model="smsCode" placeholder="인증번호 입력">
       </div>
       <br>
-        <button class="btn_pink" @click="verifyCode">비밀번호 재설정하기</button>
+        <button class="btn_pink3" @click="verifyCode">비밀번호 재설정하기</button>
     </div>
   </div>
   </div>

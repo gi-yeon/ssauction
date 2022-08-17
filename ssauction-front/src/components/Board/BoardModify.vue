@@ -1,20 +1,23 @@
 <template>
   <div>
-    <input type="text" name="title" id="title" v-model="state.boardTitle" />
+    <input style="margin-top:20px"
+    type="text" name="title" id="title" v-model="state.boardTitle" />
     <div></div>
     <textarea
+      style="margin-top:20px"
       name="content"
       id="content"
-      cols="30"
+      cols="60"
       rows="10"
       v-model="state.boardContent"
     >
+    
     </textarea>
 
-    <div>
-      <button @click="ModifyArticle">글수정하기</button>
+    <div style="margin-top:20px">
+      <button class="btn_pink" @click="ModifyArticle">수정</button>&nbsp;&nbsp;
       <router-link to="/board">
-        <button>목록</button>
+        <button class="btn_yellow">목록</button>
       </router-link>
     </div>
   </div>
@@ -73,3 +76,54 @@ export default {
   },
 };
 </script>
+
+<style>
+.title {
+  width: 400px;
+  border: 20px;
+  background-color: rgba(255, 211, 182, 0.741);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
+textarea{
+  outline: none;
+  resize: none;
+  padding: 20px;
+}
+
+textarea:focus{
+  outline: none;
+}
+
+.btn_pink {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_pink2 {
+  width: 80px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgb(255, 211, 182, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+</style>

@@ -4,16 +4,43 @@
   <div style="margin-top: 100px">
   <h1>비밀번호 재설정</h1>
   <br />
-
-  <h1>{{ phoneNo }}</h1>
-  <h1>{{ email }}</h1>
+  <p>
+    새로운 비밀번호를 입력해주세요.
+  </p>
+<!-- 
   <label for="user_password">새 비밀번호: </label>
   <input id="user_password" type="password" v-model="password" />
   <h1>{{ password }}</h1>
   <label for="user_password2">비밀번호 확인: </label>
   <input id="user_password2" type="password" v-model="password2" />
   <h1>{{ password2 }}</h1>
-  <button @click="ResetPwd2">Reset Password</button>
+  <button @click="ResetPwd2">Reset Password</button> -->
+
+ <div class="box" style="margin-top: 50px">
+    <div>
+      <input id="user_password" type="password" v-model="password" placeholder="새 비밀번호">
+      <br>
+      <br>
+      <input id="user_password2" type="password" v-model="password2" placeholder="새 비밀번호 확인">
+    </div>
+      <br>
+      <button class="btn_pink" @click="ResetPwd2">비밀번호 재설정</button>
+      
+    <div v-if="modalSmsCode == true">
+    <br/>
+    <br/>
+      <div>
+        <input id="user_smsCode" type="string" v-model="smsCode" placeholder="인증번호 입력">
+      </div>
+      <br>
+        <button class="btn_pink" @click="verifyCode">비밀번호 재설정하기</button>
+    </div>
+  </div>
+
+
+
+
+
   </div>
 </template>
 

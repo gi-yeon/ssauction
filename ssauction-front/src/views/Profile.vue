@@ -50,7 +50,7 @@
                 <div class="card">
                   <div class="card-body">
                     <div>
-                      <img
+                      <img class=""
                         v-bind:src="
                           'data:image/png;base64,' + index.itemMainImg
                         "
@@ -140,4 +140,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.resize {
+  height: 300px;
+  width: 300px;
+}
+</style>

@@ -42,7 +42,7 @@
 
     <el-menu-item index="5" style="height:80px;">
       <router-link to="/board"
-        ><img src="@\assets\imgs\board.png" alt="Board" class="icon"
+        ><img src="@\assets\imgs\board.png" alt="Board" class="icon4"
       /></router-link>&nbsp;
       <span>게시판</span>
     </el-menu-item>
@@ -72,6 +72,13 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 .icon {
   height: 40px;
+  width: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+.icon4 {
+  height: 45px;
   width: 40px;
   margin-left: auto;
   margin-right: auto;
