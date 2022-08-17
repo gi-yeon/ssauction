@@ -98,7 +98,7 @@ export default {
 #container {
   position: fixed;
   left: 70px;
-  right: 70px;
+  right: 0px;
   top: 70px;
   bottom: 0;
 }

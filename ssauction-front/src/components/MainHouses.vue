@@ -1,15 +1,19 @@
 <template>
   <div class="container main-house">
     <div class="row">
-      <div class="col-6">
-        <!-- <img
+      <!-- <div class="col-6"> -->
+      <!-- <img
           class="itemimg d-block m-3"
           :src="`http://localhost:8080/file/item/${imgNameList[0]}`"
           alt=""
         /> -->
-      </div>
-      <div class="col-6">
+      <!-- </div> -->
+      <div class="col-4">
         <div class="row">{{ this.hot.houseTitle }}</div>
+        <img
+          class="resize"
+          v-bind:src="'data:image/png;base64,' + index.itemImgs[0].img"
+        />
         <!-- <div class="row">{{ this.hot.item.sellerNickname }}</div> -->
         <div class="row" v-if="isSelling">{{ participantNum }}</div>
         <div class="row" v-if="!isSelling">
