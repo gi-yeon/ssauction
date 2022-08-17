@@ -59,6 +59,7 @@ public class SessionsController {
     // Collection to pair session names and tokens (the inner Map pairs tokens and
     // role associated)
     private Map<String, Map<String, OpenViduRole>> mapSessionNamesTokens = new ConcurrentHashMap<>();
+    private Map<String, Set<String>> mapBlackList = new ConcurrentHashMap<>();
 
     // URL where our OpenVidu server is listening
     private String OPENVIDU_URL;
@@ -79,6 +80,7 @@ public class SessionsController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = SessionsTokenResponseDto.class),
             @ApiResponse(code = 404, message = "잘못된 요청", response = SessionsTokenResponseDto.class),
+            @ApiResponse(code = 406, message = "잘못된 닉네임", response = SessionsTokenResponseDto.class),
             @ApiResponse(code = 500, message = "서버 오류", response = SessionsTokenResponseDto.class)
     })
     public ResponseEntity<SessionsTokenResponseDto> getToken(@RequestBody @ApiParam(value="세션 이름 및 유저 정보", required = true) SessionsCreateJoinRequestDto sessionNameLoggedUserParam)
@@ -91,13 +93,20 @@ public class SessionsController {
         String sessionName = (String) sessionNameLoggedUserParam.getSessionName();
         // 방에 입장할 때 입력한 닉네임
         String loggedUser = (String) sessionNameLoggedUserParam.getLoggedUser();
+        // 실제 유저 번호
+        String userNo = (String) sessionNameLoggedUserParam.getUserNo();
         // 방의 호스트인지 판별하는 변수
         Boolean isHost = (Boolean) sessionNameLoggedUserParam.getIsHost();
 
+        System.out.println("sessionName : " + sessionName + " loggedUser : " + loggedUser + " userNo : " + userNo + " isHost : " + isHost);
+
+        if (loggedUser == null || loggedUser.length() == 0 || loggedUser.length() > 10) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
         // 토큰을 요청한 유저에게 부여할 권한
-        // SUBSCRIBER : stream 수신만 가능
-        // PUBLISHER : SUBSCRIBER + stream 전송 가능
-        // MODERATOR : PUBLISHER + 강제로 다른 사람의 연결을 끊을 수 있음
+        //  SUBSCRIBER : stream 수신만 가능
+        //  PUBLISHER : SUBSCRIBER + stream 전송 가능
+        //  MODERATOR : PUBLISHER + 강제로 다른 사람의 연결을 끊을 수 있음
         OpenViduRole role = OpenViduRole.PUBLISHER;
         if (isHost) {
             role = OpenViduRole.MODERATOR;
@@ -115,6 +124,10 @@ public class SessionsController {
         if (this.mapSessions.get(sessionName) != null) {
             System.out.println("Existing session " + sessionName);
             try {
+                // 블랙리스트에 있는 경우 403 에러를 발생시킨다.
+                if (this.mapBlackList.get(sessionName).contains(userNo)) {
+                    return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+                };
 
                 // Generate a new Connection with the recently created connectionProperties
                 String token = this.mapSessions.get(sessionName).createConnection(connectionProperties).getToken();
@@ -156,6 +169,9 @@ public class SessionsController {
             this.mapSessionNamesTokens.get(sessionName).put(token, role);
             // 입찰 정보 저장 deque 생성
             this.mapBids.put(sessionName, new ArrayDeque<>());
+            // 블랙리스트 생성
+            this.mapBlackList.put(sessionName, new HashSet<>());
+
             // 응답에 토큰 세팅
             response.setToken(token);
 
@@ -172,6 +188,7 @@ public class SessionsController {
     @ApiOperation(value = "User 제거", notes = "session에 접속해있는 User의 token을 제거한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = JSONObject.class),
+            @ApiResponse(code = 202, message = "이미 처리된 요청", response = JSONObject.class),
             @ApiResponse(code = 404, message = "잘못된 요청", response = JSONObject.class),
             @ApiResponse(code = 500, message = "서버 오류", response = JSONObject.class)
     })
@@ -182,29 +199,42 @@ public class SessionsController {
 
         // Retrieve the params from BODY
         String sessionName = (String) sessionNameToken.getSessionName();
-        String token = (String) sessionNameToken.getToken();
+        String cameraToken = (String) sessionNameToken.getCameraToken();
+//        String screenToken = (String) sessionNameToken.getScreenToken();
+        String userNo = (String) sessionNameToken.getUserNo();
+        String reason = (String) sessionNameToken.getReason();
+
+//        System.out.println("cameraToken : " + cameraToken + " screenToken : " + screenToken);
+
+        if (reason.equals("kick-out")) {
+            mapBlackList.get(sessionName).add(userNo);
+        }
 
         // If the session exists
-        if (this.mapSessions.get(sessionName) != null && this.mapSessionNamesTokens.get(sessionName) != null) {
-
+         if (this.mapSessions.get(sessionName) != null && this.mapSessionNamesTokens.get(sessionName) != null) {
+//            this.mapSessionNamesTokens.get(sessionName).remove(screenToken);
             // If the token exists
-            if (this.mapSessionNamesTokens.get(sessionName).remove(token) != null) {
+            if (this.mapSessionNamesTokens.get(sessionName).remove(cameraToken) != null) {
+
                 // User left the session
                 if (this.mapSessionNamesTokens.get(sessionName).isEmpty()) {
                     // Last user left: session must be removed
                     this.mapSessions.remove(sessionName);
+                    this.mapBids.remove(sessionName);
+                    this.mapBlackList.remove(sessionName);
                 }
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else {
+            }
+            else {
                 // The TOKEN wasn't valid
-                System.out.println("Problems in the app server: the TOKEN wasn't valid");
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                System.out.println("Problems in the app server: the TOKEN is not in the map. Maybe the auction is already finished");
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
             }
 
         } else {
             // The SESSION does not exist
             System.out.println("Problems in the app server: the SESSION does not exist");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
     }
 
@@ -241,6 +271,7 @@ public class SessionsController {
         sessionToClose.close();
         mapSessions.remove(sessionName);
         mapSessionNamesTokens.remove(sessionName);
+        mapBids.remove(sessionName);
         return new ResponseEntity<>("Session closed", HttpStatus.OK);
     }
 
@@ -253,6 +284,17 @@ public class SessionsController {
         }
     }
 
+    @PostMapping("/bidstart")
+    public ResponseEntity<String> startBid(@RequestBody Map<String, Object> info) throws Exception {
+        String sessionName = (String)info.get("sessionName");
+
+        Long houseNo = Long.parseLong(sessionName);
+        Houses house=housesService.findEntityById(houseNo);
+        // house 상태를 경매 시작(입장 불가)로 변경
+        house.setHouseStatus(2);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
     // 입찰 현황을 갱신한다
     @PutMapping("/bid")
     public ResponseEntity<ArrayDeque<ResultOrdersSaveDto>> updateBid(@RequestBody Map<String, Object> bid) throws Exception {
@@ -261,18 +303,28 @@ public class SessionsController {
         String userNo = (String) bid.get("userNo");
         String priceToBid = (String) bid.get("priceToBid");
 
+        // 금액 유효성 검사
+        if (priceToBid.length() > 13 || Long.parseLong(priceToBid) < 0) {
+            return new ResponseEntity<>(null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+
         System.out.println("bidder: " + userName + "userNo: " + userNo + " priceToBid: " + priceToBid + " mySessionId: " + sessionName);
         ResultOrdersSaveDto newBid = new ResultOrdersSaveDto(Long.parseLong(userNo), Long.parseLong(sessionName), Integer.parseInt(priceToBid));
-        
+
+
         // 해당 경매장 입찰 정보를 담을 map이 존재하지 않는다면 경매가 종료된 것이므로 417을 return
         if (!mapBids.containsKey(sessionName)) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
-        // 요청으로 들어온 가격이 서버에 저장된 현재 최고가보다 낮다면 203을 return
+        // 새로 입찰한 가격이 서버에 저장된 현재 최고가보다 낮거나,
+        // 새로 입찰한 유저가 기존 최고가를 입찰한 유저와 같다면 203을 return
         ArrayDeque<ResultOrdersSaveDto> queue = mapBids.get(sessionName);
-        if (!queue.isEmpty() && queue.getLast().getOrderPrice() > newBid.getOrderPrice()) {
+        if (!queue.isEmpty() &&
+                (queue.getLast().getOrderPrice() > newBid.getOrderPrice()
+                        || queue.getLast().getUserNo() == newBid.getUserNo())) {
             return new ResponseEntity<>(null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
+
         // 적은 금액에서 큰 금액 순으로 저장한다.
         queue.addLast(newBid);
         // 3개를 초과하는 입찰 데이터는 필요 없으므로 제거한다.
@@ -302,11 +354,13 @@ public class SessionsController {
                 user.getResults().add(resultOrders);
                 house.getResults().add(resultOrders);
             }
-            // 실시간 경매 결과 저장소를 제거한다.
-            mapBids.remove(sessionName);
-        } else {
-            return new ResponseEntity<>("No Bids", HttpStatus.OK);
         }
+
+
+        mapSessions.remove(sessionName);
+        mapSessionNamesTokens.remove(sessionName);
+        // 실시간 경매 결과 저장소를 제거한다.
+        mapBids.remove(sessionName);
 
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }

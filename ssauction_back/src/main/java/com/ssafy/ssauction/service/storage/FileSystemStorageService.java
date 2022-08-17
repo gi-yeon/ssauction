@@ -33,7 +33,6 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
         this.itemImgLocation = rootLocation.resolve("item");
         this.profileImgLocation = rootLocation.resolve("profile");
-
     }
 
     @Override

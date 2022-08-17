@@ -1,44 +1,45 @@
 <template>
   <div>
-    <input
+    <input style="margin-top:20px"
       type="text"
       name="title"
       id="title"
       v-model="state.boardTitle"
       readonly
     />
+
     <div></div>
-    <textarea
+    <textarea style="margin-top:20px"
       name="boardContent"
       id="boardContent"
-      cols="30"
+      cols="60"
       rows="10"
       v-model="state.boardContent"
       readonly
     >
     </textarea>
 
-    <div>
-      <button v-show="state.isWriter" @click="ModifyArticle">글수정</button>
-      <button v-show="state.isWriter" @click="DeleteArticle">글삭제</button>
+    <div style="margin-top:20px">
+      <button class="btn_pink" v-show="state.isWriter" @click="ModifyArticle">글수정</button>&nbsp;&nbsp;
+      <button class="btn_pink" v-show="state.isWriter" @click="DeleteArticle">글삭제</button>&nbsp;&nbsp;
       <router-link to="/board">
-        <button>목록</button>
+        <button class="btn_yellow">목록</button>
       </router-link>
     </div>
-    <board-comment-item
+    <board-comment-item style="margin-top:20px"
       v-for="(comment, index) in state.comments"
       :key="index"
       v-bind="comment"
     ></board-comment-item>
     <div>
-      <textarea
+      <textarea style="margin-top:20px"
         name="commentRegister"
         id="commentRegister"
-        cols="30"
+        cols="50"
         rows="2"
         v-model="state.commentContent"
-      ></textarea>
-      <button @click="registerComment">댓글 달기</button>
+      ></textarea>&nbsp;&nbsp;
+      <button class="btn_pink2" @click="registerComment">댓글 달기</button>
     </div>
     <div></div>
   </div>
@@ -116,6 +117,7 @@ export default {
         state.userNickname = data.board.userNickname;
         state.comments = data.board.comments;
 
+
         if (state.userNo != null && data.board.userNo == state.userNo)
           state.isWriter = true;
         else state.isWriter = false;
@@ -130,3 +132,59 @@ export default {
   },
 };
 </script>
+
+
+<style>
+.title {
+  width: 400px;
+  border: 20px;
+  /* background-color: rgba(255, 211, 182, 0.741); */
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
+textarea {
+  outline: none;
+  resize: none;
+  padding: 20px;
+  background-color: rgba(158, 158, 158, 0.212);
+  border: none;
+  border-radius: 10px;
+}
+
+textarea:focus{
+  outline: none;
+}
+
+.btn_pink {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_pink2 {
+  width: 80px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgb(255, 211, 182, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+</style>

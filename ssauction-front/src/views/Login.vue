@@ -23,31 +23,16 @@
     />
     <br />
     <br />
-    <button @click="login" width="500px" class="btn_yellow">로그인</button>
+    <button @click="login" width="500px" class="btn_yellow3">로그인</button>
     <br />
     <br />
-    <button class="btn_pink">아이디 찾기</button> &nbsp;
-    <button class="btn_pink">비밀번호 찾기</button>
+    <button @click="findid" class="btn_pink3">아이디 찾기</button> &nbsp;
+    <button @click="resetpwd" class="btn_pink3">비밀번호 찾기</button>
     <br />
     <br />
     <router-link to="/signUp" class="toSignUp"
       >회원이 아니신가요? join us😊</router-link
     >
-    <!-- <a href="/oauth2/authorization/google"
-      ><img
-        src="@\assets\imgs\google.png"
-        alt="구글 로그인"
-        class="logo_resize" /></a
-    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href=""
-      ><img
-        src="@\assets\imgs\naver.png"
-        alt="네이버 로그인"
-        class="logo_resize"
-    /></a> -->
-    <!-- <br>
-    <button class="btn_pink">구글로 회원가입</button> &nbsp;
-    <button class="btn_pink">네이버로 회원가입</button> &nbsp; -->
   </div>
 </template>
 
@@ -70,6 +55,14 @@ export default {
   mounted() {},
 
   methods: {
+    findid() {
+      this.$router.push('/findid')
+    },
+
+    resetpwd() {
+      this.$router.push('/resetpwd')
+    },
+
     login() {
       //user 모듈의 userLogin으로 보낸다.
       this.$store.dispatch("user/userLogin", this.loginInfo);
@@ -97,19 +90,19 @@ input:focus {
   outline: 3px rgb(94, 94, 94);
 }
 
-.btn_pink {
-  width: 245px;
+.btn_pink3 {
+  width: 150px;
   height: 50px;
   border: 0;
   background-color: rgb(255, 170, 165);
-  border-radius: 20px;
+  border-radius: 45px;
   color: rgb(94, 94, 94);
   text-align: center;
 }
 
-.btn_yellow {
-  width: 500px;
-  height: 50px;
+.btn_yellow3 {
+  width: 150px;
+  height: 45px;
   border: 0;
   background-color: rgb(255, 211, 182);
   border-radius: 20px;

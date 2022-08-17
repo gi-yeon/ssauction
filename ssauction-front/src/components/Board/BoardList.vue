@@ -1,20 +1,22 @@
 <template>
-  <div class="table">
-    <h1>BoardList</h1>
+<!-- 게시판 조회 화면 -->
+  <div class="table" style="border-color: rgb(94, 94, 94)">
     <div class="register">
       <div>
         <select v-model="state.searchType">
-          <option disabled selected value="">-선택-</option>
+          <option disabled selected value="">선택</option>
           <option value="title">제목</option>
           <option value="userNickname">작성자</option>
-        </select>
-        <input type="text" name="search" id="search" v-model="state.search" />
-        <button @click="getArticles(0)">검색</button>
+        </select>&nbsp; &nbsp;
+        <input type="text" name="search" id="search" v-model="state.search" />&nbsp; &nbsp;
+        <button class="btn-search" @click="getArticles(0)">검색</button>&nbsp; &nbsp;
+        <button class="btn-search" @click="mvBoardRegister">글쓰기</button>
       </div>
-      <button v-show="state.isUser" @click="mvBoardRegister">글쓰기</button>
+      
     </div>
-    <table class="boardtable">
-      <colgroup>
+    <br>
+    <table class="boardtable table-hover table-sm align-center caption-top table-responsive"  style="margin-left: auto; margin-right: auto; bordercolor: rgb(94, 94, 94)">
+      <colgroup style="align:center;">
         <col style="width: 10%" />
         <col style="width: 50%" />
         <col style="width: 20%" />
@@ -36,14 +38,17 @@
         ></board-list-item>
       </tbody>
     </table>
+    <br>
+
+  <!-- 페이지네이션 / 10개당 1페이지로 구성 -->
     <div class="btnGroup">
-      <button @click="getArticles(state.startPage - 10)">〈〈</button>
+      <button class="btn-arrow" @click="getArticles(state.startPage - 10)">〈〈</button>
       <span v-for="(p, index) in state.pages" :key="index">
-        <button @click="getArticles(p - 1)">
+        <button style="border:0px;" @click="getArticles(p - 1)">
           {{ p }}
         </button>
       </span>
-      <button @click="getArticles(state.totalPages + 10)">〉〉</button>
+      <button class="btn-arrow" @click="getArticles(state.totalPages + 10)">〉〉</button>
     </div>
   </div>
 </template>
@@ -54,6 +59,7 @@ import axios from "@/utils/axios";
 import { useRouter } from "vue-router";
 import { reactive } from "vue";
 // npm install universal-cookie
+
 import { useStore } from "vuex";
 
 export default {
@@ -105,6 +111,7 @@ export default {
           },
         })
         .then(({ data }) => {
+          // console.log(data);
           state.currentPage = data.list.number;
           state.totalPages = data.list.totalPages;
           state.numberOfElements = data.list.numberOfElements;
@@ -141,3 +148,73 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+.btn-arrow{
+  background-color: #f8e6e0;
+  color: #6e6e6e;
+  position: relative;
+  border: none;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  margin-top: 10px;
+}
+
+.btn-search {
+  background-color: rgb(255, 211, 182);
+  color: #6e6e6e;
+  position: relative;
+  border: none;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  margin-top: 10px;
+}
+
+input {
+  width: 400px;
+  height: 40px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
+input:focus {
+  outline: 3px rgb(94, 94, 94);
+}
+
+
+select {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 35px;
+  background: rgb(255, 211, 182);
+  background-size: 20px;
+  padding: 5px 30px 5px 10px;
+  border-radius: 4px;
+  outline: 0 none;
+  border: 0;
+  color: rgb(94, 94, 94);
+}
+.select option {
+  background: rgb(255, 211, 182);
+  color: rgb(255, 211, 182);
+  padding: 3px 0;
+  border: 0px;
+}
+</style>
