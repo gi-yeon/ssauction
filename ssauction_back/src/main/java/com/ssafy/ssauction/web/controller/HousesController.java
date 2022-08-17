@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONValue;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,10 +41,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -127,27 +126,19 @@ public class HousesController {
         return new ResponseEntity<>("created", HttpStatus.OK);
     }
 
-    @GetMapping("/searchAll/{sellerNo}")
-    public ResponseEntity<List<HousesItemsResponseDto>> searchAllBySeller(@PathVariable Long sellerNo) {
-        Users user = usersService.findEntityById(sellerNo);
-        List<Items> itemList=user.getSellItems();
-        HousesResponseDto hr = null;
-        List<ItemImgsResponseDto> iir = null;
-        List<HousesItemsResponseDto> result = new ArrayList<>();
-        for (Items item : itemList) {
-            ItemsResponseDto ir = new ItemsResponseDto(item);
-            Houses house = item.getHouse();
-            if (house != null) {
-                hr = new HousesResponseDto(house);
-                List<ItemImgs> itemImgs = item.getImages();
-                iir = new ArrayList<>();
-                for (ItemImgs i : itemImgs) {
-                    iir.add(new ItemImgsResponseDto(i));
-                }
-            }
-            result.add(new HousesItemsResponseDto(ir, iir, hr));
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @GetMapping("/searchAll")
+    public ResponseEntity<Map<String, Object>> searchAll(@RequestParam("page") int page,
+                                                                  @RequestParam("size") int size,
+                                                                  @RequestParam(value = "search", required = false) String search,
+                                                                @RequestParam(value="houseStatus", required=false) int houseStatus) {
+        Map<String, Object> resultMap = new HashMap<>();
+        System.out.println("page : " + page + " size: " + size + " search : " + search + " houseStatus : " + houseStatus);
+        HttpStatus status = HttpStatus.OK;
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        resultMap.put("list", housesService.houseList(pageRequest, search, houseStatus));
+        System.out.println(resultMap.get("list"));
+        return new ResponseEntity<>(resultMap, status);
     }
     
     @GetMapping("{itemNo}")

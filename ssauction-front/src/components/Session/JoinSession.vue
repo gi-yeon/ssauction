@@ -10,11 +10,11 @@
       >
         <div class="" style="width: 50%">
           <div class="m-5">
-            <label class="m-3">Session</label>
+            <label class="m-3">방 이름</label>
             <h1>{{ sessionName }}</h1>
           </div>
           <div class="m-5 row">
-            <label class="my-3">Participant</label>
+            <label class="my-3">이름</label>
             <input
               placeholder="다른 사람들에게 보여질 이름을 입력하세요(최대 10글자)"
               v-model="myUserName"
@@ -29,7 +29,7 @@
               class="session-btn btn-toggle-audio m-5"
               @click="$emit('toggleAudio')"
             >
-              <div v-if="isAudioOn">
+              <div v-if="isAudioOn" style="color: green">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -45,7 +45,7 @@
                 </svg>
                 <p>마이크 켜짐</p>
               </div>
-              <div v-else>
+              <div v-else style="color: red">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -69,7 +69,7 @@
               class="session-btn btn-toggle-camera m-5"
               @click="$emit('toggleVideo')"
             >
-              <div v-if="isVideoOn">
+              <div v-if="isVideoOn" style="color: green">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -85,7 +85,7 @@
                 </svg>
                 <p>카메라 켜짐</p>
               </div>
-              <div v-else>
+              <div v-else style="color: red">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -134,8 +134,10 @@ export default {
   data() {
     return {
       myUserName: null,
+      startTime: 30,
     };
   },
+
   computed: {
     isValidUsername() {
       return this.myUserName ? true : false;

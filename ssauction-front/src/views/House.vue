@@ -25,20 +25,15 @@
         <h4>경매 일시</h4>
       </div>
       <div class="col-2 data">
-        <v-date-picker
-          v-model="house.houseDate"
-          mode="dateTime"
-          locale="ko-KR"
-          :model-config="modelConfig"
-          is24hr
-          placeholder="경매 날짜를 선택하세요"
-          class="input_style"
-          style="margin-bottom: 0.5rem"
-        >
-          <template v-slot="{ inputValue, inputEvents }">
-            <input :value="inputValue" v-on="inputEvents" />
-          </template>
-        </v-date-picker>
+        <div class="row" house-input>
+          <el-date-picker
+            v-model="house.houseAucTime"
+            type="datetime"
+            placeholder="Pick a Date"
+            format="YYYY/MM/DD hh:mm:ss"
+            value-format="YYYY-MM-DD hh:mm:ss"
+          />
+        </div>
       </div>
     </div>
     <div class="row house-input">
@@ -397,10 +392,8 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        // itemSellerNo: null,
         itemDealStatus: "SELL",
         userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
-        // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
         itemNo: 1,
@@ -408,9 +401,7 @@ export default {
       },
       house: {
         houseTitle: null,
-        // Datepicker 관련 구현이 아직 완벽하지 않아
-        // houseAucTime, houseStatus 값을 우선 하드코딩된 값으로 대체했다.
-        houseAucTime: "2022-02-22T22:22:22",
+        houseAucTime: null,
         houseStatus: 0,
       },
       houseDate: new Date(),
@@ -440,6 +431,10 @@ export default {
       console.log(this.item);
       console.log(this.ctgr);
 
+      this.house.houseAucTime =
+        this.house.houseAucTime.split(" ")[0] +
+        "T" +
+        this.house.houseAucTime.split(" ")[1];
       // file은 multipart/form-data 형식으로 전송되어야 한다.
       // multipart/form-data 형식으로 요청하면 JSON을 바로 body에 넣는 방식을 사용할 수 없다.
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.

@@ -3,13 +3,12 @@ package com.ssafy.ssauction.service.houses;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.houses.HousesRepository;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.users.UsersRepository;
 import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,5 +28,9 @@ public class HousesService {
 
     public Houses findEntityById(Long houseNo){
         return housesRepository.findById(houseNo).get();
+    }
+
+    public Page<Houses> houseList(PageRequest pageRequest, String search, int houseStatus) {
+            return housesRepository.findByHouseTitleContainingAndHouseStatus(pageRequest, search, houseStatus);
     }
 }

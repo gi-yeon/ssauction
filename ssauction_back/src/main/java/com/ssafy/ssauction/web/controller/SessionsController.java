@@ -80,6 +80,7 @@ public class SessionsController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = SessionsTokenResponseDto.class),
             @ApiResponse(code = 404, message = "잘못된 요청", response = SessionsTokenResponseDto.class),
+            @ApiResponse(code = 406, message = "잘못된 닉네임", response = SessionsTokenResponseDto.class),
             @ApiResponse(code = 500, message = "서버 오류", response = SessionsTokenResponseDto.class)
     })
     public ResponseEntity<SessionsTokenResponseDto> getToken(@RequestBody @ApiParam(value="세션 이름 및 유저 정보", required = true) SessionsCreateJoinRequestDto sessionNameLoggedUserParam)
@@ -99,6 +100,9 @@ public class SessionsController {
 
         System.out.println("sessionName : " + sessionName + " loggedUser : " + loggedUser + " userNo : " + userNo + " isHost : " + isHost);
 
+        if (loggedUser == null || loggedUser.length() == 0 || loggedUser.length() > 10) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
         // 토큰을 요청한 유저에게 부여할 권한
         //  SUBSCRIBER : stream 수신만 가능
         //  PUBLISHER : SUBSCRIBER + stream 전송 가능
@@ -280,6 +284,17 @@ public class SessionsController {
         }
     }
 
+    @PostMapping("/bidstart")
+    public ResponseEntity<String> startBid(@RequestBody Map<String, Object> info) throws Exception {
+        String sessionName = (String)info.get("sessionName");
+
+        Long houseNo = Long.parseLong(sessionName);
+        Houses house=housesService.findEntityById(houseNo);
+        // house 상태를 경매 시작(입장 불가)로 변경
+        house.setHouseStatus(2);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
     // 입찰 현황을 갱신한다
     @PutMapping("/bid")
     public ResponseEntity<ArrayDeque<ResultOrdersSaveDto>> updateBid(@RequestBody Map<String, Object> bid) throws Exception {
@@ -288,9 +303,15 @@ public class SessionsController {
         String userNo = (String) bid.get("userNo");
         String priceToBid = (String) bid.get("priceToBid");
 
+        // 금액 유효성 검사
+        if (priceToBid.length() > 13 || Long.parseLong(priceToBid) < 0) {
+            return new ResponseEntity<>(null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+
         System.out.println("bidder: " + userName + "userNo: " + userNo + " priceToBid: " + priceToBid + " mySessionId: " + sessionName);
         ResultOrdersSaveDto newBid = new ResultOrdersSaveDto(Long.parseLong(userNo), Long.parseLong(sessionName), Integer.parseInt(priceToBid));
-        
+
+
         // 해당 경매장 입찰 정보를 담을 map이 존재하지 않는다면 경매가 종료된 것이므로 417을 return
         if (!mapBids.containsKey(sessionName)) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -303,6 +324,7 @@ public class SessionsController {
                         || queue.getLast().getUserNo() == newBid.getUserNo())) {
             return new ResponseEntity<>(null, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
+
         // 적은 금액에서 큰 금액 순으로 저장한다.
         queue.addLast(newBid);
         // 3개를 초과하는 입찰 데이터는 필요 없으므로 제거한다.

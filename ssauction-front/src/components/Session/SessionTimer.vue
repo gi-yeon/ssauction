@@ -10,7 +10,6 @@ export default {
   data() {
     return {
       timer: null,
-      startTime: 5,
       pauseTime: null,
       timeCounter: null,
       isPaused: false,
@@ -19,6 +18,7 @@ export default {
   props: {
     remainingTime: Number,
     isHost: Boolean,
+    startTime: Number,
   },
   mounted() {
     this.timerStop(this.timer);

@@ -5,6 +5,7 @@
       :isAudioOn="isAudioOn"
       :isVideoOn="isVideoOn"
       :sessionName="sessionName"
+      :startTime="startTime"
       @joinSession="joinSession"
       @switchModal="switchModal"
       @toggleVideo="toggleVideo"
@@ -13,12 +14,12 @@
     <div class="row" id="session" style="height: 100%" v-if="sessionCamera">
       <div class="row" id="session-header" style="height: 8%">
         <div class="col">
-          <h1 id="session-title">{{ mySessionId }}</h1>
+          <h1 id="session-title">{{ sessionName }}</h1>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-9" id="session-main-container">
-          <div class="row">
+      <div class="row" style="height: 92%">
+        <div class="col-md-9" id="session-main-container" style="height: 100%">
+          <div class="row" style="height: 25%">
             <div id="session-video-container">
               <participant-video
                 class="session-publisher float-left m-1"
@@ -38,8 +39,8 @@
               />
             </div>
           </div>
-          <div class="row">
-            <div class="session-main-video">
+          <div class="row" style="height: 75%">
+            <div class="session-main-video" style="height: 40%">
               <main-video
                 :stream-manager="mainStreamManager"
                 :key="mainStreamManager"
@@ -54,17 +55,39 @@
                 ref="timer"
                 :remainingTime="remainingTime"
                 :isHost="isHost"
+                :startTime="startTime"
                 @finishAuction="finishAuctionFromHost"
                 @tickTimer="tickTimer"
               ></session-timer>
               <div>
-                <button @click="openBid = !openBid" :disabled="isFinished">
+                <button
+                  v-if="!isHost"
+                  @click="openBid = !openBid"
+                  :disabled="isFinished"
+                  class="btn btn-warning"
+                >
                   입찰하기
+                </button>
+                <p>제한시간 : {{ startTime }}초</p>
+                <el-input-number
+                  v-if="isHost"
+                  v-model="startTime"
+                  :min="1"
+                  :max="999"
+                  @change="handleChange"
+                />
+                <button
+                  v-if="isHost"
+                  class="btn btn-warning"
+                  :disabled="isStarted"
+                  @click="startAuctionFromHost"
+                >
+                  경매 시작
                 </button>
               </div>
             </div>
             <div class="row">최고 입찰자 : {{ currentBidder }}</div>
-            <div class="row">최고 금액 : {{ currentPrice }}</div>
+            <div class="row">최고 금액 : {{ formatMoney(currentPrice) }}</div>
           </div>
           <div class="row" id="session-chat-panel">
             <div class="row mb-3" id="session-chat-history">
@@ -137,7 +160,6 @@
             @leaveSession="leaveSession"
             @toggleVideo="toggleVideo"
             @toggleAudio="toggleAudio"
-            @startAuction="startAuctionFromHost"
             @setFreeze="setFreezeFromHost"
             @undoFreeze="undoFreezeFromHost"
           />
@@ -147,80 +169,135 @@
     <!-- 입찰 모달 modal  -->
     <Teleport to="body">
       <div v-if="openBid && !isFinished" class="bid-modal">
-        <div class="row modal-title"><h1>경고</h1></div>
-        <div class="row modal-warn">
-          <h3>입찰을 하게 되면 되돌릴 수 없습니다.</h3>
+        <div class="row modal-title" style="color: red"><h1>경고</h1></div>
+        <div class="row modal-warn" style="color: red">
+          <h3>입찰하면 되돌릴 수 없습니다.</h3>
+        </div>
+        <div>
+          <!-- <div class="col"> -->
+          <button
+            class="btn btn-primary btn-price"
+            @click="priceToBid = Number(priceToBid) + 1000 + ''"
+          >
+            1,000
+          </button>
+          <!-- </div>
+          <div class="col"> -->
+          <button
+            class="btn btn-warning btn-price"
+            @click="priceToBid = Number(priceToBid) + 5000 + ''"
+          >
+            5,000
+          </button>
+          <!-- </div>
+          <div class="col"> -->
+          <button
+            class="btn btn-success btn-price"
+            @click="priceToBid = Number(priceToBid) + 10000 + ''"
+          >
+            10,000
+          </button>
+          <!-- </div> -->
+          <!-- <div class="col"> -->
+          <button class="btn btn-danger btn-price" @click="resetPriceToBid">
+            reset
+          </button>
+          <!-- </div> -->
+          <!-- <div class="col-4"> -->
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="manualInput"
+              v-model="isManual"
+            />
+            <label class="form-check-label" for="manualInput"
+              >직접 입력하기</label
+            >
+          </div>
+          <!-- </div> -->
         </div>
         <div class="row">
-          <div class="col">
-            <button
-              class="btn btn-primary"
-              @click="priceToBid = Number(priceToBid) + 1000 + ''"
-            >
-              1,000
-            </button>
-          </div>
-          <div class="col">
-            <button
-              class="btn btn-warning"
-              @click="priceToBid = Number(priceToBid) + 5000 + ''"
-            >
-              5,000
-            </button>
-          </div>
-          <div class="col">
-            <button
-              class="btn btn-success"
-              @click="priceToBid = Number(priceToBid) + 10000 + ''"
-            >
-              10,000
-            </button>
-          </div>
-          <div class="col">
-            <button class="btn btn-danger" @click="resetPriceToBid">
-              reset
-            </button>
-          </div>
-          <div class="col-4">
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="manualInput"
-                v-model="isManual"
-              />
-              <label class="form-check-label" for="manualInput"
-                >직접 입력하기</label
-              >
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <input type="text" v-model="priceToBid" :disabled="!isManual" />
+          <input
+            type="text"
+            v-model="priceToBid"
+            :disabled="!isManual"
+            @input="checkMoney"
+            maxlength="13"
+          />
         </div>
         <div class="row">
           {{ priceToKor }}
         </div>
         <div class="row">
           <div class="col">
-            <button @click="makeBid" :disabled="isFinished">입찰</button>
+            <button
+              class="btn btn-primary"
+              @click="makeBid"
+              :disabled="isFinished || isInvalidPrice"
+            >
+              입찰
+            </button>
           </div>
-          <div class="col"><button @click="closeModal">닫기</button></div>
+          <div class="col">
+            <button class="btn btn-danger" @click="closeModal">닫기</button>
+          </div>
         </div>
       </div>
     </Teleport>
     <Teleport to="body">
-      <div v-if="isFinished" class="result-modal">
+      <div v-if="isFinished" class="result-modal" style="text-align: center">
         <div class="row">
-          <h1>최종 가격 : {{ this.currentPrice }}</h1>
+          <h1>최종 가격 : {{ formatMoney(this.currentPrice) }}</h1>
         </div>
         <div class="row">
-          <h1 v-if="this.currentBidder">
-            {{ this.currentBidder }}에게 최종 낙찰 되었습니다!
-          </h1>
-          <h1 v-else>유찰되었습니다.</h1>
+          <div class="result-text">
+            <h3 v-if="this.currentBidder">
+              {{ this.currentBidder }}에게 최종 낙찰 되었습니다!
+            </h3>
+            <h3 v-else>유찰되었습니다.</h3>
+          </div>
+          <div class="bidder-rank">
+            <div v-for="(bidder, index) in this.top3List" :key="index">
+              <div class="bidder-line">
+                <div
+                  style="display: inline-block; padding: 0.5em 0 0.5em 0"
+                  :class="'bidder-line' + index"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-award-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="m8 0 1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z"
+                    />
+                    <path
+                      d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"
+                    />
+                  </svg>
+                </div>
+                <div style="display: inline-block; padding: 0.5em">
+                  {{ index + 1 + "위" }}
+                </div>
+                <div style="display: inline-block; padding: 0.5em">
+                  {{ bidder.bidder }}
+                </div>
+                <div style="display: inline-block; padding: 0.5em">
+                  {{ formatMoney(bidder.priceToBid) }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="row"><button @click="leaveSession">OK</button></div>
+        <div class="row m-3">
+          <button class="btn btn-warning" @click="leaveSession">
+            경매 종료
+          </button>
+        </div>
       </div>
     </Teleport>
   </div>
@@ -251,28 +328,30 @@ export default {
     SessionTimer,
   },
   mounted() {
-    const URLParams = new URL(window.location).searchParams;
-    console.log(`isHost: ${URLParams.get("isHost")}`);
-    this.mySessionId = URLParams.get("sessionId");
-    this.isHost = URLParams.get("isHost") === "true" ? true : false;
+    this.mySessionId = this.$route.params.sessionId;
+    this.sessionName = this.$route.params.sessionTitle;
+    this.isHost = this.$route.params.isHost == "true" ? true : false;
     this.userNo = this.$store.getters["user/userNo"];
+    console.log(this.isHost);
+    // 배경색 검정색으로 바꾸기
+    document.body.classList.add("dark-mode");
+  },
+
+  unmounted() {
+    document.body.classList.remove("dark-mode");
   },
 
   data() {
     return {
       OVCamera: undefined,
-      // OVScreen: undefined,
       sessionCamera: undefined,
-      // sessionScreen: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
       publisherId: undefined,
       publisherMonitor: undefined,
       subscribersCamera: [],
-      // subscribersScreen: [],
 
       cameraToken: null,
-      // screenToken: null,
       mySessionId: null,
       sessionName: null,
       myUserName: null,
@@ -288,7 +367,6 @@ export default {
       // 마이크, 카메라 설정
       isVideoOn: true,
       isAudioOn: true,
-      // isMonitor: false,
       openBid: false,
       isManual: false,
 
@@ -297,15 +375,24 @@ export default {
       currentPrice: "0",
       priceToBid: "0",
       isFinished: false,
+      isStarted: false,
       hostId: null,
       remainingTime: 0,
+      startTime: 30,
     };
   },
   computed: {
     ...mapState(["user"]),
-
+    isInvalidPrice() {
+      return (
+        isNaN(this.priceToBid) ||
+        Number(this.priceToBid) <= Number(this.currentPrice)
+      );
+    },
     priceToKor() {
-      let hanA = new Array(
+      let number = this.priceToBid;
+
+      const koreanNumber = [
         "",
         "일",
         "이",
@@ -316,38 +403,34 @@ export default {
         "칠",
         "팔",
         "구",
-        "십"
-      );
-      let danA = new Array(
-        "",
-        "십",
-        "백",
-        "천",
-        "",
-        "십",
-        "백",
-        "천",
-        "",
-        "십",
-        "백",
-        "천",
-        "",
-        "십",
-        "백",
-        "천"
-      );
-      let num = this.priceToBid + "";
-      let result = "";
-      for (let i = 0; i < num.length; i++) {
-        let str = "";
-        let han = hanA[num.charAt(num.length - (i + 1))];
-        if (han != "") str += han + danA[i];
-        if (i == 4) str += "만";
-        if (i == 8) str += "억";
-        if (i == 12) str += "조";
-        result = str + result;
+      ];
+      const tenThousandUnit = ["", "만", "억", "조"];
+      const tenUnit = ["", "십", "백", "천"];
+      let answer = "";
+      let unit = 10000;
+      let index = 0;
+      let division = Math.pow(unit, index);
+
+      while (Math.floor(number / division) > 0) {
+        const mod = Math.floor((number % (division * unit)) / division);
+        if (mod) {
+          const modToArray = mod.toString().split("");
+          const modLength = modToArray.length - 1;
+          const toKorean = modToArray.reduce((a, v, i) => {
+            if (!koreanNumber[v * 1] == "") {
+              a += `${koreanNumber[v * 1]}${tenUnit[modLength - i]}`;
+            }
+            return a;
+          }, "");
+          if (toKorean == "") {
+            answer = `${toKorean}` + answer;
+          } else {
+            answer = `${toKorean}${tenThousandUnit[index]}` + answer;
+          }
+        }
+        division = Math.pow(unit, ++index);
       }
-      return result + "원";
+      return "금 " + answer + "원";
     },
   },
 
@@ -396,6 +479,15 @@ export default {
 
     // 호스트 사이드 로직
     startAuctionFromHost() {
+      axios
+        .post(
+          "/sessions/bidstart",
+          JSON.stringify({ sessionName: this.mySessionId })
+        )
+        .then((data) => {
+          console.log(data);
+        });
+
       // 다른 클라이언트들에게 startAuction 메시지를 보내 isFinished를 false로 만든다.
       this.sessionCamera
         .signal({
@@ -438,6 +530,7 @@ export default {
     // 경매 시작
     // 클라이언트 사이드 로직
     startAuctionInClient(data) {
+      this.isStarted = true;
       this.isFinished = false;
       this.messageHistory.push(JSON.parse(data));
     },
@@ -465,11 +558,8 @@ export default {
         });
     },
 
-    joinSession() {
-      this.sessionCamera = true;
-    },
     // 세션 연결
-    joinSession_original(userName) {
+    joinSession(userName) {
       this.myUserName = userName;
       // --- Get an OpenVidu object ---
       this.OVCamera = new OpenVidu();
@@ -559,6 +649,16 @@ export default {
         (event) => {
           console.log(event.data); // Message
           this.undoHighlightSpeaker(event.data);
+        }
+      );
+
+      this.sessionCamera.on(
+        `signal:${this.mySessionId}/setstarttime`,
+        (event) => {
+          console.log(event.data); // Message
+          if (!isHost) {
+            this.setStartTime(event.data.message);
+          }
         }
       );
 
@@ -920,7 +1020,7 @@ export default {
       this.sessionCamera = false;
     },
 
-    leaveSession_original(reason) {
+    leaveSession(reason) {
       this.closeModal();
       console.log("leaveSession");
       console.log(this.cameraToken);
@@ -936,6 +1036,25 @@ export default {
       } else {
         data.reason = "normal";
       }
+
+      if (this.isHost) {
+        this.$refs.timer.timerStop();
+        this.sessionCamera
+          .signal({
+            data: JSON.stringify({
+              sender: "system : ",
+              message: "방장이 방을 나갔습니다. 경매가 중단됩니다.",
+            }),
+            to: [],
+            type: this.mySessionId + "/message",
+          })
+          .then(() => {
+            console.log();
+          });
+        this.message = null;
+      }
+
+      this.finishAuctionFromHost();
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (this.sessionCamera) this.sessionCamera.disconnect();
 
@@ -944,11 +1063,14 @@ export default {
         .then(() => {
           this.clearData();
         })
-        .catch(() => {
+        .catch((e) => {
           console.log("에러 발생");
+          console.log(e);
         });
-
       window.removeEventListener("beforeunload", this.leaveSession);
+      this.$router.push({
+        name: "Home",
+      });
     },
 
     clearData() {
@@ -1020,6 +1142,33 @@ export default {
     kickoutInClient() {
       this.leaveSession("kick-out");
     },
+    formatMoney(money) {
+      let str = "";
+      for (let i = 0; i < money.length; i++) {
+        if (i != 0 && i % 3 == 0) str += ",";
+        str += money.charAt(money.length - (i + 1));
+      }
+      return str.split("").reverse().join("") + "원";
+    },
+    checkMoney() {
+      if (this.priceToBid.length > 13) {
+        return this.priceToBid.slice(0, 13);
+      }
+    },
+    setStartTime(startTime) {
+      console.log("setStartTime");
+      this.startTime = startTime;
+    },
+    handleChange(value) {
+      this.sessionCamera.signal({
+        data: JSON.stringify({
+          sender: "system :",
+          message: value,
+        }),
+        to: [],
+        type: this.mySessionId + "/setstarttime",
+      });
+    },
   },
 };
 </script>
@@ -1050,9 +1199,9 @@ export default {
 .result-modal {
   position: fixed;
   z-index: 999;
-  top: 20%;
+  top: 50%;
   left: 50%;
-  margin-left: -150px;
+  transform: translate(-50%, -50%);
   background-color: white;
   width: auto;
 }
@@ -1070,10 +1219,11 @@ export default {
 
 #session-container {
   background-color: black;
+  color: white;
 }
 
 #session-chat-panel {
-  height: 70%;
+  height: 60%;
 }
 
 #session-chat-history {
@@ -1090,7 +1240,6 @@ export default {
 footer {
   bottom: 0;
   padding: 1em;
-  background-color: black;
 }
 textarea {
   resize: none;
@@ -1103,5 +1252,36 @@ textarea {
   margin-top: calc(var(--bs-gutter-y) * -1);
   margin-right: calc(var(--bs-gutter-x) * -0.5);
   margin-left: calc(var(--bs-gutter-x) * -0.5);
+}
+
+el-tabs {
+  --el-bg-color-overlay: black;
+  --el-fill-color-light: black;
+}
+
+.result-modal {
+  color: black;
+  padding: 2em;
+}
+.bid-modal {
+  color: black;
+  text-align: center;
+  padding: 2em;
+}
+
+.btn-price {
+  margin: 1%;
+}
+
+.bidder-line0 {
+  color: gold;
+}
+
+.bidder-line1 {
+  color: silver;
+}
+
+.bidder-line2 {
+  color: brown;
 }
 </style>
