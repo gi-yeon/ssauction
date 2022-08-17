@@ -1016,10 +1016,6 @@ export default {
       this.openBid = !this.openBid;
     },
 
-    leaveSession() {
-      this.sessionCamera = false;
-    },
-
     leaveSession(reason) {
       this.closeModal();
       console.log("leaveSession");

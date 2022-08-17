@@ -388,7 +388,6 @@ export default {
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
-        itemNo: -1,
         ctgrName: [],
       },
       house: {
@@ -419,10 +418,9 @@ export default {
     createHouse() {
       // this.house.houseAucTime = this.houseAucTime;
       console.log(this.house);
-
       console.log(this.item);
+      console.log("ctgr");
       console.log(this.ctgr);
-
       this.house.houseAucTime =
         this.house.houseAucTime.split(" ")[0] +
         "T" +
@@ -432,8 +430,10 @@ export default {
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
       const housejson = JSON.stringify(this.house);
       const itemjson = JSON.stringify(this.item);
-      console.log(itemjson);
       const ctgrjson = JSON.stringify(this.ctgr);
+
+      console.log(itemjson);
+
       const houseblob = new Blob([housejson], { type: "application/json" });
       const itemblob = new Blob([itemjson], { type: "application/json" });
       const ctgrblob = new Blob([ctgrjson], { type: "application/json" });
@@ -444,7 +444,6 @@ export default {
       formData.append("itemDto", itemblob);
       formData.append("houseDto", houseblob);
       formData.append("ctgrDto", ctgrblob);
-
       // Spring에서 여러 file을 자동으로 배열로 받기 위해서는 Json 리스트를 그대로 전달하면 안된다.
       // 같은 이름을 가진 여러 개의 file을 전송한다.
       for (let img of this.itemImages) {
@@ -455,28 +454,21 @@ export default {
         .post("/houses", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then((data) => {
+        .then(({ data }) => {
           console.log(data);
-          // this.itemNo = data.item_no
+          this.itemNo = data;
+          console.log(this.itemNo);
+          this.itemNo = data.item_no;
+          console.log(this.itemNo);
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
 
           this.$router.push({ name: "Home" });
         })
-        .then(() => {
-          axios.post("/categories", ctgrjson).then((data) => {
-            console.log(data);
-          });
-
-          // this.sendFile();
-          this.itemImages.splice(0);
-        })
         .catch((error) => {
           alert(error);
         });
-
-      console.log(ctgrjson);
     },
 
     deleteImg(index) {
