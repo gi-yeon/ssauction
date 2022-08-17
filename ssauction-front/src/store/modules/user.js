@@ -12,8 +12,8 @@ const state = {
     userNickname: "",
     userGrade: ""
   },
-  accessToken: "",
-  refreshToken: "",
+  // accessToken: "",
+  // refreshToken: "",
   //로그인 여부
   isLogin: false,
 };
@@ -160,8 +160,8 @@ const mutations = {
     VueCookies.set("login.userNickname", state.loginUser.userNickname, '30min');
     VueCookies.set("login.userGrade", state.loginUser.userGrade, '30min');
     VueCookies.set("isLogin", state.isLogin, '30min');
-    VueCookies.set("accessToken", state.accessToken, '30min');
-    VueCookies.set("refreshToken", state.refreshToken, '3d');
+    // VueCookies.set("accessToken", state.accessToken, '30min');
+    // VueCookies.set("refreshToken", state.refreshToken, '3d');
   },
 
 
@@ -192,8 +192,8 @@ const mutations = {
     VueCookies.remove("login.userNickname");
     VueCookies.remove("login.userGrade");
     VueCookies.remove("isLogin");
-    VueCookies.remove("accessToken");
-    VueCookies.remove("refreshToken");
+    // VueCookies.remove("accessToken");
+    // VueCookies.remove("refreshToken");
 
   },
 };
