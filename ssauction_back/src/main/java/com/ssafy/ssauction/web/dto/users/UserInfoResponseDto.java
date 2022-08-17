@@ -14,7 +14,6 @@ public class UserInfoResponseDto {
     private String userEmail;
     private String userPhoneNo;
     private String userDesc;
-
     private String userComment;
 
 
