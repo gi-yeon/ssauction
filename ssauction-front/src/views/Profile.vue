@@ -16,7 +16,10 @@
               v-for="(element, idx) in updateImgs"
               :key="element"
             >
-              <img class="resize" v-bind:src="'data:image/png;base64,' + element.img" />
+              <img
+                class="resize"
+                v-bind:src="'data:image/png;base64,' + element.img"
+              />
               <button @click="deleteImgs(idx)">delete</button>
             </div>
           </draggable>
@@ -67,16 +70,23 @@
         </template>
       </b-modal>
       <div class="card">
-        <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem;">
+        <div
+          class="card-body p-2"
+          style="padding: 0.5rem; padding-bottom: 0rem"
+        >
           <h4 class="card-title" style="display: inline-block">기본 정보</h4>
           <br />
           <div class="row">
             <div class="col-sm-4">
               <div class="card">
-                <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
+                <div
+                  class="card-body"
+                  style="padding: 0.5rem; padding-bottom: 0rem"
+                >
                   <div class="img-container">
                     <div>유저사진</div>
-                    <img class="resize"
+                    <img
+                      class="resize"
                       v-if="hasImg"
                       v-bind:src="'data:image/png;base64,' + userMainImg"
                     />
@@ -86,36 +96,137 @@
             </div>
             <div class="col-sm-8">
               <div class="card">
-                <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
+                <div
+                  class="card-body"
+                  style="padding: 0.5rem; padding-bottom: 0rem"
+                >
                   <div class="row">
-                    <div class="col-sm-6" style="padding: 0rem; padding-left: 0.5rem;">
-                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>아이디 (이메일)</button>
-                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ userEmail }}</button>
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-left: 0.5rem"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-sm col-sm-4"
+                        disabled
+                      >
+                        아이디 (이메일)
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ userEmail }}
+                      </button>
                     </div>
                     <br />
-                    <div class="col-sm-6" style="padding: 0rem; padding-right: 0.5rem;">
-                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>닉네임</button>
-                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ user.loginUser.userNickname }}</button>
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-right: 0.5rem"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-sm col-sm-4"
+                        disabled
+                      >
+                        닉네임
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ user.loginUser.userNickname }}
+                      </button>
                     </div>
                     <br />
-                    <div class="col-sm-6" style="padding: 0rem; padding-left: 0.5rem;">
-                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>휴대폰 번호</button>
-                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ userPhoneNo }}</button>
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-left: 0.5rem"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-sm col-sm-4"
+                        disabled
+                      >
+                        휴대폰 번호
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ userPhoneNo }}
+                      </button>
                     </div>
                     <br />
-                    <div class="col-sm-6" style="padding: 0rem; padding-right: 0.5rem;">
-                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>유저 등급</button>
-                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ user.loginUser.userGrade }}</button>
+                    <div
+                      class="col-sm-6"
+                      style="padding: 0rem; padding-right: 0.5rem"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-sm col-sm-4"
+                        disabled
+                      >
+                        유저 등급
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-8"
+                        disabled
+                      >
+                        {{ user.loginUser.userGrade }}
+                      </button>
                     </div>
                     <br />
-                    <div class="col-sm-12" style="padding: 0rem; padding-left: 0.5rem; padding-right: 0.5rem;">
-                      <button type="button" class="btn btn-secondary btn-sm col-sm-2" disabled>상태 메시지</button>
-                      <button type="button" class="btn btn-light btn-sm col-sm-10" disabled>{{ userComment }}</button>
+                    <div
+                      class="col-sm-12"
+                      style="
+                        padding: 0rem;
+                        padding-left: 0.5rem;
+                        padding-right: 0.5rem;
+                      "
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-sm col-sm-2"
+                        disabled
+                      >
+                        상태 메시지
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-10"
+                        disabled
+                      >
+                        {{ userComment }}
+                      </button>
                     </div>
                     <br />
-                    <div class="col-sm-12" style="padding: 0rem; padding-left: 0.5rem; padding-right: 0.5rem;">
-                      <button type="button" class="btn btn-secondary btn-sm col-sm-2" disabled>자기 소개</button>
-                      <button type="button" class="btn btn-light btn-sm col-sm-10" disabled>{{ userDesc }}</button>
+                    <div
+                      class="col-sm-12"
+                      style="
+                        padding: 0rem;
+                        padding-left: 0.5rem;
+                        padding-right: 0.5rem;
+                      "
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-sm col-sm-2"
+                        disabled
+                      >
+                        자기 소개
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light btn-sm col-sm-10"
+                        disabled
+                      >
+                        {{ userDesc }}
+                      </button>
                     </div>
                     <br />
                   </div>
@@ -127,7 +238,10 @@
       </div>
       <br />
       <div class="card">
-        <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem;">
+        <div
+          class="card-body p-2"
+          style="padding: 0.5rem; padding-bottom: 0rem"
+        >
           <h4 class="card-title">판매 내역</h4>
           <div class="row">
             <div
@@ -166,9 +280,13 @@
               </b-modal>
               <div>
                 <div class="card">
-                  <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
+                  <div
+                    class="card-body"
+                    style="padding: 0.5rem; padding-bottom: 0rem"
+                  >
                     <div class="sell-container">
-                      <img class="resize"
+                      <img
+                        class="resize"
                         v-bind:src="
                           'data:image/png;base64,' + index.itemImgs[0].img
                         "
@@ -191,7 +309,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
+        <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem">
           <h5 class="card-title">Purchase Items</h5>
           <div class="row">
             <div
@@ -236,18 +354,23 @@
               </b-modal>
               <div>
                 <div class="card">
-                  <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
+                  <div
+                    class="card-body"
+                    style="padding: 0.5rem; padding-bottom: 0rem"
+                  >
                     <div class="sell-container">
-                      <img class="resize"
+                      <img
+                        class="resize"
                         v-bind:src="
                           'data:image/png;base64,' + index.itemImgs[0].img
                         "
                       />
-                        <br />
-                        {{ index.item.itemName }}
-                        <br />
-                        {{ index.item.startPrice }}원 / {{ index.item.regTime.substr(0, 10) }}
-                      </div>
+                      <br />
+                      {{ index.item.itemName }}
+                      <br />
+                      {{ index.item.startPrice }}원 /
+                      {{ index.item.regTime.substr(0, 10) }}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -170,7 +170,7 @@ export default {
       userDesc: "",
       userComment: "",
       isLogin: false,
-      userImg: "",
+      userImg: null,
       nicknameChecked: false,
       smsAuthChecked: false,
       smsVerifyChecked: false,
@@ -200,11 +200,12 @@ export default {
     },
 
     imgUpload() {
-      this.userImg = this.$refs.userImg.files[0];
+      this.userImg = [];
+      Array.prototype.push.apply(this.userImg, this.$refs.userImg.files);
       console.log(this.userImg);
     },
 
-    putUserInfo() {
+    putUserInfo: async function () {
       //닉네임 변경되었을 경우 (중복체크 미완료시)
       if (this.originNickname != this.userNickname && !this.nicknameChecked) {
         alert("닉네임 중복체크를 진행해주세요.");
@@ -221,8 +222,7 @@ export default {
           this.smsAuthChecked &&
           this.smsVerifyChecked) ||
         this.originDesc != this.userDesc ||
-        this.originComment != this.userComment ||
-        this.originImg != this.userImg
+        this.originComment != this.userComment
       ) {
         const obj = {
           userNickname: this.userNickname,
@@ -231,7 +231,7 @@ export default {
           userComment: this.userComment,
         };
 
-        axios
+        await axios
           .put("/users/profile/info/" + this.userNo, JSON.stringify(obj))
           .then(() => {
             this.$store.dispatch("user/getUpdateInfo", this.userNickname);
@@ -243,16 +243,17 @@ export default {
       }
       //이미지 변경되었을 경우
       if (this.originImg != this.userImg) {
-        const formData = new FormData();
-        formData.append("userImg", this.userImg);
-        axios
-          .put(
-            "/users/profile/img/" + this.userNo,
-            this.userImg
-            // headers: {
-            //   "Content-Type": "multipart/form-data",
-            // },
-          )
+        let formData = new FormData();
+        for (let img of this.userImg) {
+          formData.append("file", img);
+        }
+
+        await axios
+          .put("/users/profile/img/" + this.userNo, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
           .then(() => {
             alert("회원 정보가 변경되었습니다.");
             this.$router.push("/");
