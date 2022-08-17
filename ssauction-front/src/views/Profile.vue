@@ -1,7 +1,7 @@
 <template>
   <div>
+    <h2>{{ user.loginUser.userNickname }}님의 프로필</h2>
     <br />
-    <h1>{{ user.loginUser.userNickname }}님의 프로필</h1>
     <div v-show="user.isLogin">
       <br />
       <b-modal id="modal-3" scrollable title="Update item" size="lg">
@@ -16,7 +16,7 @@
               v-for="(element, idx) in updateImgs"
               :key="element"
             >
-              <img v-bind:src="'data:image/png;base64,' + element.img" />
+              <img class="resize" v-bind:src="'data:image/png;base64,' + element.img" />
               <button @click="deleteImgs(idx)">delete</button>
             </div>
           </draggable>
@@ -67,15 +67,16 @@
         </template>
       </b-modal>
       <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">UserProfile</h5>
+        <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem;">
+          <h4 class="card-title" style="display: inline-block">기본 정보</h4>
+          <br />
           <div class="row">
             <div class="col-sm-4">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
                   <div class="img-container">
                     <div>유저사진</div>
-                    <img
+                    <img class="resize"
                       v-if="hasImg"
                       v-bind:src="'data:image/png;base64,' + userMainImg"
                     />
@@ -85,19 +86,38 @@
             </div>
             <div class="col-sm-8">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
                   <div class="row">
-                    <div class="col-sm-6">
-                      유저닉네임 : {{ user.loginUser.userNickname }}
+                    <div class="col-sm-6" style="padding: 0rem; padding-left: 0.5rem;">
+                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>아이디 (이메일)</button>
+                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ userEmail }}</button>
                     </div>
                     <br />
-                    <div class="col-sm-6">
-                      유저등급 : {{ user.loginUser.userGrade }}
+                    <div class="col-sm-6" style="padding: 0rem; padding-right: 0.5rem;">
+                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>닉네임</button>
+                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ user.loginUser.userNickname }}</button>
                     </div>
-                    <div class="col-sm-6">유저로그인 : {{ user.isLogin }}</div>
                     <br />
-                    <div class="col-sm-6">유저설명 : {{ userDesc }}</div>
-                    <div class="col-sm-6">유저한줄평 : {{ userComment }}</div>
+                    <div class="col-sm-6" style="padding: 0rem; padding-left: 0.5rem;">
+                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>휴대폰 번호</button>
+                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ userPhoneNo }}</button>
+                    </div>
+                    <br />
+                    <div class="col-sm-6" style="padding: 0rem; padding-right: 0.5rem;">
+                      <button type="button" class="btn btn-secondary btn-sm col-sm-4" disabled>유저 등급</button>
+                      <button type="button" class="btn btn-light btn-sm col-sm-8" disabled>{{ user.loginUser.userGrade }}</button>
+                    </div>
+                    <br />
+                    <div class="col-sm-12" style="padding: 0rem; padding-left: 0.5rem; padding-right: 0.5rem;">
+                      <button type="button" class="btn btn-secondary btn-sm col-sm-2" disabled>상태 메시지</button>
+                      <button type="button" class="btn btn-light btn-sm col-sm-10" disabled>{{ userComment }}</button>
+                    </div>
+                    <br />
+                    <div class="col-sm-12" style="padding: 0rem; padding-left: 0.5rem; padding-right: 0.5rem;">
+                      <button type="button" class="btn btn-secondary btn-sm col-sm-2" disabled>자기 소개</button>
+                      <button type="button" class="btn btn-light btn-sm col-sm-10" disabled>{{ userDesc }}</button>
+                    </div>
+                    <br />
                   </div>
                 </div>
               </div>
@@ -107,8 +127,8 @@
       </div>
       <br />
       <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Sell Items</h5>
+        <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem;">
+          <h4 class="card-title">판매 내역</h4>
           <div class="row">
             <div
               v-b-modal.modal-1
@@ -146,9 +166,9 @@
               </b-modal>
               <div>
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
                     <div class="sell-container">
-                      <img
+                      <img class="resize"
                         v-bind:src="
                           'data:image/png;base64,' + index.itemImgs[0].img
                         "
@@ -171,7 +191,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
           <h5 class="card-title">Purchase Items</h5>
           <div class="row">
             <div
@@ -216,23 +236,18 @@
               </b-modal>
               <div>
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem;">
                     <div class="sell-container">
-                      <img
+                      <img class="resize"
                         v-bind:src="
                           'data:image/png;base64,' + index.itemImgs[0].img
                         "
                       />
-
-                      <br />
-                      {{ index.item.itemName }}
-                      <br />
-                      {{ index.item.modelNo }}
-                      <br />
-                      {{ index.item.startPrice }}
-                      <br />
-                      {{ index.item.regTime }}
-                    </div>
+                        <br />
+                        {{ index.item.itemName }}
+                        <br />
+                        {{ index.item.startPrice }}원 / {{ index.item.regTime.substr(0, 10) }}
+                      </div>
                   </div>
                 </div>
               </div>
@@ -263,6 +278,8 @@ export default defineComponent({
   data() {
     return {
       userNo: 0,
+      userEmail: "",
+      userPhoneNo: "",
       userDesc: "",
       userComment: "",
       userMainImg: [],
@@ -293,6 +310,9 @@ export default defineComponent({
           console.log(data);
           this.userDesc = data.userDesc;
           this.userComment = data.userComment;
+          this.userImgUri = data.userImgUri;
+          this.userEmail = data.userEmail;
+          this.userPhoneNo = data.userPhoneNo;
         })
         .catch(({ data }) => {
           console.log(data);
@@ -312,6 +332,7 @@ export default defineComponent({
     },
 
     getItemInfo: async function () {
+      console.log(this.userNo);
       await axios
         .get("/houses/profile/" + this.userNo)
         .then(({ data }) => {
@@ -385,7 +406,6 @@ export default defineComponent({
 
 <style>
 .resize {
-  height: 300px;
-  width: 300px;
+  width: 100%;
 }
 </style>
