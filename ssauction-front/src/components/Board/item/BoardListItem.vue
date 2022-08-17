@@ -4,6 +4,7 @@
     <td @click="boardDetail()">{{boardTitle}}</td>
     <td>{{userNickname}}</td>
     <td>{{boardRegDate}}</td>
+    
   </tr>
 </template>
 

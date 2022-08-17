@@ -24,7 +24,7 @@
       <div class="col-4 label">
         <h4>경매 일시</h4>
       </div>
-      <div class="col-2 data">
+      <div class="col-6 data">
         <v-date-picker
           v-model="house.houseDate"
           mode="dateTime"
@@ -73,8 +73,9 @@
       <div class="col-4 label">
         <h4>카테고리</h4>
       </div>
-      <div class="col-8 data">
-        <div class="form-check form-check-inline">
+      
+<div class="col-8 data align-left">
+        <div class="form-check form-check-inline ">
           <input
             class="form-check-input"
             type="checkbox"
@@ -373,9 +374,8 @@
         />
       </div>
     </div>
-    <div class="row" style="height: 320px"></div>
-    <div class="row house-input p-5">
-      <button @click="createHouse">경매방 생성</button>
+    <div class="row justify-content-center house-input p-5">
+      <button class="btn_pink2" @click="createHouse">경매방 생성</button>
     </div>
   </div>
 </template>
@@ -395,8 +395,9 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        itemDealStatus: "SELL",
-        userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
+        itemDealStatus : "SELL",
+        userNo: this.$store.getters["user/userNo"] // 유저정보를 현재 로그인 된 유저로 설정
+        // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
         itemNo: -1,
@@ -500,10 +501,10 @@ export default {
 
 <style scoped>
 label {
-  text-align: MiddleLeft;
-  display: inline-block;
-  width: 140px;
-  line-height: 30px;
+  text-align: Left;
+  display:inline-block;
+  width:140px;
+  line-height:30px;
 }
 .preview {
   overflow-x: auto;
@@ -531,5 +532,38 @@ input {
   border-radius: 20px;
   color: rgb(94, 94, 94);
   padding-left: 30px;
+}
+.btn_pink2 {
+  width: 150px;
+  height: 40px;
+  border: 0;
+  background-color: rgba(255, 169, 165, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow {
+  width: 70px;
+  height: 40px;
+  border: 0;
+  background-color: rgb(255, 211, 182, 0.7);
+  border-radius: 10px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+textarea {
+  outline: none;
+  resize: none;
+  padding: 20px;
+  background-color: rgba(158, 158, 158, 0.212);
+  border: none;
+  border-radius: 10px;
+  width: 500px;
+}
+
+textarea:focus{
+  outline: none;
 }
 </style>

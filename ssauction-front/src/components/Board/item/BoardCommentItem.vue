@@ -5,6 +5,7 @@
         <div>{{commentRegDate}}</div>
         <button v-show="state.isWriter" @click="deleteComment()">삭제</button>
     </div>
+    
 </template>
 
 <script>

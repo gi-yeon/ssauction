@@ -384,8 +384,8 @@ export default defineComponent({
 </script>
 
 <style>
-img {
-  width: 200px;
-  height: 100px;
+.resize {
+  height: 300px;
+  width: 300px;
 }
 </style>
