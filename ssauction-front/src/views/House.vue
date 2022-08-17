@@ -5,8 +5,8 @@
     <br />
     <br />
     <div class="row">
-      <div class="col-4 label">
-        <h4>경매방 이름</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">경매방 이름</h4>
       </div>
       <div class="col-2">
         <input
@@ -20,30 +20,27 @@
         />
       </div>
     </div>
-    <div class="row house-input">
-      <div class="col-4 label">
-        <h4>경매 일시</h4>
-      </div>
-      <div class="col-6 data">
-        <v-date-picker
-          v-model="house.houseDate"
-          mode="dateTime"
-          locale="ko-KR"
-          :model-config="modelConfig"
-          is24hr
-          placeholder="경매 날짜를 선택하세요"
-          class="input_style"
-          style="margin-bottom: 0.5rem"
-        >
-          <template v-slot="{ inputValue, inputEvents }">
-            <input :value="inputValue" v-on="inputEvents" />
-          </template>
-        </v-date-picker>
+    <div class="date">
+      <div class="row house-input">
+        <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+          <h4 align="right">경매 일시</h4>
+        </div>
+        <div class="col-6 data">
+          <div class="row house-input">
+            <el-date-picker
+              v-model="house.houseAucTime"
+              type="datetime"
+              placeholder="Pick a Date"
+              format="YYYY/MM/DD hh:mm:ss"
+              value-format="YYYY-MM-DD hh:mm:ss"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>매물 이름</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">매물 이름</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -56,8 +53,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>모델 번호</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">모델 번호</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -70,246 +67,264 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>카테고리</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">카테고리</h4>
       </div>
-      
-<div class="col-8 data align-left">
-        <div class="form-check form-check-inline ">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr1"
-            value="전자기기"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr1">전자기기</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr2"
-            value="생활가전"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr2">생활가전</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr3"
-            value="가구/인테리어"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr3">가구/인테리어</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr4"
-            value="생활/주방"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr4">생활/주방</label>
-        </div>
-        <br />
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr5"
-            value="여성명품"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr5">여성명품</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr6"
-            value="여성의류/신발"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr6">여성의류/신발</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr7"
-            value="여성잡화"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr7">여성잡화</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr8"
-            value="뷰티/미용"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr8">뷰티/미용</label>
-        </div>
-        <br />
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr9"
-            value="남성명품"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr9">남성명품</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr10"
-            value="남성의류/신발"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr10">남성의류/신발</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr11"
-            value="남성잡화"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr11">남성잡화</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr12"
-            value="스포츠/레저"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr12">스포츠/레저</label>
-        </div>
-        <br />
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr13"
-            value="취미/게임/음반"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr13">취미/게임/음반</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr14"
-            value="도서"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr14">도서</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr15"
-            value="티켓/입장권"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr15">티켓/입장권</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr16"
-            value="상품권/교환권"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr16">상품권/교환권</label>
-        </div>
-        <br />
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr17"
-            value="유아동"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr17">유아동</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr18"
-            value="가공식품"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr18">가공식품</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr19"
-            value="반려동물용품"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr19">반려동물용품</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr20"
-            value="식물"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr20">식물</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ctgr21"
-            value="기타물품"
-            v-model="ctgr.ctgrName"
-          />
-          <label class="form-check-label" for="ctgr21">기타물품</label>
-        </div>
-        <div style="text-align: center; display: inline-block">
-          <p>다중 선택 가능합니다.</p>
+
+      <div class="col-8 data align-left">
+        <div class="box">
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr1"
+              value="전자기기"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr1">전자기기</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr2"
+              value="생활가전"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr2">생활가전</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr3"
+              value="가구/인테리어"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr3">가구/인테리어</label>
+          </div>
+          <br />
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr4"
+              value="생활/주방"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr4">생활/주방</label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr5"
+              value="여성명품"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr5">여성명품</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr6"
+              value="여성의류/신발"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr6">여성의류/신발</label>
+          </div>
+          <br />
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr7"
+              value="여성잡화"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr7">여성잡화</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr8"
+              value="뷰티/미용"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr8">뷰티/미용</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr9"
+              value="남성명품"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr9">남성명품</label>
+          </div>
+          <br />
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr10"
+              value="남성의류/신발"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr10">남성의류/신발</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr11"
+              value="남성잡화"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr11">남성잡화</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr12"
+              value="스포츠/레저"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr12">스포츠/레저</label>
+          </div>
+          <br />
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr13"
+              value="취미/게임/음반"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr13">취미/게임/음반</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr14"
+              value="도서"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr14">도서</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr15"
+              value="티켓/입장권"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr15">티켓/입장권</label>
+          </div>
+          <br />
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr16"
+              value="상품권/교환권"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr16">상품권/교환권</label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr17"
+              value="유아동"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr17">유아동</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr18"
+              value="가공식품"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr18">가공식품</label>
+          </div>
+          <br />
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr19"
+              value="반려동물용품"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr19">반려동물용품</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr20"
+              value="식물"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr20">식물</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ctgr21"
+              value="기타물품"
+              v-model="ctgr.ctgrName"
+            />
+            <label class="form-check-label" for="ctgr21">기타물품</label>
+          </div>
         </div>
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>매물상태</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">매물상태</h4>
       </div>
       <div class="col-8 data">
-        <input
+        <!-- <input
           v-model="item.itemQuality"
           class="form-control"
           type="text"
           style="margin-bottom: 0.5rem"
-        />
+        /> -->
+        <div class="form-group">
+        <select
+          v-model="item.itemQuality"
+          class="form-control"
+          type="text"
+          style="margin-bottom: 0.5rem"
+          id="exampleFormControlSelect1">
+
+          <option>S</option>
+          <option>A</option>
+          <option>B</option>
+          <option>C</option>
+
+        </select>
+        </div>
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>매물설명</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">매물설명</h4>
       </div>
       <div class="col-8 data">
         <textarea
@@ -321,8 +336,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>시작가격</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">시작가격</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -335,22 +350,11 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>사진</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">사진</h4>
       </div>
       <div class="col-2 data">
         <div class="mb-3">
-          <el-upload
-            class="avatar-uploader"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-          </el-upload>
-
           <input
             type="file"
             ref="itemImage"
@@ -383,7 +387,6 @@
 <script>
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-import { mapState } from "vuex";
 export default {
   name: "SsauctionHouse",
   components: { ItemImagePreview },
@@ -392,11 +395,11 @@ export default {
       item: {
         itemName: null,
         itemModelNo: null,
-        itemQuality: "S",
+        itemQuality: null,
         itemStartPrice: null,
         itemDesc: null,
-        itemDealStatus : "SELL",
-        userNo: this.$store.getters["user/userNo"] // 유저정보를 현재 로그인 된 유저로 설정
+        itemDealStatus: "SELL",
+        userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
@@ -435,6 +438,7 @@ export default {
       console.log(this.item);
       console.log(this.ctgr);
 
+      console.log(this.house.houseAucTime);
       this.house.houseAucTime =
         this.house.houseAucTime.split(" ")[0] +
         "T" +
@@ -502,9 +506,9 @@ export default {
 <style scoped>
 label {
   text-align: Left;
-  display:inline-block;
-  width:140px;
-  line-height:30px;
+  display: inline-block;
+  width: 140px;
+  line-height: 30px;
 }
 .preview {
   overflow-x: auto;
@@ -513,8 +517,8 @@ label {
 
 .form-check {
   margin-top: 0.5rem;
-  margin-right: 1.5rem;
-  font-size: 1.3rem;
+  margin-right: 0.5rem;
+  font-size: 1rem;
 }
 .form-check-input {
   margin-top: 0;
@@ -524,8 +528,9 @@ label {
   width: 30px;
   height: 30px;
 }
+
 input {
-  width: 500px;
+  width: 630px;
   height: 50px;
   border: 0;
   background-color: rgb(230, 230, 230);
@@ -533,6 +538,17 @@ input {
   color: rgb(94, 94, 94);
   padding-left: 30px;
 }
+
+select {
+  width: 630px;
+  height: 50px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
 .btn_pink2 {
   width: 150px;
   height: 40px;
@@ -560,10 +576,32 @@ textarea {
   background-color: rgba(158, 158, 158, 0.212);
   border: none;
   border-radius: 10px;
-  width: 500px;
+  width: 630px;
 }
 
-textarea:focus{
+textarea:focus {
   outline: none;
+}
+
+.box {
+  margin-left: 0px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding: 20px;
+  border: 0px solid grey;
+  border-radius: 5px;
+  width: 630px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.preview {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.date {
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 </style>

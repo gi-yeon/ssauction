@@ -17,6 +17,7 @@
               :key="element"
             >
               <img v-bind:src="'data:image/png;base64,' + element.img" />
+              <img src="@\assets\imgs\logout.png" alt="">
               <button @click="deleteImgs(idx)">delete</button>
             </div>
           </draggable>
