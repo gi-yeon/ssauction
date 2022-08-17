@@ -253,6 +253,8 @@ public class UsersController {
                 result.put("userNickname", user.getUserNickname());
                 result.put("userGrade", user.getUserGrade());
                 result.put("userAuthority", user.getAuthority());
+                result.put("accessToken", accessToken);
+                result.put("refreshToken", refreshToken);
 
 
                 //access token 쿠키에 담아줌
@@ -260,6 +262,7 @@ public class UsersController {
                 cookie.setPath("/");
                 cookie.setHttpOnly(true);
                 cookie.setSecure(true);
+
                 cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
                 res.addCookie(cookie);
 
@@ -281,11 +284,6 @@ public class UsersController {
                 status = HttpStatus.ACCEPTED;
 
             }
-//        } else {
-//            //실패
-//            result.put("message", FAIL);
-//            status = HttpStatus.ACCEPTED;
-//        }
         return new ResponseEntity<Map<String, Object>>(result, status);
 
     }

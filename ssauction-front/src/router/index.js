@@ -64,7 +64,7 @@ const routes = [
     component: Profile,
   },
   {
-    path: "/sessions/:sessionId/:sessionTitle/:isHost",
+    path: "/sessions",
     name: "Sessions",
     component: Sessions,
   },

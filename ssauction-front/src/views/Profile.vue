@@ -23,7 +23,7 @@
               :key="element"
             >
               <img
-                class="resize"
+                class="imgTag"
                 v-bind:src="'data:image/png;base64,' + element.img"
               />
               <button @click="deleteImgs(idx)">delete</button>
@@ -103,41 +103,44 @@
           </b-button>
         </template>
       </b-modal>
-      <div class="card">
+      <div class="card" style="margin: 10px">
         <div
           class="card-body p-2"
           style="padding: 0.5rem; padding-bottom: 0rem"
         >
-          <h4 class="card-title" style="display: inline-block">기본 정보</h4>
+          <!-- <h4 class="card-title" style="display: inline-block">기본 정보</h4> -->
           <br />
           <div class="row">
-            <div class="col-sm-4">
-              <div class="card">
-                <div
+            <div class="col-sm-4" style="text-align: center">
+              <!-- <div class="card"> -->
+              <!-- <div
                   class="card-body"
-                  style="padding: 0.5rem; padding-bottom: 0rem"
-                >
-                  <div class="img-container">
-                    <div>유저사진</div>
-                    <img
-                      class="resize"
-                      v-if="hasImg"
-                      v-bind:src="'data:image/png;base64,' + userMainImg"
-                    />
-                  </div>
-                </div>
+                  style="
+                    padding: 0.5rem;
+                    padding-bottom: 0rem;
+                    text-align: center;
+                  "
+                > -->
+              <div class="img-container">
+                <img
+                  class="userImgContainer"
+                  v-if="hasImg"
+                  v-bind:src="'data:image/png;base64,' + userMainImg"
+                />
+                <!-- </div> -->
+                <!-- </div> -->
               </div>
             </div>
             <div class="col-sm-8">
               <div class="card">
                 <div
                   class="card-body"
-                  style="padding: 0.5rem; padding-bottom: 0rem"
+                  style="padding: 0.5rem; padding-bottom: 0.5rem"
                 >
                   <div class="row">
                     <div
                       class="col-sm-6"
-                      style="padding: 0rem; padding-left: 0.5rem"
+                      style="padding: 0rem; padding-left: 1rem"
                     >
                       <button
                         type="button"
@@ -157,7 +160,7 @@
                     <br />
                     <div
                       class="col-sm-6"
-                      style="padding: 0rem; padding-right: 0.5rem"
+                      style="padding: 0rem; padding-right: 1rem"
                     >
                       <button
                         type="button"
@@ -177,8 +180,8 @@
                     <br />
                     <div
                       class="col-sm-6"
-                      style="padding: 0rem; padding-left: 0.5rem"
-                    >
+                      style="padding: 0rem; padding-left: 1rem"
+                                          >
                       <button
                         type="button"
                         class="btn btn-secondary btn-sm col-sm-4"
@@ -197,7 +200,7 @@
                     <br />
                     <div
                       class="col-sm-6"
-                      style="padding: 0rem; padding-right: 0.5rem"
+                      style="padding: 0rem; padding-right: 1rem"
                     >
                       <button
                         type="button"
@@ -219,8 +222,8 @@
                       class="col-sm-12"
                       style="
                         padding: 0rem;
-                        padding-left: 0.5rem;
-                        padding-right: 0.5rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
                       "
                     >
                       <button
@@ -243,8 +246,8 @@
                       class="col-sm-12"
                       style="
                         padding: 0rem;
-                        padding-left: 0.5rem;
-                        padding-right: 0.5rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
                       "
                     >
                       <button
@@ -326,15 +329,93 @@
                           index.itemImgs[getItemImgsIdx(index)].img
                         "
                       />
+      <p>
+        <button
+          class="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#sellingItem"
+          aria-expanded="false"
+          aria-controls="sellingItem"
+        >
+          판매 내역
+        </button>
+        <button
+          class="btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#purchasedItem"
+          aria-expanded="false"
+          aria-controls="purchasedItem"
+        >
+          구매 내역
+        </button>
+      </p>
 
-                      <br />
-                      {{ index.item.itemName }}
-                      <br />
-                      {{ index.item.modelNo }}
-                      <br />
-                      {{ index.item.startPrice }}
-                      <br />
-                      {{ index.item.regTime }}
+      <div class="collapse" id="sellingItem">
+        <div class="card" style="margin: 10px">
+          <div
+            class="card-body p-2"
+            style="padding: 0.5rem; padding-bottom: 0rem"
+          >
+            <h4 class="card-title">판매 내역</h4>
+            <br />
+            <div class="row">
+              <div
+                v-b-modal.modal-1
+                class="col-sm-3"
+                v-for="index in sellItem"
+                :key="index"
+                @click="getItemDetail(index)"
+              >
+                <b-modal scrollable id="modal-1" title="Selling item" size="lg">
+                  <Carousel :images="images" />
+                  <p class="my-4">Hello from modal!</p>
+                  <br />
+                  {{ info.itemName }}
+                  <br />
+                  {{ info.modelNo }}
+                  <br />
+                  {{ info.startPrice }}
+                  <br />
+                  {{ info.regTime }}
+                  <br />
+                  {{ info.auctionTime }}
+                  <br />
+                  {{ info.dealStatus }}
+                  <br />
+                  {{ info.desc }}
+                  <template v-slot:footer="{ ok }">
+                    <b-button
+                      v-b-modal.modal-3
+                      @click="ok"
+                      variant="primary"
+                      data-baz="buz"
+                      >Update</b-button
+                    >
+                  </template>
+                </b-modal>
+                <div>
+                  <div class="card" style="margin: 10px">
+                    <div
+                      class="card-body"
+                      style="padding: 0.5rem; padding-bottom: 0rem"
+                    >
+                      <div class="sell-container">
+                        <img
+                          class="sellImgContainer"
+                          v-bind:src="
+                            'data:image/png;base64,' + index.itemImgs[0].img
+                          "
+                        />
+
+                        <br />
+                        {{ index.item.itemName }}
+                        <!-- ({{ index.item.modelNo }}) -->
+                        <br />
+                        {{ index.item.startPrice }}원 /
+                        {{ index.item.regTime.substr(0, 10) }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -343,69 +424,71 @@
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem">
-          <h5 class="card-title">Purchase Items</h5>
-          <div class="row">
-            <div
-              v-b-modal.modal-2
-              class="col-sm-4"
-              v-for="index in buyItem"
-              :key="index"
-              @click="getItemDetail(index)"
-            >
-              <b-modal
-                scrollable
-                id="modal-2"
-                title="Purchased item"
-                ok-title="update"
-                size="lg"
+      <div class="collapse" id="purchasedItem">
+        <div class="card" style="margin: 10px">
+          <div class="card-body" style="padding: 0.5rem; padding-bottom: 0rem">
+            <h4 class="card-title">구매 내역</h4>
+            <br />
+            <div class="row">
+              <div
+                v-b-modal.modal-2
+                class="col-sm-3"
+                v-for="index in buyItem"
+                :key="index"
+                @click="getItemDetail(index)"
               >
-                <Carousel :images="images" />
-                <p class="my-4">Hello from modal2!</p>
-                <br />
-                {{ info.itemName }}
-                <br />
-                {{ info.modelNo }}
-                <br />
-                {{ info.startPrice }}
-                <br />
-                {{ info.regTime }}
-                <br />
-                {{ info.auctionTime }}
-                <br />
-                {{ info.dealStatus }}
-                <br />
-                {{ info.desc }}
-                <template v-slot:footer="{ ok }">
-                  <b-button
-                    v-b-modal.modal-3
-                    @click="ok"
-                    variant="primary"
-                    data-baz="buz"
-                    >Update</b-button
-                  >
-                </template>
-              </b-modal>
-              <div>
-                <div class="card">
-                  <div
-                    class="card-body"
-                    style="padding: 0.5rem; padding-bottom: 0rem"
-                  >
-                    <div class="sell-container">
-                      <img
-                        class="resize"
-                        v-bind:src="
-                          'data:image/png;base64,' +
-                          index.itemImgs[getItemImgsIdx(index)].img
-                        "
-                      />
-                      <br />
-                      {{ index.item.itemName }}
-                      <br />
-                      {{ index.item.startPrice }}원 /
-                      {{ index.item.regTime.substr(0, 10) }}
+                <b-modal
+                  scrollable
+                  id="modal-2"
+                  title="Purchased item"
+                  ok-title="update"
+                  size="lg"
+                >
+                  <Carousel :images="images" />
+                  <p class="my-4">Hello from modal2!</p>
+                  <br />
+                  {{ info.itemName }}
+                  <br />
+                  {{ info.modelNo }}
+                  <br />
+                  {{ info.startPrice }}
+                  <br />
+                  {{ info.regTime }}
+                  <br />
+                  {{ info.auctionTime }}
+                  <br />
+                  {{ info.dealStatus }}
+                  <br />
+                  {{ info.desc }}
+                  <template v-slot:footer="{ ok }">
+                    <b-button
+                      v-b-modal.modal-3
+                      @click="ok"
+                      variant="primary"
+                      data-baz="buz"
+                      >Update</b-button
+                    >
+                  </template>
+                </b-modal>
+                <div>
+                  <div class="card">
+                    <div
+                      class="card-body"
+                      style="padding: 0.5rem; padding-bottom: 0rem"
+                    >
+                      <div class="sell-container">
+                        <img
+                          class="sellImgContainer"
+                          v-bind:src="
+                            'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
+                          "
+                        />
+                        <br />
+                        {{ index.item.itemName }}
+                        <br />
+                        {{ index.item.startPrice }}원 /
+                        {{ index.item.regTime.substr(0, 10) }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -610,7 +693,44 @@ export default defineComponent({
 </script>
 
 <style>
-.resize {
+.userImgContainer {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sellImgContainer {
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  /* object-fit: contain; */
+}
+.col-sm-6 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.col-sm-12 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.btn btn-light btn-sm col-sm-8 {
+  border: solid grey;
+}
+.img-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin: auto;
+}
+.sell-container {
+  height: 300px;
+  overflow: hidden;
+  margin: auto;
+}
+.imgTag {
+  display: block;
+  margin: auto;
 }
 </style>
