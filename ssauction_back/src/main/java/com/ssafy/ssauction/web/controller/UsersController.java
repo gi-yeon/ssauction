@@ -251,25 +251,22 @@ public class UsersController {
                 result.put("userNickname", user.getUserNickname());
                 result.put("userGrade", user.getUserGrade());
                 result.put("userAuthority", user.getAuthority());
-                result.put("accessToken", accessToken);
-                result.put("refreshToken", refreshToken);
 
-//                //access token 쿠키에 담아줌
-//                Cookie cookie = new Cookie("accessToken", accessToken);
-//                cookie.setPath("/");
-//                cookie.setHttpOnly(true);
-//                cookie.setSecure(true);
-//
-//                cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
-//                res.addCookie(cookie);
-//
-//                //refresh token 쿠키에 담아줌
-//                Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-//                refreshCookie.setPath("/");
-//                refreshCookie.setHttpOnly(true);
-//                refreshCookie.setSecure(true);
-//                refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
-//                res.addCookie(refreshCookie);
+                //access token 쿠키에 담아줌
+                Cookie cookie = new Cookie("accessToken", accessToken);
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                cookie.setSecure(true);
+                cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
+                res.addCookie(cookie);
+
+                //refresh token 쿠키에 담아줌
+                Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+                refreshCookie.setPath("/");
+                refreshCookie.setHttpOnly(true);
+                refreshCookie.setSecure(true);
+                refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
+                res.addCookie(refreshCookie);
 
 
                 //success 메시지 담아준다.
