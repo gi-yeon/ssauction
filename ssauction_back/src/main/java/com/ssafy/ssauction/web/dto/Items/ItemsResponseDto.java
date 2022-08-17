@@ -21,6 +21,8 @@ public class ItemsResponseDto {
     private int itemFinalPrice;
     private String sellerNickname;
 
+    private Long sellerNo;
+
     @Builder
     public ItemsResponseDto(Items item) {
         this.itemNo = item.getItemNo();
@@ -32,5 +34,6 @@ public class ItemsResponseDto {
         this.itemStartPrice = item.getItemStartPrice();
         this.itemFinalPrice = item.getItemFinalPrice();
         this.sellerNickname = item.getSeller().getUserNickname();
+        this.sellerNo = item.getSeller().getUserNo();
     }
 }

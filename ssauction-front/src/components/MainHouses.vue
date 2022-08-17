@@ -2,25 +2,23 @@
   <div class="container main-house">
     <div class="row">
       <div class="col-6">
-        <!-- <img
+        <img
           class="itemimg d-block m-3"
-          :src="`http://localhost:8080/file/item/${imgNameList[0]}`"
+          :src="'data:image/png;base64,' + hot.itemImgList[0].img"
           alt=""
-        /> -->
+        />
       </div>
       <div class="col-6">
-        <div class="row">{{ this.hot.houseTitle }}</div>
+        <div class="row">{{ hot.house.houseTitle }}</div>
         <!-- <div class="row">{{ this.hot.item.sellerNickname }}</div> -->
-        <div class="row" v-if="isSelling">{{ participantNum }}</div>
-        <div class="row" v-if="!isSelling">
-          {{ getAuctionStartTime(this.hot.houseAucTime) }}
+        <div class="row">
+          {{ getAuctionStartTime(hot.house.houseAucTime) }}
         </div>
-        <div class="row" v-if="isSelling">
-          <div class="col">{{ houseAuctionCurrentPrice }}</div>
-          <div class="col">{{ houseAuctionRemainingTime }}</div>
+        <div class="row">
+          <div>{{ this.hot.house.houseDesc }}</div>
         </div>
-        <div class="row" v-if="!isSelling">
-          <div>{{ this.hot.houseDesc }}</div>
+        <div class="row">
+          {{ this.hot.item.sellerNickname }}
         </div>
         <div><button @click="like">찜하기</button></div>
       </div>

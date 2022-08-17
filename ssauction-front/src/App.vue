@@ -2,11 +2,11 @@
   <div id="app" class="common-layout">
     <!-- 전체 레이아웃을 el-header, el-aside, el-container로 나눈 뒤, 각각에 navbar.vue, sidebar.vue, router vue를 배치함 -->
     <el-container>
-      <el-header v-if="!isInSession">
+      <el-header>
         <nav-bar id="navbar"></nav-bar>
       </el-header>
 
-      <side-bar v-if="!isInSession" id="sidebar"></side-bar>
+      <side-bar id="sidebar"></side-bar>
 
       <el-main id="container">
         <router-view></router-view>
@@ -21,6 +21,7 @@
 import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";
 import SessionsVue from "@/views/Sessions.vue";
+import { useStore } from "vuex";
 
 export default {
   name: "App",
@@ -28,23 +29,20 @@ export default {
   data() {
     return {
       isInSession: false,
+      store: null,
     };
   },
+  beforeMount() {
+    this.store = useStore();
+  },
   mounted() {
-    const URLParams = new URL(window.location).searchParams;
-    // console.log(URLParams.get("isInSession"));
-    this.isInSession = URLParams.get("isInSession");
+    // console.log(this.store.state.session.isInSession);
+    // this.isInSession = !this.store.state.session.isInSession;
 
     //쿠키에서 logininfo를 가져온다.
     this.$store.dispatch("user/getLoginInfo");
   },
-  methods: {
-    setBackground() {
-      if (this.isInSession) {
-        return "background-color:black;";
-      }
-    },
-  },
+  methods: {},
 };
 </script>
 

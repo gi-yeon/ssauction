@@ -17,6 +17,7 @@ public class CategoriesController {
     private final ItemsService itemsService;
     @PostMapping("/categories")
     public Long save(@RequestBody CategoriesLoadRequestDto requestDto){
+        System.out.println("itemNo : " + requestDto.getItemNo());
         Items item = itemsService.findEntityById(requestDto.getItemNo());
         for(String str:requestDto.getCtgrName()){   // for문을 이용해 복수의 카테고리를 하나씩 저장해주기
             System.out.println(str);

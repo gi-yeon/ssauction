@@ -25,20 +25,15 @@
         <h4>경매 일시</h4>
       </div>
       <div class="col-6 data">
-        <v-date-picker
-          v-model="house.houseDate"
-          mode="dateTime"
-          locale="ko-KR"
-          :model-config="modelConfig"
-          is24hr
-          placeholder="경매 날짜를 선택하세요"
-          class="input_style"
-          style="margin-bottom: 0.5rem"
-        >
-          <template v-slot="{ inputValue, inputEvents }">
-            <input :value="inputValue" v-on="inputEvents" />
-          </template>
-        </v-date-picker>
+        <div class="row house-input">
+          <el-date-picker
+            v-model="house.houseAucTime"
+            type="datetime"
+            placeholder="Pick a Date"
+            format="YYYY/MM/DD hh:mm:ss"
+            value-format="YYYY-MM-DD hh:mm:ss"
+          />
+        </div>
       </div>
     </div>
     <div class="row house-input">
@@ -73,9 +68,9 @@
       <div class="col-4 label">
         <h4>카테고리</h4>
       </div>
-      
-<div class="col-8 data align-left">
-        <div class="form-check form-check-inline ">
+
+      <div class="col-8 data align-left">
+        <div class="form-check form-check-inline">
           <input
             class="form-check-input"
             type="checkbox"
@@ -383,7 +378,6 @@
 <script>
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-import { mapState } from "vuex";
 export default {
   name: "SsauctionHouse",
   components: { ItemImagePreview },
@@ -395,8 +389,8 @@ export default {
         itemQuality: "S",
         itemStartPrice: null,
         itemDesc: null,
-        itemDealStatus : "SELL",
-        userNo: this.$store.getters["user/userNo"] // 유저정보를 현재 로그인 된 유저로 설정
+        itemDealStatus: "SELL",
+        userNo: this.$store.getters["user/userNo"], // 유저정보를 현재 로그인 된 유저로 설정
         // userNo: 1, // 유저정보를 현재 로그인 된 유저가 아닌 임시로 1번유저로 지정
       },
       ctgr: {
@@ -468,8 +462,9 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((data) => {
+          console.log("house created");
           console.log(data);
-          // this.itemNo = data.item_no
+          this.ctgr.itemNo = data;
           // this.sendFile();
           this.itemImages.splice(0);
           alert("생성 완료");
@@ -502,9 +497,9 @@ export default {
 <style scoped>
 label {
   text-align: Left;
-  display:inline-block;
-  width:140px;
-  line-height:30px;
+  display: inline-block;
+  width: 140px;
+  line-height: 30px;
 }
 .preview {
   overflow-x: auto;
@@ -563,7 +558,7 @@ textarea {
   width: 500px;
 }
 
-textarea:focus{
+textarea:focus {
   outline: none;
 }
 </style>
