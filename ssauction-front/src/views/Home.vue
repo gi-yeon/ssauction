@@ -101,12 +101,14 @@
           ></b-button>
         </div>
         <div class="row">
-          <div class="col detail-image"></div>
+          <div class="col detail-image">
+            <Carousel :images="houseToDetail.itemImgList" />
+          </div>
           <div class="col detail-info">
-            <div>경매 정보 : {{ houseToDetail.houseDesc }}</div>
+            <div>경매 정보 : {{ houseToDetail.house.houseDesc }}</div>
             <div>
               경매 시작 시간 :
-              {{ getAuctionStartTime(houseToDetail.houseAucTime) }}
+              {{ getAuctionStartTime(houseToDetail.house.houseAucTime) }}
             </div>
             <div>물품명 : {{ houseToDetail.item.itemName }}</div>
             <div>물품 설명 : {{ houseToDetail.item.itemDesc }}</div>
@@ -116,7 +118,9 @@
           </div>
         </div>
         <div class="row"><button @click="joinSession">입장</button></div>
-        <div class="row"><button @click="toggleDetail">닫기</button></div>
+        <div class="row">
+          <button @click="toggleDetail(houseToDetail)">닫기</button>
+        </div>
       </div>
     </Teleport>
   </div>
@@ -127,6 +131,7 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import MainHouses from "@/components/MainHouses.vue";
 import axios from "@/utils/axios.js";
+import Carousel from "@/components/CarouselComp.vue";
 
 function useUser() {
   const store = useStore();
@@ -138,8 +143,10 @@ function useUser() {
 export default {
   name: "SsauctionHome",
   components: {
+    Carousel,
     MainHouses,
   },
+
   MainHousesdata() {
     return {
       ...useUser(),
@@ -147,6 +154,7 @@ export default {
   },
   data() {
     return {
+      store: null,
       hotDeals: null,
       houseSearchWord: null,
       houseCurrentPage: 1,
@@ -162,6 +170,7 @@ export default {
     };
   },
   mounted() {
+    this.store = useStore();
     console.log("hotdeals");
     this.getHouses(0, "", 5, 0);
     this.userNo = this.$store.getters["user/userNo"];
@@ -178,13 +187,16 @@ export default {
         )
         .then((response) => {
           console.log(response.data);
-          this.hotDeals = response.data.list.content;
-          this.totalElements = response.data.list.totalElements;
-          this.totalPages = response.data.list.totalPages;
-          this.numberOfElements = response.data.list.numberOfElements;
-          this.isPagingFirst = response.data.list.first;
-          this.isPagingLast = response.data.list.last;
-          this.isPagingEmpty = response.data.list.empty;
+          this.hotDeals = response.data;
+          this.hotDeals.splice(4);
+          // 페이지네이션을 위한 코드
+
+          // this.totalElements = response.data.list.totalElements;
+          // this.totalPages = response.data.list.totalPages;
+          // this.numberOfElements = response.data.list.numberOfElements;
+          // this.isPagingFirst = response.data.list.first;
+          // this.isPagingLast = response.data.list.last;
+          // this.isPagingEmpty = response.data.list.empty;
           console.log(this.hotDeals);
         });
     },
@@ -194,8 +206,28 @@ export default {
     toggleDetail(house) {
       console.log("toggleDetail");
       console.log(house);
-      this.houseToDetail = house;
       this.showModal = !this.showModal;
+
+      this.houseToDetail = house;
+      this.$store.dispatch(
+        "session/setSessionId",
+        this.houseToDetail.house.houseNo
+      );
+      const isHost =
+        this.userNo == this.houseToDetail.item.sellerNo ? "true" : "false";
+      this.$store.dispatch("session/setIsHost", isHost);
+      this.$store.dispatch(
+        "session/setSessionTitle",
+        this.houseToDetail.house.houseTitle
+      );
+      this.$store.dispatch(
+        "session/setStartPrice",
+        this.houseToDetail.item.itemStartPrice
+      );
+      console.log("sessionStoreTest");
+      console.log(
+        `sessionId : ${this.store.state.session.sessionId}, isHost : ${this.store.state.session.isHost}, sessionTitle : ${this.store.state.session.sessionTitle}, startPrice : ${this.store.state.session.startPrice}`
+      );
     },
     getAuctionStartTime(timestamp) {
       let datetest = new Date(timestamp);
@@ -205,17 +237,10 @@ export default {
       return `${date} ${time}`;
     },
     joinSession() {
-      let isHost = this.userNo == "1" ? "true" : "false";
-      let sessionId = this.houseToDetail.houseNo;
-      let sessionTitle = this.houseToDetail.houseTitle;
-      console.log(this.houseToDetail.houseSearchOptio);
+      this.$store.dispatch("session/setIsInSession", true);
+      console.log(this.store.state.session.isInSession);
       this.$router.push({
         name: "Sessions",
-        params: {
-          sessionId: sessionId,
-          sessionTitle: sessionTitle,
-          isHost: isHost,
-        },
       });
     },
   },

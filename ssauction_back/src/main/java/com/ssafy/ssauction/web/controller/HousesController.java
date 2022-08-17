@@ -11,10 +11,7 @@ import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.storage.StorageService;
 import com.ssafy.ssauction.service.users.UsersService;
-import com.ssafy.ssauction.web.dto.Houses.HousesItemsResponseDto;
-import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
-import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
-import com.ssafy.ssauction.web.dto.Houses.MyHouseResponseDto;
+import com.ssafy.ssauction.web.dto.Houses.*;
 import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsResponseDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
@@ -191,19 +188,40 @@ public class HousesController {
     }
 
     @GetMapping("/searchAll")
-    public ResponseEntity<Map<String, Object>> searchAll(@RequestParam("page") int page,
-                                                                  @RequestParam("size") int size,
-                                                                  @RequestParam(value = "search", required = false) String search,
-                                                                @RequestParam(value="houseStatus", required=false) int houseStatus) {
-        Map<String, Object> resultMap = new HashMap<>();
-        System.out.println("page : " + page + " size: " + size + " search : " + search + " houseStatus : " + houseStatus);
-        HttpStatus status = HttpStatus.OK;
-        PageRequest pageRequest = PageRequest.of(page, size);
+    public ResponseEntity<List<HousesItemsBinaryResponseDto>> searchAll(@RequestParam("page") int page,
+                                                                                    @RequestParam("size") int size,
+                                                                                    @RequestParam(value = "search", required = false) String search,
+                                                                                    @RequestParam(value="houseStatus", required=false) int houseStatus) {
+        List<HousesItemsBinaryResponseDto> result = new ArrayList<>();
+        List<Houses> housesList = housesService.findEntityByHouseStatusAndHouseTitleContaining(houseStatus, search);
+        for (Houses house : housesList) {
+            HousesResponseDto housesResponseDto = new HousesResponseDto(house);
+            Items item = house.getItem();
+            ItemsResponseDto itemsResponseDto = new ItemsResponseDto(item);
+            List<ItemImgs> itemImgsList = item.getImages();
+            List<ImgInfo> itemImgsBinaryList = new ArrayList<>();
+            for (ItemImgs ii : itemImgsList) {
+                String uri = ii.getItemImgUri();
+                byte[] transform = null;
 
-        resultMap.put("list", housesService.houseList(pageRequest, search, houseStatus));
-        System.out.println(resultMap.get("list"));
-        return new ResponseEntity<>(resultMap, status);
+                try {
+                    File file = new File(System.getProperty("user.dir") + "/imgs/item/" + uri);  //이미지 파일 가져오기
+                    FileInputStream inputStream = new FileInputStream(file);                          //파일을 바이트 값으로 저장하기 위한 스트림 생성
+                    transform = new byte[(int) file.length()];                                         //바이트 배열 생성
+                    inputStream.read(transform);                                                    //바이트 값으로 변환
+                    inputStream.close();
+                } catch (Exception e) {
+                    return null;
+                }
+                if (transform != null) {
+                    itemImgsBinaryList.add(ImgInfo.builder().img(transform.clone()).imgNo(ii.getImgNo()).build());
+                }
+            }
+            result.add(new HousesItemsBinaryResponseDto(itemsResponseDto, itemImgsBinaryList, housesResponseDto));
+        }
+        System.out.println(result.size());
 
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("{itemNo}")

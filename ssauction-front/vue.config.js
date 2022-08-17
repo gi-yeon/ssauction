@@ -6,5 +6,4 @@ module.exports = defineConfig({
   },
   transpileDependencies: true,
   lintOnSave: false,
-  outputDir: "../ssauction_back/src/main/resources/dist",
 });

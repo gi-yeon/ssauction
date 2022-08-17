@@ -338,7 +338,7 @@ public class SessionsController {
     // 경매를 종료한다.
     @PostMapping("/bid")
     public ResponseEntity<String> finishBid(@RequestBody Map<String, Object> result) throws Exception {
-        String sessionName = (String)result.get("sessionName");
+        String sessionName = result.get("sessionName").toString();
 
         ArrayDeque<ResultOrdersSaveDto> bidList = mapBids.get(sessionName);
         if (bidList != null && bidList.size() > 0) {

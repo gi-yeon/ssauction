@@ -3,10 +3,11 @@
     <div class="card" style="margin-bottom: 10px; margin-top: 10px">
       <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem">
         <div class="mainsell-container">
-          <!-- <img
-              class="sellImgContainer"
-              v-bind:src="'data:image/png;base64,' + index.itemImgs[0].img"
-            /> -->
+          <img
+            class="itemimg d-block m-3"
+            :src="'data:image/png;base64,' + hot.itemImgList[0].img"
+            alt=""
+          />
           <br />
           {{ this.hot.houseTitle }}
           <br />
