@@ -24,11 +24,14 @@ public class CommentsController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> commentRegister(@RequestBody Map<String, Object> map) {
+
+        System.out.println(map.toString());
+        System.out.println(map);
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
 
         Comments comment = commentsService.commentRegister(map);
-
+        System.out.println(comment);
         if(comment == null) {
             resultMap.put("message", "올바르지 않은 게시글 또는 사용자 입니다.");
             status = HttpStatus.NOT_FOUND;

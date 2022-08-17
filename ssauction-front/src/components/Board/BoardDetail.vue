@@ -1,6 +1,7 @@
 <template>
   <div>
-    <input style="margin-top:20px"
+    <input
+      style="margin-top: 20px"
       type="text"
       name="title"
       id="title"
@@ -9,7 +10,8 @@
     />
 
     <div></div>
-    <textarea style="margin-top:20px"
+    <textarea
+      style="margin-top: 20px"
       name="boardContent"
       id="boardContent"
       cols="60"
@@ -19,26 +21,33 @@
     >
     </textarea>
 
-    <div style="margin-top:20px">
-      <button class="btn_pink" v-show="state.isWriter" @click="ModifyArticle">글수정</button>&nbsp;&nbsp;
-      <button class="btn_pink" v-show="state.isWriter" @click="DeleteArticle">글삭제</button>&nbsp;&nbsp;
+    <div style="margin-top: 20px">
+      <button class="btn_pink" v-show="state.isWriter" @click="ModifyArticle">
+        글수정</button
+      >&nbsp;&nbsp;
+      <button class="btn_pink" v-show="state.isWriter" @click="DeleteArticle">
+        글삭제</button
+      >&nbsp;&nbsp;
       <router-link to="/board">
         <button class="btn_yellow">목록</button>
       </router-link>
     </div>
-    <board-comment-item style="margin-top:20px"
+    <board-comment-item
+      style="margin-top: 20px"
       v-for="(comment, index) in state.comments"
       :key="index"
       v-bind="comment"
     ></board-comment-item>
     <div>
-      <textarea style="margin-top:20px"
+      <textarea
+        style="margin-top: 20px"
         name="commentRegister"
         id="commentRegister"
         cols="50"
         rows="2"
         v-model="state.commentContent"
-      ></textarea>&nbsp;&nbsp;
+      ></textarea
+      >&nbsp;&nbsp;
       <button class="btn_pink2" @click="registerComment">댓글 달기</button>
     </div>
     <div></div>
@@ -97,31 +106,26 @@ export default {
         userNo: state.userNo,
         commentContent: state.commentContent,
       };
+      console.log("comment");
+      console.log(state.commentContent);
       axios.post("comment", JSON.stringify(params)).then(() => {
         alert("댓글을 등록하였습니다.");
         router.go();
       });
     };
 
-    axios
-      .get("board/detail", {
-        params: {
-          boardNo: route.params.id,
-        },
-      })
-      .then(({ data }) => {
-        state.boardNo = data.board.boardNo;
-        state.boardTitle = data.board.boardTitle;
-        state.boardContent = data.board.boardContent;
-        state.userNo = data.board.userNo;
-        state.userNickname = data.board.userNickname;
-        state.comments = data.board.comments;
+    axios.get("board/detail/" + route.params.id).then(({ data }) => {
+      state.boardNo = data.board.boardNo;
+      state.boardTitle = data.board.boardTitle;
+      state.boardContent = data.board.boardContent;
+      state.userNo = data.board.userNo;
+      state.userNickname = data.board.userNickname;
+      state.comments = data.board.comments;
 
-
-        if (state.userNo != null && data.board.userNo == state.userNo)
-          state.isWriter = true;
-        else state.isWriter = false;
-      });
+      if (state.userNo != null && data.board.userNo == state.userNo)
+        state.isWriter = true;
+      else state.isWriter = false;
+    });
 
     return {
       state,
@@ -132,7 +136,6 @@ export default {
   },
 };
 </script>
-
 
 <style>
 .title {
@@ -153,7 +156,7 @@ textarea {
   border-radius: 10px;
 }
 
-textarea:focus{
+textarea:focus {
   outline: none;
 }
 
@@ -186,5 +189,4 @@ textarea:focus{
   color: rgb(94, 94, 94);
   text-align: center;
 }
-
 </style>
