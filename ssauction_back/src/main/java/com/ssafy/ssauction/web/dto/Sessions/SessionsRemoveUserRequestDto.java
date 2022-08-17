@@ -9,5 +9,8 @@ import lombok.*;
 @ToString
 public class SessionsRemoveUserRequestDto {
     String sessionName;
-    String token;
+    String cameraToken;
+//    String screenToken;
+    String userNo;
+    String reason;
 }

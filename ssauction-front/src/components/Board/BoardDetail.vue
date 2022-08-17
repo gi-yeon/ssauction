@@ -81,7 +81,7 @@ export default {
         .delete("board", {
           params: {
             boardNo: route.params.id,
-            userNo: this.state.userNo,
+            userNo: state.userNo,
           },
         })
         .then(() => {
@@ -117,10 +117,8 @@ export default {
         state.userNickname = data.board.userNickname;
         state.comments = data.board.comments;
 
-        if (
-          state.userNo != null &&
-          data.board.userNo == this.$store.state.userNo
-        )
+
+        if (state.userNo != null && data.board.userNo == state.userNo)
           state.isWriter = true;
         else state.isWriter = false;
       });

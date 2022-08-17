@@ -4,7 +4,7 @@
       <div class="col-6">
         <img
           class="itemimg d-block m-3"
-          :src="'data:image/png;base64,'+this.like.itemImgList[0]"
+          :src="'data:image/png;base64,' + this.like.itemImgList[0]"
           alt=""
         />
       </div>
@@ -44,20 +44,14 @@ export default {
   props: {
     like: Object,
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     joinSession() {
       console.log(`houseNo : ${this.like.house.houseNo}`);
-      // this.$router.push({
-      //   name: "Sessions",
-      //   params: { houseNo: this.like.house.houseNo },
-      // });
-      window.open(
-        `http://localhost:8083/sessions/${this.like.house.houseNo}?isInSession=true`,
-        "_blank"
-      );
-      this.$route.push({ name: "sessionRedirect" });
+      this.$router.push({
+        name: "Sessions",
+        params: { sessionId: this.like.house.houseNo },
+      });
     },
   },
 };

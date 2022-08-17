@@ -1,22 +1,22 @@
 <template>
   <div>
-      <br />
-      <h1>경매방 만들기</h1>
-      <br />
-      <br>
-      <div class="row house-input">
+    <br />
+    <h1>경매방 만들기</h1>
+    <br />
+    <br />
+    <div class="row">
       <div class="col-4 label">
         <h4>경매방 이름</h4>
       </div>
-      <div class="col-8 data">
+      <div class="col-2">
         <input
-            id="houseTitle"
-            v-model="house.houseTitle"
-            type="text"
-            required
-            class="input_style"
-            style="margin-bottom: 0.5rem;"
-            label="경매방 이름"
+          id="houseTitle"
+          v-model="house.houseTitle"
+          type="text"
+          required
+          class="input_style"
+          style="margin-bottom: 0.5rem"
+          label="경매방 이름"
         />
       </div>
     </div>
@@ -33,13 +33,10 @@
           is24hr
           placeholder="경매 날짜를 선택하세요"
           class="input_style"
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         >
           <template v-slot="{ inputValue, inputEvents }">
-            <input
-              :value="inputValue"
-              v-on="inputEvents"
-            />
+            <input :value="inputValue" v-on="inputEvents" />
           </template>
         </v-date-picker>
       </div>
@@ -54,7 +51,7 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
@@ -68,12 +65,10 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
-
-
     <div class="row house-input">
       <div class="col-4 label">
         <h4>카테고리</h4>
@@ -294,19 +289,22 @@
           />
           <label class="form-check-label" for="ctgr21">기타물품</label>
         </div>
-        <div style="text-align: center; display:inline-block;">
-          <p>다중 선택 가능합니다. </p>
+        <div style="text-align: center; display: inline-block">
+          <p>다중 선택 가능합니다.</p>
         </div>
       </div>
-
-      
     </div>
     <div class="row house-input">
       <div class="col-4 label">
         <h4>매물상태</h4>
       </div>
       <div class="col-8 data">
-        <input v-model="item.itemQuality" class="form-control" type="text" style="margin-bottom: 0.5rem;"/>
+        <input
+          v-model="item.itemQuality"
+          class="form-control"
+          type="text"
+          style="margin-bottom: 0.5rem"
+        />
       </div>
     </div>
     <div class="row house-input">
@@ -318,7 +316,7 @@
           v-model="item.itemDesc"
           class="form-control"
           type="text"
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         ></textarea>
       </div>
     </div>
@@ -332,7 +330,7 @@
           class="form-control"
           type="text"
           required
-          style="margin-bottom: 0.5rem;"
+          style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
@@ -347,12 +345,19 @@
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
-          
-          <input type="file" ref="itemImage" @change="imageUpload" multiple style="margin-bottom: 0.5rem;">
+
+          <input
+            type="file"
+            ref="itemImage"
+            @change="imageUpload"
+            multiple
+            style="margin-bottom: 0.5rem"
+          />
         </div>
       </div>
     </div>
@@ -365,7 +370,7 @@
           :previewfile="file"
           :index="index"
           @delete-img="deleteImg"
-          style="margin-bottom: 0.5rem; margin-left:0.5rem"
+          style="margin-bottom: 0.5rem; margin-left: 0.5rem"
         />
       </div>
     </div>
@@ -375,13 +380,10 @@
   </div>
 </template>
 
-
 <script>
-
-
 import axios from "@/utils/axios";
 import ItemImagePreview from "@/components/ItemImagePreview.vue";
-
+import { mapState } from "vuex";
 export default {
   name: "SsauctionHouse",
   components: { ItemImagePreview },
@@ -403,9 +405,7 @@ export default {
       },
       house: {
         houseTitle: null,
-        // Datepicker 관련 구현이 아직 완벽하지 않아
-        // houseAucTime, houseStatus 값을 우선 하드코딩된 값으로 대체했다.
-        houseAucTime: "2022-02-22T22:22:22",
+        houseAucTime: null,
         houseStatus: 0,
       },
       houseDate: new Date(),
@@ -435,6 +435,10 @@ export default {
       console.log(this.item);
       console.log(this.ctgr);
 
+      this.house.houseAucTime =
+        this.house.houseAucTime.split(" ")[0] +
+        "T" +
+        this.house.houseAucTime.split(" ")[1];
       // file은 multipart/form-data 형식으로 전송되어야 한다.
       // multipart/form-data 형식으로 요청하면 JSON을 바로 body에 넣는 방식을 사용할 수 없다.
       // 따라서 json Blob 객체로 만들어 파일 형식으로 전달한다.
@@ -464,21 +468,21 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((data) => {
-
           console.log(data);
           // this.itemNo = data.item_no
           // this.sendFile();
           this.itemImages.splice(0);
-          alert("경매방 생성이 완료되었습니다.");
-          this.$route.push({ name: "Home" });
+          alert("생성 완료");
+
+          this.$router.push({ name: "Home" });
         })
         .then(() => {
           axios.post("/categories", ctgrjson).then((data) => {
-          console.log(data);
-         });
-         
-      // this.sendFile();
-      this.itemImages.splice(0);
+            console.log(data);
+          });
+
+          // this.sendFile();
+          this.itemImages.splice(0);
         })
         .catch((error) => {
           alert(error);
@@ -491,11 +495,9 @@ export default {
       this.itemImages.splice(index, 1);
       console.log(this.$refs.itemImage);
     },
-
   },
 };
 </script>
-
 
 <style scoped>
 label {
@@ -519,9 +521,8 @@ label {
   margin-right: 0.5rem;
   height: 1.8rem;
   background-color: rgb(255, 211, 182);
-  width : 30px;
+  width: 30px;
   height: 30px;
-
 }
 input {
   width: 500px;

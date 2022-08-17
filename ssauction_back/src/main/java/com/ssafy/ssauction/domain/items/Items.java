@@ -55,7 +55,8 @@ public class Items {
     private Timestamp itemUpdateTime;
 
     @JsonIgnore
-    @ManyToOne(fetch = LAZY)
+//    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "item_seller_no")
     private Users seller;
 

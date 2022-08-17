@@ -140,19 +140,22 @@ public class Users implements UserDetails {
         this.authority=authority;
     }
 
-    public void updateProfile(String userComment, String userDesc) {
+    public void updateProfile(String userNickname, String userPhoneNo, String userComment, String userDesc) {
+        this.userNickname = userNickname;
+        this.userPhoneNo = userPhoneNo;
         this.userComment = userComment;
         this.userDesc = userDesc;
         this.userUpdateDate = new Timestamp(System.currentTimeMillis());
     }
 
-    public void updateNickname(String userNickname){
-        this.userNickname=userNickname;
-    }
 
     // 비밀번호 재설정
     public void updatePwd(String userPwd) {
         this.userPwd = userPwd;
+    }
+
+    public void updateAuthorities(Authority authority){
+        this.authority = authority;
     }
 
 

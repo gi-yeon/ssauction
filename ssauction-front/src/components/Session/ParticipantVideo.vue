@@ -49,14 +49,12 @@ p {
   border-bottom-right-radius: 4px;
 }
 video + div {
-  /* float: left; */
   width: 50%;
   position: relative;
   margin-left: -50%;
 }
 video {
   position: relative;
-  /* float: left; */
   width: 100%;
   cursor: pointer;
 }

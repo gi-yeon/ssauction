@@ -1,41 +1,36 @@
 package com.ssafy.ssauction.web.controller;
 
 
-import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.ssafy.ssauction.auth.JwtTokenProvider;
-
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.likes.Likes;
-
 import com.ssafy.ssauction.domain.userImages.UserImgs;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.likes.LikesService;
+import com.ssafy.ssauction.service.storage.FileSystemStorageService;
 import com.ssafy.ssauction.service.userImages.UserImgsService;
-
 import com.ssafy.ssauction.service.users.UsersService;
-import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
-import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
-
 import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
+import com.ssafy.ssauction.web.dto.likes.LikesSaveRequestDto;
+import com.ssafy.ssauction.web.dto.userImages.UserImgsGetResponseDto;
+import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 import com.ssafy.ssauction.web.dto.users.*;
-
-import kotlin.reflect.jvm.internal.impl.load.java.lazy.types.TypeParameterUpperBoundEraser;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections.functors.FalsePredicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-
-import java.util.*;
-
-import javax.naming.spi.ObjectFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -52,15 +47,77 @@ public class UsersController {
 
     private final HousesService housesService;
     private final LikesService likesService;
-
+    private final FileSystemStorageService storageService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
+    //프로필 가져오기
     @GetMapping("/profile/{userNo}")
     public UserInfoResponseDto findById(@PathVariable Long userNo) {
-
         return usersService.getInfo(userNo);
+    }
+
+
+    @GetMapping("/profile/img/{userNo}")
+    public ResponseEntity<UserImgsGetResponseDto> findProfileInfoById(@PathVariable Long userNo) {
+        UserImgs img = userImgsService.findEntityById(userNo);
+        String uri = img.getUserImgUri();
+        System.out.println(uri);
+        byte[] transform = null;
+        System.out.println("2 under transform");
+        try {
+            System.out.println("3 before file");
+            File file = new File(System.getProperty("user.dir") + "/imgs/profile/" + uri);
+            System.out.println("3-1 " + file);
+            FileInputStream inputStream = new FileInputStream(file);
+            System.out.println("3-2 " + inputStream);
+            transform = new byte[(int) file.length()];
+            inputStream.read(transform);
+            inputStream.close();
+            System.out.println("4 after file");
+            System.out.println("5 ioexception");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        UserImgsGetResponseDto resDto = UserImgsGetResponseDto.builder()
+                .userMainImg(transform)
+                .infoDto(
+                        UserInfoResponseDto.builder()
+                                .user(usersService.findEntityById(userNo))
+                                .build()
+                )
+                .build();
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(resDto);
+    }
+
+    @PutMapping("/profile/img/{userNo}")
+    public ResponseEntity<String> updateImg(
+            @PathVariable Long userNo,
+            @RequestPart(value = "file") MultipartFile[] files) {
+        boolean isSuccess = false;
+        MultipartFile file = files[0];
+        // FileUpload 관련 설정
+        if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
+            System.out.println(file.getName());
+            System.out.println(file.getContentType());
+            String originalFileName = file.getOriginalFilename();           //          원본 파일 이름을 알아둔다.
+            if (!originalFileName.isEmpty()) {                              //          원본 파일 이름이 유효하다면,
+                String saveFileName = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
+                        + originalFileName                                  //              원본 파일 이름을 합친다.
+                        .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
+                storageService.store(file, saveFileName, "profile");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
+                isSuccess = userImgsService.update(userNo, UserImgsUpdateRequestDto.builder()
+                        .imgName(originalFileName)
+                        .imgUri(saveFileName)
+                        .build());   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
+            }
+        }
+        if (isSuccess)
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/join")
@@ -85,7 +142,6 @@ public class UsersController {
         } else {
             return ResponseEntity.ok(FAIL);
         }
-
     }
 
     //닉네임 중복 확인
@@ -99,12 +155,31 @@ public class UsersController {
         }
     }
 
+    //비밀번호 확인
+    @PostMapping("/pwdCheck")
+    public ResponseEntity<?> pwdCheck(@RequestBody PasswordChckRequestDto requestDto) {
+        Long userNo = requestDto.getUserNo();
+        String userPwd = requestDto.getUserPwd();
 
-    @PutMapping("/profile/img/{userNo}")
-    public Long updateImg(@PathVariable Long userNo, @RequestBody UserImgsUpdateRequestDto requestDto) {
-        System.out.println(userNo);
-        System.out.println(requestDto.toString());
-        return userImgsService.update(userNo, requestDto);
+        //userEmail로 DB에 저장된 user정보 불러옴
+        UsersAuthResponseDto user = usersService.findByUserNo(userNo);
+
+        //비밀번호가 올바르게 입력됐다면
+        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+            return ResponseEntity.ok(SUCCESS);
+        } else {
+            return ResponseEntity.ok(FAIL);
+        }
+    }
+
+    //회원정보 수정에서 비밀번호 재설정
+    @PutMapping("/profile/resetPwd/{userNo}")
+    public ResponseEntity<?> update(@PathVariable Long userNo, @RequestBody UsersUpdatePwdDto resetPwdDto) {
+        if (usersService.profileUpdatePwd(userNo, resetPwdDto)) {
+            return ResponseEntity.ok(SUCCESS);
+        } else {
+            return ResponseEntity.ok(FAIL);
+        }
     }
 
     // 아이디 찾기
@@ -121,10 +196,9 @@ public class UsersController {
         return usersService.updatePwd(userPhoneNo, userId, resetPwdDto);
     }
 
+
     @PutMapping("/profile/info/{userNo}")
     public ResponseEntity<String> updateInfo(@PathVariable Long userNo, @RequestBody UsersInfoUpdateRequestDto requestDto) {
-        System.out.println(userNo);
-        System.out.println(requestDto.toString());
         try {
             usersService.updateInfo(userNo, requestDto);
         } catch (NoSuchElementException e) {
@@ -133,22 +207,14 @@ public class UsersController {
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
-    @PutMapping("/profile/name/{userNo}")
-    public ResponseEntity<UsersNameResponseDto> updateNickname(@PathVariable Long userNo, @RequestBody UsersNameUpdateRequestDto requestDto) {
-        System.out.println(requestDto.getUserNickname());
-        String result = usersService.updateNickname(userNo, requestDto);
-        return new ResponseEntity<>(UsersNameResponseDto.builder().userNickname(requestDto.getUserNickname()).build(), HttpStatus.OK);
-    }
 
-    @DeleteMapping("/{userNo}")
-    public Long delete(@PathVariable Long userNo) {
-        System.out.println("\n\n" + userNo + "\n\n");
-        try {
-            Long delete = usersService.delete(userNo);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    @PutMapping("deleteUser/{userNo}")
+    public ResponseEntity delete(@PathVariable Long userNo) {
+        if (usersService.deleteUser(userNo)) {
+            return ResponseEntity.ok(SUCCESS);
+        } else {
+            return ResponseEntity.ok(FAIL);
         }
-        return 1L;
     }
 
     //login
@@ -163,53 +229,61 @@ public class UsersController {
         //userEmail로 DB에 저장된 user정보 불러옴
         UsersAuthResponseDto user = usersService.findByUserEmail(userEmail);
 
-        //비밀번호가 올바르게 입력됐다면
-        if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
+//        if (user.getAuthority().equals("ROLE_ADMIN") || user.getAuthority().equals("ROLE_USER")) {
 
-            //맵에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("userEmail", user.getUserEmail());
-            userMap.put("userNickname", user.getUserNickname());
-            userMap.put("authority", user.getAuthority());
+            //비밀번호가 올바르게 입력됐다면
+            if (passwordEncoder.matches(userPwd, user.getUserPwd())) {
 
-
-            //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
-            String accessToken = jwtTokenProvider.createAccessToken(userMap);
-            String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
-            usersService.updateRefreshToken(user.getUserNo(), refreshToken); //token db 저장
-
-            //result에 정보 담아준다.
-            result.put("userNo", user.getUserNo());
-            result.put("userNickname", user.getUserNickname());
-            result.put("userGrade", user.getUserGrade());
-
-            //access token 쿠키에 담아줌
-            Cookie cookie = new Cookie("accessToken", accessToken);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true);
-            cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
-            res.addCookie(cookie);
-
-            //refresh token 쿠키에 담아줌
-            Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-            refreshCookie.setPath("/");
-            refreshCookie.setHttpOnly(true);
-            refreshCookie.setSecure(true);
-            refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
-            res.addCookie(refreshCookie);
+                //맵에 유저정보 담아준다. (jwt 페이로드에 넣을 것)
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("userEmail", user.getUserEmail());
+                userMap.put("userNickname", user.getUserNickname());
+                userMap.put("authority", user.getAuthority());
 
 
-            //success 메시지 담아준다.
-            result.put("message", SUCCESS);
-            status = HttpStatus.ACCEPTED; //202
+                //accessToken, refreshToken 생성하고 refresh token은 DB에 저장
+                String accessToken = jwtTokenProvider.createAccessToken(userMap);
+                String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
+                usersService.updateRefreshToken(user.getUserNo(), refreshToken); //token db 저장
 
-        } else {
-            //실패
-            result.put("message", FAIL);
-            status = HttpStatus.ACCEPTED;
+                //result에 정보 담아준다.
+                result.put("userNo", user.getUserNo());
+                result.put("userNickname", user.getUserNickname());
+                result.put("userGrade", user.getUserGrade());
+                result.put("userAuthority", user.getAuthority());
 
-        }
+                //access token 쿠키에 담아줌
+                Cookie cookie = new Cookie("accessToken", accessToken);
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                cookie.setSecure(true);
+                cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
+                res.addCookie(cookie);
+
+                //refresh token 쿠키에 담아줌
+                Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+                refreshCookie.setPath("/");
+                refreshCookie.setHttpOnly(true);
+                refreshCookie.setSecure(true);
+                refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
+                res.addCookie(refreshCookie);
+
+
+                //success 메시지 담아준다.
+                result.put("message", SUCCESS);
+                status = HttpStatus.ACCEPTED; //202
+
+            } else {
+                //실패
+                result.put("message", FAIL);
+                status = HttpStatus.ACCEPTED;
+
+            }
+//        } else {
+//            //실패
+//            result.put("message", FAIL);
+//            status = HttpStatus.ACCEPTED;
+//        }
         return new ResponseEntity<Map<String, Object>>(result, status);
 
     }

@@ -13,6 +13,8 @@ import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
 import ProfileUpdate from "@/views/ProfileUpdate.vue";
 import Sessions from "@/views/Sessions.vue";
+import PwdUpdate from "@/views/PwdUpdate.vue";
+import DeleteUser from "@/views/DeleteUser.vue";
 
 const routes = [
   {
@@ -62,7 +64,7 @@ const routes = [
     component: Profile,
   },
   {
-    path: "/sessions/:houseNo",
+    path: "/sessions/:sessionId/:sessionTitle/:isHost",
     name: "Sessions",
     component: Sessions,
   },
@@ -70,6 +72,16 @@ const routes = [
     path: "/profile/update",
     name: "ProfileUpdate",
     component: ProfileUpdate,
+  },
+  {
+    path: "/pwdUpdate",
+    name: "PwdUpdate",
+    component: PwdUpdate,
+  },
+  {
+    path: "/deleteUser",
+    name: "DeleteUser",
+    component: DeleteUser,
   },
   {
     path: "/zzim",

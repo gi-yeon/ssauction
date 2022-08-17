@@ -1,20 +1,17 @@
 <template>
   <div v-if="streamManager">
-    <ov-video :stream-manager="streamManager" />
-    <div>
-      <p>{{ clientData }}</p>
-    </div>
+    <main-ov-video :stream-manager="streamManager" />
   </div>
 </template>
 
 <script>
-import OvVideo from "./OvVideo";
+import MainOvVideo from "@/components/Session/MainOvVideo.vue";
 
 export default {
-  name: "UserVideo",
+  name: "MainVideo",
 
   components: {
-    OvVideo,
+    MainOvVideo,
   },
 
   props: {
