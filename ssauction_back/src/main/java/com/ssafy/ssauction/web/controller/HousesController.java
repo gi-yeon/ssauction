@@ -139,8 +139,6 @@ public class HousesController {
             itemImgsService.updateMain(img, i==0?true:false);
             System.out.println(""+i+" "+img.getImgNo()+" "+img.getIsMain());
         }
-        System.out.println(files.length);
-        System.out.println(files[0].getContentType());
         for (MultipartFile file : files) {
             if(file.getContentType().equals("text/plain")){
                 break;
