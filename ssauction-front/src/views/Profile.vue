@@ -181,7 +181,7 @@
                     <div
                       class="col-sm-6"
                       style="padding: 0rem; padding-left: 1rem"
-                                          >
+                    >
                       <button
                         type="button"
                         class="btn btn-secondary btn-sm col-sm-4"
@@ -273,62 +273,7 @@
           </div>
         </div>
       </div>
-      <br />
-      <div class="card">
-        <div
-          class="card-body p-2"
-          style="padding: 0.5rem; padding-bottom: 0rem"
-        >
-          <h4 class="card-title">판매 내역</h4>
-          <div class="row">
-            <div
-              v-b-modal.modal-1
-              class="col-sm-4"
-              v-for="index in sellItem"
-              :key="index"
-              @click="getItemDetail(index)"
-            >
-              <b-modal scrollable id="modal-1" title="Selling item" size="lg">
-                <Carousel :images="images" />
-                <p class="my-4">Hello from modal!</p>
-                <br />
-                {{ info.itemName }}
-                <br />
-                {{ info.modelNo }}
-                <br />
-                {{ info.startPrice }}
-                <br />
-                {{ info.regTime }}
-                <br />
-                {{ info.auctionTime }}
-                <br />
-                {{ info.dealStatus }}
-                <br />
-                {{ info.desc }}
-                <template v-slot:footer="{ ok }">
-                  <b-button
-                    v-b-modal.modal-3
-                    @click="ok"
-                    variant="primary"
-                    data-baz="buz"
-                    >Update</b-button
-                  >
-                </template>
-              </b-modal>
-              <div>
-                <div class="card">
-                  <div
-                    class="card-body"
-                    style="padding: 0.5rem; padding-bottom: 0rem"
-                  >
-                    <div class="sell-container">
-                      <img
-                        class="resize"
-                        v-bind:src="
-                          'data:image/png;base64,' +
-                          index.itemImgs[getItemImgsIdx(index)].img
-                        "
-                      />
+
       <p>
         <button
           class="btn"
@@ -405,7 +350,8 @@
                         <img
                           class="sellImgContainer"
                           v-bind:src="
-                            'data:image/png;base64,' + index.itemImgs[0].img
+                            'data:image/png;base64,' +
+                            index.itemImgs[getItemImgsIdx(index)].img
                           "
                         />
 
@@ -480,7 +426,8 @@
                         <img
                           class="sellImgContainer"
                           v-bind:src="
-                            'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
+                            'data:image/png;base64,' +
+                            index.itemImgs[getItemImgsIdx(index)].img
                           "
                         />
                         <br />
@@ -640,6 +587,8 @@ export default defineComponent({
       }
       const deletejson = JSON.stringify({ indexs: deleteArr });
       const sortjson = JSON.stringify({ indexs: idxs });
+      const infojson = JSON.stringify(this.info);
+      console.log(infojson);
       console.log(deletejson);
       console.log(sortjson);
       const deleteblob = new Blob([deletejson], { type: "application/json" });
