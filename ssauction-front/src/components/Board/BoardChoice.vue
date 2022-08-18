@@ -18,13 +18,13 @@ export default {
   methods: {
     setNotice() {
       this.$store.dispatch("board/setBoardType", 1);
-      // console.log(this.$store.state.board.boardType);
+      console.log(this.$store.state.board.boardType);
       this.$router.go();
     },
 
     setFree() {
       this.$store.dispatch("board/setBoardType", 0);
-      // console.log(this.$store.state.board.boardType);
+      console.log(this.$store.state.board.boardType);
       this.$router.go();
     },
   }
