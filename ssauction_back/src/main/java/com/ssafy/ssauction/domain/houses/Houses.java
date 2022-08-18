@@ -20,6 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @NoArgsConstructor
 @Entity
+@Setter
 public class Houses {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -114,10 +114,15 @@ public class HousesController {
     }
 
 
-
+    @DeleteMapping("/{houseNo}")
+    public ResponseEntity<String> deleteHouse(@PathVariable Long houseNo){
+        housesService.deleteHouseInProfile(houseNo);
+        return new ResponseEntity<>("String",HttpStatus.OK);
+    }
     @PutMapping("/update/{houseNo}")
     public ResponseEntity<String> updateHouse(@PathVariable Long houseNo,
-                                              @RequestPart(value = "houseUpdateDto") HouseUpdateRequestDto requestDto,
+                                              @RequestPart(value = "houseUpdateDto") HouseUpdateRequestDto houseDto,
+                                              @RequestPart(value = "ctgrDto") CategoriesLoadRequestDto ctgrDto,
                                               @RequestPart(value = "deleteDto") ItemImgsDeleteRequestDto deleteDto,
                                               @RequestPart(value = "files") MultipartFile[] files,
                                               @RequestPart(value="sortDto") ItemImgsSortRequestDto sortDto)
@@ -134,8 +139,12 @@ public class HousesController {
             itemImgsService.updateMain(img, i==0?true:false);
             System.out.println(""+i+" "+img.getImgNo()+" "+img.getIsMain());
         }
-
+        System.out.println(files.length);
+        System.out.println(files[0].getContentType());
         for (MultipartFile file : files) {
+            if(file.getContentType().equals("text/plain")){
+                break;
+            }
             // FileUpload 관련 설정
             if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
                 System.out.println(file.getName());
@@ -153,6 +162,16 @@ public class HousesController {
                 isSuccess = false;
             }
         }
+        int size=item.getCategories().size();
+        for(int i=size-1;i>=0;i--){
+            System.out.println(item.getCategories().get(i).getCtgrNo());
+            categoriesService.deleteAllbyItem(i,item);
+        }
+        for(String str:ctgrDto.getCtgrName()){
+            categoriesService.save(item,str);
+        }
+        itemsService.update(item, houseDto);
+        housesService.update(house, houseDto);
         return isSuccess ? new ResponseEntity<>("success", HttpStatus.OK) : new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
     }
 
@@ -272,10 +291,4 @@ public class HousesController {
 //
 //        return new ResponseEntity<>(result, HttpStatus.OK);
 //    }
-
-    @DeleteMapping("{houseNo}")
-    public ResponseEntity<String> deleteHouse(@PathVariable Long houseNo) {
-        housesService.delete(houseNo);
-        return new ResponseEntity<>("deleted", HttpStatus.OK);
-    }
 }

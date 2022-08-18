@@ -18,6 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Setter
 public class Items {
     @Id
     @JsonIgnore
