@@ -16,6 +16,19 @@
 
     <div class="row" id="comming-soon-container">
       <div class="my-3" style="height: 20%">
+        <!-- <div class="wave2">
+          <span>C</span>
+          <span>O</span>
+          <span>M</span>
+          <span>I</span>
+          <span>N</span>
+          <span>G</span>
+          <span>&nbsp;</span>
+          <span>S</span>
+          <span>O</span>
+          <span>O</span>
+          <span>N</span>
+        </div> -->
         <input
           class="searchInput"
           type="string"
@@ -29,34 +42,20 @@
       </div>
 
       <div style="height: 60%">
-        <div>
+        <div class="card">
           <div class="card-body">
             <div class="row">
               <main-houses
-                v-for="(hot,index) in hotDeals"
-                :key="hot"
+                v-for="(hot, index) in hotDeals"
+                :key="index"
                 :hot="hot"
-                @click="toggleDetail(index)"
+                @click="toggleDetail(hot)"
               />
             </div>
           </div>
-          <!-- <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-          </nav> -->
+
           <div class="example-pagination-block">
-            <!-- <el-pagination
-              layout="prev, pager, next"
-              :current-page="houseCurrentPage"
-              :total="totalPages"
-            /> -->
+
           </div>
         </div>
       </div>
@@ -69,24 +68,34 @@
       >
         <div>
           <div class="detail-image" style="text-align:center">
-            <Carousel :images="houseToDetail.itemImgList" />
+            <img
+              class="sellImgContainer"
+              v-bind:src="
+              'data:image/png;base64,' +
+              houseToDetail.itemImgList[0].img"/>
           </div>
           <br>
-          <div class="detail-info" style="text-align:center">
-            <h3>{{ houseToDetail.item.itemName }}</h3>
+          <div class="detail-info">
+            <h3 style="text-align:center">{{ houseToDetail.item.itemName }}</h3>
 
-            <h4>{{ getAuctionStartTime(houseToDetail.house.houseAucTime) }} 시작</h4>
+            <h5 style="text-align:left">모델 번호 : {{ houseToDetail.item.itemModelNo }}</h5>
+            <!-- <h4>{{ houseToDetail.item.ctgrList }}</h4> -->
+            <h5 style="text-align:left">시작 가격 : {{ houseToDetail.item.itemStartPrice }}</h5>
+            <h5 style="text-align:left">매물 설명 : {{ houseToDetail.item.itemDesc }}</h5>
+<hr>
+            <h4 style="text-align:center">{{ getAuctionStartTime(houseToDetail.house.houseAucTime) }} 시작</h4>
 
           </div>
-        </div>
+        
         <br>
 
-        <div class="row">
+          <div class="row">
           <button class="btn_pink6" @click="joinSession">입장</button></div>
         
-        <div class="row" style="margin-top:0.5rem">
+          <div class="row" style="margin-top:0.5rem">
           <button class="btn_yellow6" @click="toggleDetail(houseToDetail)">닫기</button>
         </div>
+      </div>
       </div>
     </Teleport>
   </div>
@@ -158,13 +167,13 @@ export default {
             this.hotDeals.splice(4);
           }
           // 페이지네이션을 위한 코드
+
           // this.totalElements = response.data.list.totalElements;
           // this.totalPages = response.data.list.totalPages;
           // this.numberOfElements = response.data.list.numberOfElements;
           // this.isPagingFirst = response.data.list.first;
           // this.isPagingLast = response.data.list.last;
           // this.isPagingEmpty = response.data.list.empty;
-          console.log("hotdeals")
           console.log(this.hotDeals);
         });
     },
@@ -176,7 +185,7 @@ export default {
       console.log(house);
       this.showModal = !this.showModal;
 
-      this.houseToDetail = this.hotDeals[house];
+      this.houseToDetail = house;
       this.$store.dispatch(
         "session/setSessionId",
         this.houseToDetail.house.houseNo

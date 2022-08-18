@@ -74,9 +74,9 @@
         <br />
 
         <div class="row">
-        <label class="formLabel col-2">카테고리</label>&nbsp;&nbsp;
-        <div class="box2 col-6" style="margin-bottom=1rem float:right;">
-          <div class="form-check form-check-inline">
+        <label class="formLabel col-2" >카테고리</label>&nbsp;&nbsp;
+        <div class="box2 col-8 align-left"  style="margin-bottom=1rem ">
+          <div class="form-check2 form-check-inline ">
             <input
               class="form-check-input"
               type="checkbox"
@@ -86,7 +86,7 @@
             />
             <label class="form-check-label" for="ctgr1">전자기기</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -96,7 +96,7 @@
             />
             <label class="form-check-label" for="ctgr2">생활가전</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -107,7 +107,7 @@
             <label class="form-check-label" for="ctgr3">가구/인테리어</label>
           </div>
           <br />
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -118,7 +118,7 @@
             <label class="form-check-label" for="ctgr4">생활/주방</label>
           </div>
 
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -128,7 +128,7 @@
             />
             <label class="form-check-label" for="ctgr5">여성명품</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -139,7 +139,7 @@
             <label class="form-check-label" for="ctgr6">여성의류/신발</label>
           </div>
           <br />
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -149,7 +149,7 @@
             />
             <label class="form-check-label" for="ctgr7">여성잡화</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -159,7 +159,7 @@
             />
             <label class="form-check-label" for="ctgr8">뷰티/미용</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -170,7 +170,7 @@
             <label class="form-check-label" for="ctgr9">남성명품</label>
           </div>
           <br />
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -180,7 +180,7 @@
             />
             <label class="form-check-label" for="ctgr10">남성의류/신발</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -190,7 +190,7 @@
             />
             <label class="form-check-label" for="ctgr11">남성잡화</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -201,7 +201,7 @@
             <label class="form-check-label" for="ctgr12">스포츠/레저</label>
           </div>
           <br />
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -211,7 +211,7 @@
             />
             <label class="form-check-label" for="ctgr13">취미/게임/음반</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -221,7 +221,7 @@
             />
             <label class="form-check-label" for="ctgr14">도서</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -232,7 +232,7 @@
             <label class="form-check-label" for="ctgr15">티켓/입장권</label>
           </div>
           <br />
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -243,7 +243,7 @@
             <label class="form-check-label" for="ctgr16">상품권/교환권</label>
           </div>
 
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -253,7 +253,7 @@
             />
             <label class="form-check-label" for="ctgr17">유아동</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -264,7 +264,7 @@
             <label class="form-check-label" for="ctgr18">가공식품</label>
           </div>
           <br />
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -274,7 +274,7 @@
             />
             <label class="form-check-label" for="ctgr19">반려동물용품</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -284,7 +284,7 @@
             />
             <label class="form-check-label" for="ctgr20">식물</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check2 form-check-inline">
             <input
               class="form-check-input"
               type="checkbox"
@@ -541,7 +541,7 @@
                   <br />
                   <label class="formLabel">모델 번호</label>&nbsp;&nbsp;{{ info.modelNo }}
                   <br />
-                  <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{ info.ctgrName }}
+                  <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{ info.ctgrList }}
                   <br />
                   <label class="formLabel">시작 가격</label>&nbsp;&nbsp;{{ info.startPrice }}원
                   <br />
@@ -619,7 +619,7 @@
                   <br />
                   <label class="formLabel">모델 번호</label>&nbsp;&nbsp;{{ info.modelNo }}
                   <br />
-                  <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{ info.ctgrName }}
+                  <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{ info.ctgrList }}
                   <br />
                   <label class="formLabel">시작 가격</label>&nbsp;&nbsp;{{ info.startPrice }}원
                   <br />
@@ -912,14 +912,6 @@ export default defineComponent({
   margin: auto;
 }
 
-.box {
-  margin-left: 0px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  margin-right: 10px;
-  padding: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
 
 .togglebtn {
   width: 100px;
@@ -979,7 +971,7 @@ export default defineComponent({
   margin-left: 5px;
   margin-right: 5px;
   height: 50px;
-  width: 100px;
+  width: 130px;
   margin-bottom: 20px;
   font-weight:bold;
 }
@@ -1001,19 +993,20 @@ export default defineComponent({
   margin-top: 10px;
   margin-bottom: 20px;
   margin-right: 10px;
-  padding: 20px;
+  padding: 5px;
   border: solid;
   border-width: medium;
   border-color: grey;
   border-radius: 5px;
-  width: 400px;
+  width: 370px;
 }
 
-.form-check {
+.form-check2 {
   margin-top: 0.5rem;
   margin-right: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.7rem;
 }
+
 .form-check-input {
   margin-top: 0;
   margin-right: 0.5rem;

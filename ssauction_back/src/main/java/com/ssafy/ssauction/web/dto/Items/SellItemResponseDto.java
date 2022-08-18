@@ -24,7 +24,9 @@ public class SellItemResponseDto {
     private Timestamp auctionTime;
     private DealStatus dealStatus;
     private String desc;
-    private List<Categories> ctgrName;
+
+    private List<Categories> ctgrList;
+
     @Builder
     public SellItemResponseDto(Items item, Houses house){
         this.itemNo=item.getItemNo();
@@ -37,6 +39,6 @@ public class SellItemResponseDto {
         this.dealStatus=item.getItemDealStatus();
         this.desc=item.getItemDesc();
         this.houseTitle=house.getHouseTitle();
-        this.ctgrName=item.getCategories();
+        this.ctgrList=item.getCategories();
     }
 }
