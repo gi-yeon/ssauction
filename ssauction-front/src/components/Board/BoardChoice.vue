@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <div class="btn justify-content-center margin-top:15px">
+    <div class="justify-content-center margin-top:15px">
       <div class="choice">
         <span @click="setNotice">공지사항</span> &nbsp; &nbsp; | &nbsp; &nbsp;
         <span @click="setFree">자유 게시판</span>

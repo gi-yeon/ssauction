@@ -40,7 +40,7 @@
     </el-menu-item> -->
 
     <el-menu-item index="4" style="height:80px;">
-      <router-link to="house"
+      <router-link to="/house"
         ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
       /></router-link>&nbsp;
       <span>경매방</span>

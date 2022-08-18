@@ -1,3 +1,5 @@
+// BoardDetail.vue
+
 <template>
   <div>
     <input
@@ -32,12 +34,15 @@
         <button class="btn_yellow">목록</button>
       </router-link>
     </div>
+    <div class="comment">
     <board-comment-item
-      style="margin-top: 20px"
+      style="text-align:left;"
       v-for="(comment, index) in state.comments"
       :key="index"
       v-bind="comment"
     ></board-comment-item>
+    </div>
+
     <div>
       <textarea
         style="margin-top: 20px"
@@ -79,6 +84,7 @@ export default {
       comments: [],
       commentContent: "",
       isWriter: Boolean,
+      // hasComment: Boolean,
     });
 
     const ModifyArticle = () => {
@@ -121,6 +127,13 @@ export default {
       state.userNo = data.board.userNo;
       state.userNickname = data.board.userNickname;
       state.comments = data.board.comments;
+
+      // console.log(state.comments.length)
+
+      // if(state.comments.length > 0){
+      //   state.hasComment = true;
+      //   console.log(state.hasComment)
+      // }
 
       if (state.userNo != null && data.board.userNo == state.userNo)
         state.isWriter = true;
@@ -188,5 +201,16 @@ textarea:focus {
   border-radius: 10px;
   color: rgb(94, 94, 94);
   text-align: center;
+}
+
+.comment {
+  width: 550px;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 1rem;
+  padding: 20px;
+  /* background-color: rgba(158, 158, 158, 0.212); */
+  border: none;
+  border-radius: 10px;
 }
 </style>

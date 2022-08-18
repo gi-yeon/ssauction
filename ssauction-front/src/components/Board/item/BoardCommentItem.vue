@@ -1,9 +1,20 @@
+// BoardCommentItem.vue
+
 <template>
     <div>
+        <div class="d-flex">
         <div>{{commentContent}}</div>
-        <div>{{userNickname}}</div>
-        <div>{{commentRegDate}}</div>
-        <button v-show="state.isWriter" @click="deleteComment()">삭제</button>
+
+        <div class="align-right">
+        <button class="btn_delete2" v-show="state.isWriter" @click="deleteComment()">X</button>
+        </div>
+
+        </div>
+
+        <br>
+        <div style="text-align:right;">작성자 : {{userNickname}}</div>
+        <div style="text-align:right;">{{commentRegDate}}</div>
+
     </div>
     
 </template>
@@ -57,3 +68,17 @@ export default {
     }
 }
 </script>
+
+
+<style scoped>
+.btn_delete2 {
+  width: 30px;
+  height: 30px;
+  padding: 0.1rem;
+  border: 0;
+  background-color: rgb(221, 221, 221);
+  border-radius: 45px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+</style>
