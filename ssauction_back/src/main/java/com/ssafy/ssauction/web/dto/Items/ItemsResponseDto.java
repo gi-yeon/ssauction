@@ -20,7 +20,7 @@ public class ItemsResponseDto {
     private int itemStartPrice;
     private int itemFinalPrice;
     private String sellerNickname;
-
+    private List<Categories> ctgrList;
     private Long sellerNo;
 
     @Builder
@@ -35,5 +35,6 @@ public class ItemsResponseDto {
         this.itemFinalPrice = item.getItemFinalPrice();
         this.sellerNickname = item.getSeller().getUserNickname();
         this.sellerNo = item.getSeller().getUserNo();
+        this.ctgrList=item.getCategories();
     }
 }
