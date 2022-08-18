@@ -5,9 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 
 public interface HousesRepository extends JpaRepository<Houses,Long> {
 
-    Page<Houses> findByHouseTitleContainingAndHouseStatus(PageRequest pageRequest, String houseTitle, int houseStatus);
+    List<Houses> findByHouseStatus(int houseStatus);
 
+    List<Houses> findEntityByHouseStatusAndHouseTitleContaining(int houseStatus, String houseTitle);
 }

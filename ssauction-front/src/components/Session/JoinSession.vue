@@ -115,6 +115,9 @@
             <p class="m-3 invalid-input-text" v-if="!isValidUsername">
               닉네임을 입력하세요
             </p>
+            <button class="btn btn-lg btn-success" @click="backToMain">
+              돌아가기
+            </button>
           </div>
         </div>
       </section>
@@ -123,6 +126,8 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+
 export default {
   name: "JoinSession",
   props: {
@@ -130,6 +135,9 @@ export default {
     isVideoOn: Boolean,
     sessionName: String,
     isInvalidUsername: Boolean,
+  },
+  beforeMount() {
+    this.store = useStore();
   },
   data() {
     return {
@@ -141,6 +149,14 @@ export default {
   computed: {
     isValidUsername() {
       return this.myUserName ? true : false;
+    },
+  },
+  methods: {
+    backToMain() {
+      this.$store.dispatch("session/setIsInSession", false);
+      this.$router.push({
+        name: "Home",
+      });
     },
   },
 };

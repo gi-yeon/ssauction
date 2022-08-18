@@ -286,7 +286,7 @@ public class SessionsController {
 
     @PostMapping("/bidstart")
     public ResponseEntity<String> startBid(@RequestBody Map<String, Object> info) throws Exception {
-        String sessionName = (String)info.get("sessionName");
+        String sessionName = info.get("sessionName").toString();
 
         Long houseNo = Long.parseLong(sessionName);
         Houses house=housesService.findEntityById(houseNo);
@@ -298,10 +298,10 @@ public class SessionsController {
     // 입찰 현황을 갱신한다
     @PutMapping("/bid")
     public ResponseEntity<ArrayDeque<ResultOrdersSaveDto>> updateBid(@RequestBody Map<String, Object> bid) throws Exception {
-        String sessionName = (String) bid.get("sessionName");
-        String userName = (String) bid.get("bidder");
-        String userNo = (String) bid.get("userNo");
-        String priceToBid = (String) bid.get("priceToBid");
+        String sessionName = bid.get("sessionName").toString();
+        String userName =  bid.get("bidder").toString();
+        String userNo = bid.get("userNo").toString();
+        String priceToBid = bid.get("priceToBid").toString();
 
         // 금액 유효성 검사
         if (priceToBid.length() > 13 || Long.parseLong(priceToBid) < 0) {
@@ -338,7 +338,7 @@ public class SessionsController {
     // 경매를 종료한다.
     @PostMapping("/bid")
     public ResponseEntity<String> finishBid(@RequestBody Map<String, Object> result) throws Exception {
-        String sessionName = (String)result.get("sessionName");
+        String sessionName = result.get("sessionName").toString();
 
         ArrayDeque<ResultOrdersSaveDto> bidList = mapBids.get(sessionName);
         if (bidList != null && bidList.size() > 0) {

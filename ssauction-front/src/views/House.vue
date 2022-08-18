@@ -5,8 +5,8 @@
     <br />
     <br />
     <div class="row">
-      <div class="col-4 label">
-        <h4>경매방 이름</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">경매방 이름</h4>
       </div>
       <div class="col-2">
         <input
@@ -22,8 +22,8 @@
     </div>
     <div class="date">
       <div class="row house-input">
-        <div class="col-4 label">
-          <h4>경매 일시</h4>
+        <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+          <h4 align="right">경매 일시</h4>
         </div>
         <div class="col-6 data">
           <div class="row house-input">
@@ -39,8 +39,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>매물 이름</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">매물 이름</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -53,8 +53,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>모델 번호</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">모델 번호</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -67,8 +67,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>카테고리</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">카테고리</h4>
       </div>
 
       <div class="col-8 data align-left">
@@ -295,21 +295,36 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>매물상태</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">매물상태</h4>
       </div>
       <div class="col-8 data">
-        <input
+        <!-- <input
           v-model="item.itemQuality"
           class="form-control"
           type="text"
           style="margin-bottom: 0.5rem"
-        />
+        /> -->
+        <div class="form-group">
+        <select
+          v-model="item.itemQuality"
+          class="form-control"
+          type="text"
+          style="margin-bottom: 0.5rem"
+          id="exampleFormControlSelect1">
+
+          <option>S</option>
+          <option>A</option>
+          <option>B</option>
+          <option>C</option>
+
+        </select>
+        </div>
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>매물설명</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">매물설명</h4>
       </div>
       <div class="col-8 data">
         <textarea
@@ -321,8 +336,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>시작가격</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">시작가격</h4>
       </div>
       <div class="col-8 data">
         <input
@@ -335,8 +350,8 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label">
-        <h4>사진</h4>
+      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <h4 align="right">사진</h4>
       </div>
       <div class="col-2 data">
         <div class="mb-3">
@@ -380,7 +395,7 @@ export default {
       item: {
         itemName: null,
         itemModelNo: null,
-        itemQuality: "S",
+        itemQuality: null,
         itemStartPrice: null,
         itemDesc: null,
         itemDealStatus: "SELL",
@@ -454,6 +469,7 @@ export default {
         .post("/houses", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
+
         .then(({ data }) => {
           console.log(data);
           this.itemNo = data;
@@ -478,7 +494,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 label {
@@ -507,6 +522,7 @@ label {
   width: 30px;
   height: 30px;
 }
+
 input {
   width: 630px;
   height: 50px;
@@ -516,6 +532,17 @@ input {
   color: rgb(94, 94, 94);
   padding-left: 30px;
 }
+
+select {
+  width: 630px;
+  height: 50px;
+  border: 0;
+  background-color: rgb(230, 230, 230);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  padding-left: 30px;
+}
+
 .btn_pink2 {
   width: 150px;
   height: 40px;
@@ -553,12 +580,18 @@ textarea:focus {
 .box {
   margin-left: 0px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-right: 10px;
   padding: 20px;
-  border: 1px solid grey;
+  border: 0px solid grey;
   border-radius: 5px;
   width: 630px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.preview {
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .date {

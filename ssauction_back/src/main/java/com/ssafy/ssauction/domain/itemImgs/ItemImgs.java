@@ -27,6 +27,7 @@ public class ItemImgs {
     @Column(name = "item_img_uri", length = 200)
     private String itemImgUri;
 
+    @Setter
     @Column(name ="item_img_main", nullable = false)
     private Boolean isMain;
     @Column(name = "item_img_reg_date")
@@ -39,7 +40,9 @@ public class ItemImgs {
     @JoinColumn(name = "item_no")
     @Setter
     private Items item;
-
+    public void updateMain(boolean isMain){
+        this.isMain=isMain;
+    }
     public void update(String itemImgName, String itemImgUri) {
         this.itemImgName = itemImgName;
         this.itemImgUri = itemImgUri;

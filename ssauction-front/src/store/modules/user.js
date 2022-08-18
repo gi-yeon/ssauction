@@ -133,8 +133,8 @@ const mutations = {
     state.loginUser.userNo = payload.data.userNo;
     state.loginUser.userNickname = payload.data.userNickname;
     state.loginUser.userGrade = payload.data.userGrade;
-    state.accessToken = payload.data.accessToken;
-    state.refreshToken = payload.data.refreshToken;
+    // state.accessToken = payload.data.accessToken;
+    // state.refreshToken = payload.data.refreshToken;
   },
 
   //닉네임 업데이트
@@ -146,8 +146,8 @@ const mutations = {
   //로그아웃
   USER_LOGOUT(state) {
     state.isLogin = false;
-    state.accessToken = null;
-    state.refreshToken = null;
+    // state.accessToken = null;
+    // state.refreshToken = null;
     state.loginUser = {
       userNo: "",
       userNickname: "",

@@ -31,7 +31,9 @@ public class ItemImgsService {
         itemImg.setItem(item);
         return itemImgsRepository.save(itemImg);
     }
-
+    public ItemImgs findById(Long imgNo){
+        return itemImgsRepository.findById(imgNo).get();
+    }
     @Transactional
     public boolean update(Long userNo, ItemImgsUpdateRequestDto requestDto){
         try {
@@ -58,5 +60,10 @@ public class ItemImgsService {
 
     public ItemImgsGetResponseDto getImgs(Items item) {
         return ItemImgsGetResponseDto.builder().img(itemImgsRepository.findByItem(item).get()).build();
+    }
+
+    @Transactional
+    public void updateMain(ItemImgs img, boolean b) {
+        img.updateMain(b);
     }
 }

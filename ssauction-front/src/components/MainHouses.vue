@@ -1,32 +1,28 @@
 <template>
-  <div class="container main-house">
-    <div class="row">
-      <!-- <div class="col-6"> -->
-      <!-- <img
-          class="itemimg d-block m-3"
-          :src="`http://localhost:8080/file/item/${imgNameList[0]}`"
-          alt=""
-        /> -->
-      <!-- </div> -->
-      <div class="col-4">
-        <div class="row">{{ this.hot.houseTitle }}</div>
-        <img
-          class="resize"
-          v-bind:src="'data:image/png;base64,' + index.itemImgs[0].img"
-        />
-        <!-- <div class="row">{{ this.hot.item.sellerNickname }}</div> -->
-        <div class="row" v-if="isSelling">{{ participantNum }}</div>
-        <div class="row" v-if="!isSelling">
-          {{ getAuctionStartTime(this.hot.houseAucTime) }}
-        </div>
-        <div class="row" v-if="isSelling">
-          <div class="col">{{ houseAuctionCurrentPrice }}</div>
-          <div class="col">{{ houseAuctionRemainingTime }}</div>
+  <div class="col-sm-3">
+    <div class="card" style="margin-bottom: 10px; margin-top: 10px">
+      <div class="card-body p-2" style="padding: 0.5rem; padding-bottom: 0rem">
+        <div class="mainsell-container">
+          <img
+            class="sellImgContainer"
+            :src="'data:image/png;base64,' + hot.itemImgList[0].img"
+            alt=""
+          />
+          <br />
+          {{ this.hot.house.houseTitle }}
+          <br />
+          <div>
+            {{ getAuctionStartTime(this.hot.house.houseAucTime) }}
+          </div>
+          <div>
+            <div>{{ this.hot.house.houseDesc }}</div>
+          </div>
+          <div><button @click="like">찜하기</button></div>
         </div>
         <div class="row" v-if="!isSelling">
           <div>{{ this.hot.houseDesc }}</div>
         </div>
-        <div><button @click="like">찜하기</button></div>
+        <!-- <div><button @click="like">찜하기</button></div> -->
       </div>
     </div>
   </div>
@@ -89,4 +85,16 @@ export default {
   height: auto;
   width: 90%;
 }
+.mainsell-container {
+  /* border-radius: 90%; */
+  overflow: hidden;
+  margin: auto;
+  height: 300px;
+}
+/* .sellImgContainer {
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  object-fit: contain;
+} */
 </style>

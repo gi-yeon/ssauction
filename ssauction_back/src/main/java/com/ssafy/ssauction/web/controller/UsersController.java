@@ -17,9 +17,11 @@ import com.ssafy.ssauction.web.dto.userImages.UserImgsGetResponseDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsUpdateRequestDto;
 import com.ssafy.ssauction.web.dto.users.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.protocol.HttpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -271,6 +273,22 @@ public class UsersController {
                 refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
                 res.addCookie(refreshCookie);
 
+                //access token 쿠키에 담아줌
+                Cookie cookie = new Cookie("accessToken", accessToken);
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                cookie.setSecure(true);
+
+                cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
+                res.addCookie(cookie);
+
+                //refresh token 쿠키에 담아줌
+                Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+                refreshCookie.setPath("/");
+                refreshCookie.setHttpOnly(true);
+                refreshCookie.setSecure(true);
+                refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
+                res.addCookie(refreshCookie);
 
                 //success 메시지 담아준다.
                 result.put("message", SUCCESS);
@@ -291,7 +309,7 @@ public class UsersController {
         //access token 제거
         Cookie cookie = new Cookie("accessToken", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         res.addCookie(cookie);
@@ -299,7 +317,7 @@ public class UsersController {
         //refresh token 제거
         Cookie recookie = new Cookie("refreshToken", null);
         recookie.setHttpOnly(true);
-        recookie.setSecure(false);
+        recookie.setSecure(true);
         recookie.setMaxAge(0);
         recookie.setPath("/");
         res.addCookie(recookie);
@@ -341,7 +359,7 @@ public class UsersController {
             //기존 access token 쿠기 삭제하고
             Cookie cookie = new Cookie("accessToken", null);
             cookie.setHttpOnly(true);
-            cookie.setSecure(false);
+            cookie.setSecure(true);
             cookie.setMaxAge(0);
             cookie.setPath("/");
             res.addCookie(cookie);
