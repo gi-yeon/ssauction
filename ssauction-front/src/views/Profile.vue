@@ -2,12 +2,15 @@
   <div>
     <h2>{{ user.loginUser.userNickname }}님의 프로필</h2>
     <br />
-
-
     <div v-show="user.isLogin">
       <br />
-      <!-- 수정 모달 -->
-      <b-modal id="modal-3" scrollable title="Update item" size="lg">
+      <b-modal
+        id="modal-3"
+        scrollable
+        title="Update item"
+        size="lg"
+        v-model="isHide"
+      >
         <div class="flex m-10">
           <draggable
             class="dragArea list-group w-full"
@@ -20,12 +23,40 @@
               :key="element"
             >
               <img
-                class="resize"
+                class="imgTag"
                 v-bind:src="'data:image/png;base64,' + element.img"
               />
               <button @click="deleteImgs(idx)">delete</button>
             </div>
           </draggable>
+        </div>
+        <div class="mb-3">
+          <el-upload
+            class="avatar-uploader"
+            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+
+          <input
+            type="file"
+            ref="addImage"
+            @change="imageUpload"
+            multiple
+            style="margin-bottom: 0.5rem"
+          />
+          <item-image-preview
+            v-for="(file, index) in addImages"
+            :key="file.lastModified"
+            :previewfile="file"
+            :index="index"
+            @delete-img="deleteImg"
+            style="margin-bottom: 0.5rem; margin-left: 0.5rem"
+          />
         </div>
         {{ updateImgs }}
         <p class="my-4">Hello from modal!</p>
@@ -408,12 +439,14 @@ import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import Carousel from "@/components/CarouselComp.vue";
 import { VueDraggableNext } from "vue-draggable-next";
+import ItemImagePreview from "@/components/ItemImagePreview.vue";
 
 export default defineComponent({
   name: "SsauctionProfile",
   components: {
     Carousel,
     draggable: VueDraggableNext,
+    ItemImagePreview,
   },
   computed: {
     ...mapState(["user"]),
@@ -435,6 +468,8 @@ export default defineComponent({
       updateImgs: {},
       delImgs: [],
       dragging: true,
+      isHide: false,
+      addImages: [],
     };
   },
 
@@ -446,6 +481,10 @@ export default defineComponent({
   },
 
   methods: {
+    deleteImg(index) {
+      this.addImages.splice(index, 1);
+      console.log(this.$refs.addImage);
+    },
     getUserInfo: async function () {
       await axios
         .get("/users/profile/" + this.userNo)
@@ -505,7 +544,8 @@ export default defineComponent({
       this.info = index.item;
     },
     ok: async function (index) {
-      console.log(index.item);
+      console.log(index);
+      console.log("here is ok");
     },
     log(event) {
       console.log(event);
@@ -525,14 +565,29 @@ export default defineComponent({
         console.log(no);
         deleteArr.push(no);
       }
+      const idxs = [];
+      for (let idx of this.updateImgs) {
+        console.log(idx.imgNo);
+        idxs.push(idx.imgNo);
+      }
       const deletejson = JSON.stringify({ indexs: deleteArr });
+      const sortjson = JSON.stringify({ indexs: idxs });
+      const infojson = JSON.stringify(this.info);
+      console.log(infojson);
       console.log(deletejson);
+      console.log(sortjson);
       const deleteblob = new Blob([deletejson], { type: "application/json" });
-
+      const sortblob = new Blob([sortjson], { type: "application/json" });
       // html의 form 태그를 이용해 submit하면 formData 객체와 multipart/form-data 형식으로 전달된다.
       // form 태그를 이용하고 있지 않지만 이용한 것처럼 요청하기 위해 새 formData 객체를 만든다.
       let formData = new FormData();
       formData.append("deleteDto", deleteblob);
+      formData.append("sortDto", sortblob);
+
+      for (let img of this.addImages) {
+        console.log(img);
+        formData.append("files", img);
+      }
 
       await axios
         .put("/houses/update/" + this.info.houseNo, formData, {
@@ -541,7 +596,31 @@ export default defineComponent({
         .then(({ data }) => {
           console.log(data);
           alert("사진 수정 완료");
+          this.isHide = false;
         });
+    },
+    imageUpload() {
+      // $refs를 통해 DOM에 있는 input의 files에 직접 접근하면 FileList 객체가 반환된다.
+      // FileList 객체는 read only이므로 다루기 어렵다.
+      // 아래의 코드를 통해 this.itemImages 배열에 files에 있는 File 객체를 그대로 복사한다.
+      Array.prototype.push.apply(this.addImages, this.$refs.addImage.files);
+      console.log(this.addImages);
+      this.$refs.addImage.value = "";
+    },
+    getItemImgsIdx(idxs) {
+      let cnt = 0;
+      console.log(idxs);
+      for (let id of idxs.itemImgs) {
+        console.log(id);
+        console.log(id.main);
+        if (id.main) {
+          console.log(cnt);
+          return cnt;
+        }
+        cnt++;
+      }
+      console.log(cnt);
+      return 0;
     },
   },
 });
@@ -580,13 +659,11 @@ export default defineComponent({
   margin: auto;
 }
 .sell-container {
-  width: 300px;
   height: 300px;
-  /* border-radius: 90%; */
   overflow: hidden;
   margin: auto;
 }
-img {
+.imgTag {
   display: block;
   margin: auto;
 }

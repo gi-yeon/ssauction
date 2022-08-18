@@ -1,10 +1,14 @@
 package com.ssafy.ssauction.domain.comments;
 
+import com.ssafy.ssauction.domain.board.Board;
+import com.ssafy.ssauction.domain.items.Items;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
@@ -23,8 +27,10 @@ public class Comments {
     @Column(name = "comment_regdate", nullable = false)
     private String commentRegDate;
 
-    @Column(name = "board_no", nullable = false)
-    private Long boardNo;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "board_no")
+    @Setter
+    private Board board;
 
     @Column(name = "user_no", nullable = false)
     private Long userNo;

@@ -4,24 +4,23 @@ import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.items.Items;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 
 @Getter
+@NoArgsConstructor
 public class CategoriesLoadRequestDto {
-    private Long itemNo;
     private String[] ctgrName;
 
     @Builder
-    public CategoriesLoadRequestDto(Long itemNo, String[] ctgrName) {
-        this.itemNo=itemNo;
+    public CategoriesLoadRequestDto( String[] ctgrName) {
         this.ctgrName=ctgrName;
     }
 
     @Override
     public String toString() {
         return "CategoriesSaveRequestDto{" +
-                "itemNo=" + itemNo +
                 ", ctgrName=" + Arrays.toString(ctgrName) +
                 '}';
     }

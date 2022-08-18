@@ -1,25 +1,22 @@
 package com.ssafy.ssauction.web.controller;
 
+import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
+import com.ssafy.ssauction.domain.items.DealStatus;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
+import com.ssafy.ssauction.service.categories.CategoriesService;
 import com.ssafy.ssauction.service.houses.HousesService;
 import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.storage.StorageService;
 import com.ssafy.ssauction.service.users.UsersService;
-import com.ssafy.ssauction.web.dto.Houses.HousesItemsResponseDto;
-import com.ssafy.ssauction.web.dto.Houses.HousesResponseDto;
-import com.ssafy.ssauction.web.dto.Houses.HousesSaveRequestDto;
-import com.ssafy.ssauction.web.dto.Houses.MyHouseResponseDto;
-import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
-import com.ssafy.ssauction.web.dto.Items.ItemsResponseDto;
-import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
-import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
-import com.ssafy.ssauction.web.dto.itemImg.ImgInfo;
-import com.ssafy.ssauction.web.dto.itemImg.ItemImgsDeleteRequestDto;
-import com.ssafy.ssauction.web.dto.itemImg.ItemImgsResponseDto;
+import com.ssafy.ssauction.web.dto.Houses.*;
+import com.ssafy.ssauction.web.dto.Items.*;
+import com.ssafy.ssauction.web.dto.categories.CategoriesLoadRequestDto;
+import com.ssafy.ssauction.web.dto.itemImg.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.Timestamp;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -42,7 +40,7 @@ public class HousesController {
 
     private final ItemImgsService itemImgsService;
     private final StorageService storageService;
-
+    private final CategoriesService categoriesService;
     @GetMapping("/profile/{userNo}")
     public ResponseEntity<MyHouseResponseDto> myAllHouses(@PathVariable Long userNo) {
         Users user = usersService.findEntityById(userNo);                                       //유저 정보 가져오기
@@ -64,7 +62,7 @@ public class HousesController {
                     return null;
                 }
                 if (transform != null) {
-                    imgs[i]=ImgInfo.builder().img(transform.clone()).imgNo(img.getImgNo()).build();
+                    imgs[i]=ImgInfo.builder().img(transform.clone()).imgNo(img.getImgNo()).isMain(img.getIsMain()).build();
                 }
             }
             boolean isNull = false;
@@ -78,8 +76,10 @@ public class HousesController {
         }
 
         //구매 중인 아이템 정보 가져오는 것도 판매랑 같음
-        List<ItemInfoResponseDto> buyList = new ArrayList<>();
-        for (Items item : user.getPurchaseItems()) {
+        List<ItemResultInfoResponseDto> buyList = new ArrayList<>();
+        List<ResultOrders> resultOrdersList = user.getResults();
+        for (ResultOrders result : resultOrdersList) {
+            Items item = result.getHouse().getItem();
             int imgSize = item.getImages().size();
             ImgInfo[] imgs=new ImgInfo[imgSize];
             for (int i = 0; i < imgSize; i++) {
@@ -96,7 +96,7 @@ public class HousesController {
                     return null;
                 }
                 if (transform != null) {
-                    imgs[i] = ImgInfo.builder().img(transform.clone()).imgNo(img.getImgNo()).build();
+                    imgs[i] = ImgInfo.builder().img(transform.clone()).imgNo(img.getImgNo()).isMain(img.getIsMain()).build();
                 }
             }
             boolean isNull = false;
@@ -105,47 +105,62 @@ public class HousesController {
                     isNull = true;
             }
             if (!isNull)
-                buyList.add(new ItemInfoResponseDto(SellItemResponseDto.builder().item(item).house(item.getHouse()).build(),
-                        imgs));
+                buyList.add(new ItemResultInfoResponseDto(SellItemResponseDto.builder().item(item).house(item.getHouse()).build(),
+                        imgs, result));
         }
 
         MyHouseResponseDto resDto = new MyHouseResponseDto(sellList, buyList);                  //보낼 데이터를 Dto로 감싸주기
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(resDto);        //보내기
     }
 
+
+
     @PutMapping("/update/{houseNo}")
     public ResponseEntity<String> updateHouse(@PathVariable Long houseNo,
-//                                              @RequestPart(value = "houseUpdateDto") HouseUpdateRequestDto requestDto,
-                                              @RequestPart(value = "deleteDto") ItemImgsDeleteRequestDto deleteDto)
-//                                              @RequestPart(value = "file") MultipartFile[] files)
+                                              @RequestPart(value = "houseUpdateDto") HouseUpdateRequestDto requestDto,
+                                              @RequestPart(value = "deleteDto") ItemImgsDeleteRequestDto deleteDto,
+                                              @RequestPart(value = "files") MultipartFile[] files,
+                                              @RequestPart(value="sortDto") ItemImgsSortRequestDto sortDto)
     {
         boolean isSuccess = true;
-
         Houses house = housesService.findEntityById(houseNo);
         Items item = house.getItem();
 
         itemImgsService.delete(item, deleteDto);
+        System.out.println("sortDto : "+sortDto.getIndexs().toString());
 
-//        for (MultipartFile file : files) {
-//            // FileUpload 관련 설정
-//            if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
-//                System.out.println(file.getName());
-//                System.out.println(file.getContentType());
-//                String originalFileName = file.getOriginalFilename();           //          원본 파일 이름을 알아둔다.
-//                if (!originalFileName.isEmpty()) {                              //          원본 파일 이름이 유효하다면,
-//                    String saveFileName = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
-//                            + originalFileName                                  //              원본 파일 이름을 합친다.
-//                            .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
-//                    storageService.store(file, saveFileName, "item");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
-//                    isSuccess = itemImgsService.update(item.getItemNo(), ItemImgsUpdateRequestDto.builder()
-//                            .imgName(originalFileName)
-//                            .imgUri(saveFileName)
-//                            .build());   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
-//                }
-//            } else {
-//                isSuccess = false;
-//            }
-//        }
+        for(int i=0;i<sortDto.getIndexs().size();i++){
+            ItemImgs img = itemImgsService.findById(sortDto.getIndexs().get(i));
+            itemImgsService.updateMain(img, i==0?true:false);
+            System.out.println(""+i+" "+img.getImgNo()+" "+img.getIsMain());
+        }
+        private Long itemNo;
+        private Long houseNo;
+        private String itemName;
+        private int startPrice;
+        private String modelNo;
+        private Timestamp regTime;
+        private Timestamp auctionTime;
+        private DealStatus dealStatus;
+        private String desc;
+        for (MultipartFile file : files) {
+            // FileUpload 관련 설정
+            if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
+                System.out.println(file.getName());
+                System.out.println(file.getContentType());
+                String originalFileName = file.getOriginalFilename();           //          원본 파일 이름을 알아둔다.
+                if (!originalFileName.isEmpty()) {                              //          원본 파일 이름이 유효하다면,
+                    String saveFileName = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
+                            + originalFileName                                  //              원본 파일 이름을 합친다.
+                            .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
+                    storageService.store(file, saveFileName, "item");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
+                    ItemImgs img = itemImgsService.save(item, originalFileName, saveFileName);   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
+                    item.getImages().add(img);
+                }
+            } else {
+                isSuccess = false;
+            }
+        }
         return isSuccess ? new ResponseEntity<>("success", HttpStatus.OK) : new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
     }
 
@@ -154,6 +169,7 @@ public class HousesController {
     public ResponseEntity<Long> createHouse(
             @RequestPart(value = "itemDto") ItemsSaveRequestDto itemDto,          //  House.vue의 item 관련 정보를 받는 객체
             @RequestPart(value = "houseDto") HousesSaveRequestDto houseDto,       //  House.vue의 house 관련 정보를 받는 객체
+            @RequestPart(value = "ctgrDto") CategoriesLoadRequestDto ctgrDto,
             @RequestPart(value = "files") MultipartFile[] files) {                //  House.vue의 files를 받는 배열
         System.out.println(itemDto);
         Users user = usersService.findEntityById(itemDto.getUserNo());          //  itemDto에서 현재 사용자의 UserNo를 통해 현재 user를 찾는다.
@@ -161,13 +177,18 @@ public class HousesController {
         System.out.println(itemDto.toString());
         Items item = itemsService.save(user, itemDto);                          //  item에 유저 정보와 item 정보를 등록한다.
         user.getSellItems().add(item);                                          //  user.SellItems에도 해당 item의 정보를 추가한다.
-
+        for(String str:ctgrDto.getCtgrName()){   // for문을 이용해 복수의 카테고리를 하나씩 저장해주기
+            System.out.println(str);
+            Categories categories = categoriesService.save(item, str);
+            item.getCategories().add(categories);
+        }
         Houses house = housesService.save(item, houseDto);                      //  house에 item 정보와 house 정보를 등록한다.
         item.setHouse(house);                                                   //  item.house에도 해당 house의 정보를 추가한다.
 
+        boolean isFirst=true;
         // FileUpload 관련 설정
         if (files[0] != null && !files[0].isEmpty()) {                          //  file 데이터가 유효하다면,
-            for (MultipartFile file : files) {                                  //      전송받은 file마다,
+            for (MultipartFile file : files) {//      전송받은 file마다,
                 String originalFileName = file.getOriginalFilename();           //          원본 파일 이름을 알아둔다.
                 if (!originalFileName.isEmpty()) {                              //          원본 파일 이름이 유효하다면,
                     String saveFileUri = UUID.randomUUID().toString()          //              저장용 구분자를 생성한다.
@@ -175,8 +196,12 @@ public class HousesController {
                             .substring(originalFileName.lastIndexOf('.'));  //              원본 파일 확장자를 합친다.
                     storageService.store(file, saveFileUri, "item");       //              위와 같이 생성된 이름으로 된 파일을 생성해 요청받은 file을 저장한다.
                     ItemImgs img = itemImgsService.save(item, originalFileName, saveFileUri);   //  itemImgsService를 통해 DB에 ItemImg 정보를 저장한다.
+                    if(isFirst){
+                        img.setIsMain(true);
+                    }
                     item.getImages().add(img);
                 }
+                isFirst=false;
             }
         }
 
@@ -184,19 +209,45 @@ public class HousesController {
     }
 
     @GetMapping("/searchAll")
-    public ResponseEntity<Map<String, Object>> searchAll(@RequestParam("page") int page,
-                                                                  @RequestParam("size") int size,
-                                                                  @RequestParam(value = "search", required = false) String search,
-                                                                @RequestParam(value="houseStatus", required=false) int houseStatus) {
-        Map<String, Object> resultMap = new HashMap<>();
-        System.out.println("page : " + page + " size: " + size + " search : " + search + " houseStatus : " + houseStatus);
-        HttpStatus status = HttpStatus.OK;
-        PageRequest pageRequest = PageRequest.of(page, size);
+    public ResponseEntity<List<HousesItemsBinaryResponseDto>> searchAll(@RequestParam("page") int page,
+                                                                                    @RequestParam("size") int size,
+                                                                                    @RequestParam(value = "search", required = false) String search,
+                                                                                    @RequestParam(value="houseStatus", required=false) int houseStatus) {
+        System.out.println("search : " + search + " houseStatus : " + houseStatus);
+        if (search == null || search.length() == 0) {
+            search = "";
+        }
+        List<HousesItemsBinaryResponseDto> result = new ArrayList<>();
+        List<Houses> housesList = housesService.findEntityByHouseStatusAndHouseTitleContaining(houseStatus, search);
+        for (Houses house : housesList) {
+            HousesResponseDto housesResponseDto = new HousesResponseDto(house);
+            Items item = house.getItem();
+            ItemsResponseDto itemsResponseDto = new ItemsResponseDto(item);
+            List<ItemImgs> itemImgsList = item.getImages();
+            List<ImgInfo> itemImgsBinaryList = new ArrayList<>();
+            for (ItemImgs ii : itemImgsList) {
+                String uri = ii.getItemImgUri();
+                byte[] transform = null;
 
-        resultMap.put("list", housesService.houseList(pageRequest, search, houseStatus));
-        System.out.println(resultMap.get("list"));
-        return new ResponseEntity<>(resultMap, status);
+                try {
+                    File file = new File(System.getProperty("user.dir") + "/imgs/item/" + uri);  //이미지 파일 가져오기
+                    FileInputStream inputStream = new FileInputStream(file);                          //파일을 바이트 값으로 저장하기 위한 스트림 생성
+                    transform = new byte[(int) file.length()];                                         //바이트 배열 생성
+                    inputStream.read(transform);                                                    //바이트 값으로 변환
+                    inputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                if (transform != null) {
+                    itemImgsBinaryList.add(ImgInfo.builder().img(transform.clone()).imgNo(ii.getImgNo()).build());
+                }
+            }
+            result.add(new HousesItemsBinaryResponseDto(itemsResponseDto, itemImgsBinaryList, housesResponseDto));
+        }
+        System.out.println(result.size());
 
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("{itemNo}")

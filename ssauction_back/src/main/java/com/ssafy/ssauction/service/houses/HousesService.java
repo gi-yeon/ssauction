@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class HousesService {
@@ -30,7 +32,11 @@ public class HousesService {
         return housesRepository.findById(houseNo).get();
     }
 
-    public Page<Houses> houseList(PageRequest pageRequest, String search, int houseStatus) {
-            return housesRepository.findByHouseTitleContainingAndHouseStatus(pageRequest, search, houseStatus);
+    public List<Houses> findEntityByHouseStatus(int houseStatus) {
+        return housesRepository.findByHouseStatus(houseStatus);
+    }
+
+    public List<Houses> findEntityByHouseStatusAndHouseTitleContaining(int houseStatus, String search) {
+        return housesRepository.findEntityByHouseStatusAndHouseTitleContaining(houseStatus, search);
     }
 }

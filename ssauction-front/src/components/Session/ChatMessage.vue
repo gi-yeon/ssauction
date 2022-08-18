@@ -21,8 +21,10 @@ export default {
 <style>
 .sender {
   font-weight: bold;
+  color: black;
 }
 .message {
   padding-left: 10px;
+  color: black;
 }
 </style>

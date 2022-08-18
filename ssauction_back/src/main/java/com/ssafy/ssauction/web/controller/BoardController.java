@@ -47,10 +47,11 @@ public class BoardController {
         return new ResponseEntity<>(resultMap, status);
     }
 
-    @GetMapping("/detail")
-    public ResponseEntity<Map<String, Object>> boardDetail(@RequestParam("boardNo") long boardNo) {
+    @GetMapping("/detail/{boardNo}")
+    public ResponseEntity<Map<String, Object>> boardDetail(@PathVariable long boardNo) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        System.out.println(boardNo);
         BoardDtoRes board = boardService.boardDetail(boardNo);
 
         if(board == null) {
@@ -101,7 +102,8 @@ public class BoardController {
                                                            @RequestParam long userNo) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
-
+        System.out.println(boardNo);
+        System.out.println(userNo);
         if(boardService.boardDelete(boardNo, userNo)) {
             status = HttpStatus.OK;
         } else {

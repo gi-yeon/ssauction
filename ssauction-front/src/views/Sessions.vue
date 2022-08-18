@@ -61,7 +61,7 @@
               ></session-timer>
               <div>
                 <button
-                  v-if="!isHost"
+                  v-if="!isHost && isStarted"
                   @click="openBid = !openBid"
                   :disabled="isFinished"
                   class="btn btn-warning"
@@ -71,6 +71,7 @@
                 <p>제한시간 : {{ startTime }}초</p>
                 <el-input-number
                   v-if="isHost"
+                  :disabled="isStarted"
                   v-model="startTime"
                   :min="1"
                   :max="999"
@@ -95,6 +96,7 @@
                 <el-tab-pane label="채팅"
                   ><div id="chat-history">
                     <chat-message
+                      class="chat-message"
                       v-for="(m, index) in messageHistory"
                       :key="index"
                       :sender="m.sender"
@@ -314,6 +316,7 @@ import SessionTimer from "@/components/Session/SessionTimer.vue";
 import MainVideo from "@/components/Session/MainVideo.vue";
 import VueCookies from "vue-cookies";
 import { mapState } from "vuex";
+import { useStore } from "vuex";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -328,11 +331,15 @@ export default {
     SessionTimer,
   },
   mounted() {
-    this.mySessionId = this.$route.params.sessionId;
-    this.sessionName = this.$route.params.sessionTitle;
-    this.isHost = this.$route.params.isHost == "true" ? true : false;
-    this.userNo = this.$store.getters["user/userNo"];
-    console.log(this.isHost);
+    this.store = useStore();
+    this.mySessionId = this.store.state.session.sessionId;
+    this.sessionName = this.store.state.session.sessionTitle;
+    this.isHost = this.store.state.session.isHost == "true" ? true : false;
+    this.userNo = this.store.state.session.userNo;
+    this.currentPrice = this.store.state.session.startPrice + "";
+    console.log(
+      `sessionId : ${this.store.state.session.sessionId}, isHost : ${this.store.state.session.isHost}, sessionTitle : ${this.store.state.session.sessionTitle}, startPrice : ${this.store.state.session.startPrice}`
+    );
     // 배경색 검정색으로 바꾸기
     document.body.classList.add("dark-mode");
   },
@@ -343,6 +350,7 @@ export default {
 
   data() {
     return {
+      store: null,
       OVCamera: undefined,
       sessionCamera: undefined,
       mainStreamManager: undefined,
@@ -656,9 +664,9 @@ export default {
         `signal:${this.mySessionId}/setstarttime`,
         (event) => {
           console.log(event.data); // Message
-          if (!isHost) {
-            this.setStartTime(event.data.message);
-          }
+          // if (!isHost) {
+          //   this.setStartTime(event.data.message);
+          // }
         }
       );
 
@@ -809,7 +817,7 @@ export default {
         for (let sub of this.$refs.subscribersCamera) {
           console.log("connectionId");
           if (speakerId == sub.streamManager.stream.connection.connectionId) {
-            sub.$el.style.border = "2px solid red";
+            sub.$el.style.border = "2px solid white";
           }
         }
       }
@@ -1016,10 +1024,6 @@ export default {
       this.openBid = !this.openBid;
     },
 
-    leaveSession() {
-      this.sessionCamera = false;
-    },
-
     leaveSession(reason) {
       this.closeModal();
       console.log("leaveSession");
@@ -1036,9 +1040,9 @@ export default {
       } else {
         data.reason = "normal";
       }
+      this.$refs.timer.timerStop();
 
       if (this.isHost) {
-        this.$refs.timer.timerStop();
         this.sessionCamera
           .signal({
             data: JSON.stringify({
@@ -1068,6 +1072,7 @@ export default {
           console.log(e);
         });
       window.removeEventListener("beforeunload", this.leaveSession);
+      this.$store.dispatch("session/setIsInSession", false);
       this.$router.push({
         name: "Home",
       });
@@ -1186,6 +1191,9 @@ export default {
   height: 80%;
   background-color: white;
   overflow-y: auto;
+}
+.chat-message {
+  color: black;
 }
 .bid-modal {
   position: fixed;
