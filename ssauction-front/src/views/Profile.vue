@@ -570,9 +570,10 @@
                         info.modelNo
                       }}
                       <br />
-                      <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{
-                        info.ctgrList
-                      }}
+                      <label class="formLabel">카테고리</label>
+                      <span v-for="index in info.ctgrList" :key="index"
+                          >&nbsp;&nbsp;#{{ index.ctgrName }}</span
+                        >
                       <br />
                       <label class="formLabel">시작 가격</label>&nbsp;&nbsp;{{
                         info.startPrice
@@ -671,9 +672,10 @@
                           info.modelNo
                         }}
                         <br />
-                        <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{
-                          info.ctgrList
-                        }}
+                        <label class="formLabel">카테고리</label>
+                        <span v-for="index in info.ctgrList" :key="index"
+                          >&nbsp;&nbsp;#{{ index.ctgrName }}</span
+                        >
                         <br />
                         <label class="formLabel">시작 가격</label>&nbsp;&nbsp;{{
                           info.startPrice

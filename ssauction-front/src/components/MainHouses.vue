@@ -14,6 +14,9 @@
           <div>
             {{ getAuctionStartTime(this.hot.house.houseAucTime) }}
           </div>
+          <span v-for="value in hot.item.ctgrList" :key="value"
+            >&nbsp;#{{ value.ctgrName }}</span
+          >
           <div>
             <div>{{ this.hot.house.houseDesc }}</div>
           </div>
