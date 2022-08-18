@@ -273,22 +273,6 @@ public class UsersController {
                 refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
                 res.addCookie(refreshCookie);
 
-                //access token 쿠키에 담아줌
-                Cookie cookie = new Cookie("accessToken", accessToken);
-                cookie.setPath("/");
-                cookie.setHttpOnly(true);
-                cookie.setSecure(true);
-
-                cookie.setMaxAge(60 * 30); //파기 시간은 토큰의 유효시간과 같다.
-                res.addCookie(cookie);
-
-                //refresh token 쿠키에 담아줌
-                Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-                refreshCookie.setPath("/");
-                refreshCookie.setHttpOnly(true);
-                refreshCookie.setSecure(true);
-                refreshCookie.setMaxAge(60 * 60 * 24 * 3); //3일 간 유효
-                res.addCookie(refreshCookie);
 
                 //success 메시지 담아준다.
                 result.put("message", SUCCESS);
@@ -395,18 +379,21 @@ public class UsersController {
     @GetMapping("/token")
     public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req, HttpServletResponse res) {
         Map<String, Object> map = new HashMap<>();
+        map.put("accessToken", null);
+        map.put("refreshToken", null);
         HttpStatus status = null;
         res.setHeader("Access-Control-Allow-Headers", "Content-Type");
         res.setHeader("Access-Control-Allow-Origin", "*");
         //token 추출해서 map에 넣어준다.
         Cookie[] list = req.getCookies();
+        if(list != null){
         for (Cookie cookie : list) {
             if (cookie.getName().equals("accessToken")) {
-                map.put("accessToken", cookie.getValue());
+                map.replace("accessToken", cookie.getValue());
             } else if (cookie.getName().equals("refreshToken")) {
-                map.put("refreshToken", cookie.getValue());
+                map.replace("refreshToken", cookie.getValue());
             }
-        }
+        }}
         status = HttpStatus.ACCEPTED;
 
         return new ResponseEntity<>(map, status);

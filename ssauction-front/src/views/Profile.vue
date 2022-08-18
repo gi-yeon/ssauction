@@ -103,12 +103,9 @@
           </b-button>
         </template>
       </b-modal>
-      
+
       <div class="box" style="margin: 10px">
-        <div
-          class="p-2"
-          style="padding: 0.5rem; padding-bottom: 0rem"
-        >
+        <div class="p-2" style="padding: 0.5rem; padding-bottom: 0rem">
           <!-- <h4 class="card-title" style="display: inline-block">기본 정보</h4> -->
           <br />
           <div class="row">
@@ -134,10 +131,7 @@
             </div>
             <div class="col-sm-8">
               <div>
-                <div
-                  
-                  style="padding: 0.5rem; padding-bottom: 0.5rem"
-                >
+                <div style="padding: 0.5rem; padding-bottom: 0.5rem">
                   <div class="row">
                     <div
                       class="col-sm-6"
@@ -276,147 +270,80 @@
       </div>
       <br />
 
-<p>
-  <button class="togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#sellingItem" aria-expanded="false" aria-controls="sellingItem">
-    판매 내역
-  </button>&nbsp; &nbsp;
-  <button class="togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#purchasedItem" aria-expanded="false" aria-controls="purchasedItem">
-    구매 내역
-  </button>
-</p>
-
-
-<div class="collapse" id="sellingItem" style="margin-top: 20px;">
-  <div class="box" style="margin: 10px">
-        <div
-          class="p-2"
-          style="padding: 0.5rem; padding-bottom: 0rem"
+      <p>
+        <button
+          class="togglebtn"
+          type="button"
+          data-bs-target="#sellingItem"
+          aria-expanded="false"
+          aria-controls="sellingItem"
+          @click="toSellingItem"
         >
-          <h4 class="card-title">판매 내역</h4>
-          <br />
-          <div class="row">
-            <div
-              v-b-modal.modal-1
-              class="col-sm-3"
-              v-for="index in sellItem"
-              :key="index"
-              @click="getItemDetail(index)"
-            >
-            <!-- 판매물품 모달 -->
-              <b-modal scrollable id="modal-1" title="판매 물품" size="lg">
-                <Carousel :images="images" />
-                <br />
-                <h3>매물 이름 : {{ info.itemName }}</h3>
-                <br />
-                모델 번호 : {{ info.modelNo }}
-                <br />
-                시작 가격 : {{ info.startPrice }}원
-                <br />
-                경매 일시 : {{ index.item.auctionTime.substr(0, 10) }} {{ index.item.auctionTime.substr(11, 5) }}
-                <br />
-                매물 상태 : {{ info.dealStatus }}
-                <br />
-                매물 설명 : {{ info.desc }}
-                <template v-slot:footer="{ ok }">
-                  <b-button
-                    v-b-modal.modal-3
-                    @click="ok"
-                    data-baz="buz"
-                    >수정하기</b-button
-                  >
-                </template>
-              </b-modal>
-              <div>
-                <div style="margin: 10px">
-                  <div
-                    
-                    style="padding: 0.5rem; padding-bottom: 0rem"
-                  >
-                    <div class="sell-container text-align:left">
-                      <img
-                        class="sellImgContainer"
-                        v-bind:src="
-                          'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
-                        "
-                      />
-                      <br>
-                      {{ index.item.itemName }}  {{ index.item.startPrice }}원
-                      <br>
-                      {{ index.item.regTime.substr(0, 10) }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-  </div>
-</div>
-&nbsp; &nbsp;
-<div class="collapse" id="purchasedItem">
-  <div class="box" style="margin: 10px">
-        <div style="padding: 0.5rem; padding-bottom: 0rem">
-          <h4 class="card-title">구매 내역</h4>
-          <br />
-          <div class="row">
-            <div
-              v-b-modal.modal-2
-              class="col-sm-3"
-              v-for="index in buyItem"
-              :key="index"
-              @click="getItemDetail(index)"
-            >
-              <b-modal
-                scrollable
-                id="modal-2"
-                title="Purchased item"
-                ok-title="update"
-                size="lg"
+          판매 내역</button
+        >&nbsp; &nbsp;
+        <button
+          class="togglebtn"
+          type="button"
+          data-bs-target="#purchasedItem"
+          aria-expanded="false"
+          aria-controls="purchasedItem"
+          @click="toPurchasedItem"
+        >
+          구매 내역
+        </button>
+      </p>
+
+      <div id="sellingItem" style="margin-top: 20px" v-show="isSell">
+        <div class="box" style="margin: 10px">
+          <div class="p-2" style="padding: 0.5rem; padding-bottom: 0rem">
+            <h4 class="card-title">판매 내역</h4>
+            <br />
+            <div class="row">
+              <div
+                v-b-modal.modal-1
+                class="col-sm-3"
+                v-for="index in sellItem"
+                :key="index"
+                @click="getItemDetail(index)"
               >
-                <Carousel :images="images" />
-                <p class="my-4">Hello from modal2!</p>
-                <br />
-                {{ info.itemName }}
-                <br />
-                {{ info.modelNo }}
-                <br />
-                {{ info.startPrice }}
-                <br />
-                {{ info.regTime }}
-                <br />
-                {{ info.auctionTime }}
-                <br />
-                {{ info.dealStatus }}
-                <br />
-                {{ info.desc }}
-                <template v-slot:footer="{ ok }">
-                  <b-button
-                    v-b-modal.modal-3
-                    @click="ok"
-                    variant="primary"
-                    data-baz="buz"
-                    >Update</b-button
-                  >
-                </template>
-              </b-modal>
-              <div>
-                <div >
-                  <div
-                    
-                    style="padding: 0.5rem; padding-bottom: 0rem"
-                  >
-                    <div class="sell-container">
-                      <img
-                        class="sellImgContainer"
-                        v-bind:src="
-                          'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
-                        "
-                      />
-                      <br />
-                      {{ index.item.itemName }}
-                      <br />
-                      {{ index.item.startPrice }}원 /
-                      {{ index.item.regTime.substr(0, 10) }}
+                <!-- 판매물품 모달 -->
+                <b-modal scrollable id="modal-1" title="판매 물품" size="lg">
+                  <Carousel :images="images" />
+                  <br />
+                  <h3>매물 이름 : {{ info.itemName }}</h3>
+                  <br />
+                  모델 번호 : {{ info.modelNo }}
+                  <br />
+                  시작 가격 : {{ info.startPrice }}원
+                  <br />
+                  경매 일시 : {{ index.item.auctionTime.substr(0, 10) }}
+                  {{ index.item.auctionTime.substr(11, 5) }}
+                  <br />
+                  매물 상태 : {{ info.dealStatus }}
+                  <br />
+                  매물 설명 : {{ info.desc }}
+                  <template v-slot:footer="{ ok }">
+                    <b-button v-b-modal.modal-3 @click="ok" data-baz="buz"
+                      >수정하기</b-button
+                    >
+                  </template>
+                </b-modal>
+                <div>
+                  <div style="margin: 10px">
+                    <div style="padding: 0.5rem; padding-bottom: 0rem">
+                      <div class="sell-container text-align:left">
+                        <img
+                          class="sellImgContainer"
+                          v-bind:src="
+                            'data:image/png;base64,' +
+                            index.itemImgs[getItemImgsIdx(index)].img
+                          "
+                        />
+                        <br />
+                        {{ index.item.itemName }} {{ index.item.startPrice }}원
+                        <br />
+                        {{ index.item.regTime.substr(0, 10) }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -424,12 +351,82 @@
             </div>
           </div>
         </div>
-  </div>
-</div>
+      </div>
 
+      <div v-show="isPurchased">
+        <div id="purchasedItem">
+          <div class="box" style="margin: 10px">
+            <div style="padding: 0.5rem; padding-bottom: 0rem">
+              <h4 class="card-title">구매 내역</h4>
+              <br />
+              <div class="row">
+                <div
+                  v-b-modal.modal-2
+                  class="col-sm-3"
+                  v-for="index in buyItem"
+                  :key="index"
+                  @click="getItemDetail(index)"
+                >
+                  <b-modal
+                    scrollable
+                    id="modal-2"
+                    title="Purchased item"
+                    ok-title="update"
+                    size="lg"
+                  >
+                    <Carousel :images="images" />
+                    <p class="my-4">Hello from modal2!</p>
+                    <br />
+                    {{ info.itemName }}
+                    <br />
+                    {{ info.modelNo }}
+                    <br />
+                    {{ info.startPrice }}
+                    <br />
+                    {{ info.regTime }}
+                    <br />
+                    {{ info.auctionTime }}
+                    <br />
+                    {{ info.dealStatus }}
+                    <br />
+                    {{ info.desc }}
+                    <template v-slot:footer="{ ok }">
+                      <b-button
+                        v-b-modal.modal-3
+                        @click="ok"
+                        variant="primary"
+                        data-baz="buz"
+                        >Update</b-button
+                      >
+                    </template>
+                  </b-modal>
+                  <div>
+                    <div>
+                      <div style="padding: 0.5rem; padding-bottom: 0rem">
+                        <div class="sell-container">
+                          <img
+                            class="sellImgContainer"
+                            v-bind:src="
+                              'data:image/png;base64,' +
+                              index.itemImgs[getItemImgsIdx(index)].img
+                            "
+                          />
+                          <br />
+                          {{ index.item.itemName }}
+                          <br />
+                          {{ index.item.startPrice }}원 /
+                          {{ index.item.regTime.substr(0, 10) }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-
   </div>
 </template>
 
@@ -470,6 +467,8 @@ export default defineComponent({
       dragging: true,
       isHide: false,
       addImages: [],
+      isSell: false,
+      isPurchased: false,
     };
   },
 
@@ -481,6 +480,15 @@ export default defineComponent({
   },
 
   methods: {
+    toSellingItem() {
+      this.isSell = true;
+      this.isPurchased = false;
+    },
+    toPurchasedItem() {
+      this.isSell = false;
+      this.isPurchased = true;
+    },
+
     deleteImg(index) {
       this.addImages.splice(index, 1);
       console.log(this.$refs.addImage);
@@ -685,7 +693,7 @@ export default defineComponent({
   border-radius: 45px;
   color: rgb(94, 94, 94);
   text-align: center;
-  font-size : 18px; 
+  font-size: 18px;
 }
 
 .labelbutton {
@@ -695,5 +703,4 @@ export default defineComponent({
   color: rgb(94, 94, 94);
   text-align: center;
 }
-
 </style>
