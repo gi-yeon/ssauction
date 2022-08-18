@@ -81,16 +81,10 @@
         class="detail-modal"
         style="text-align: center; background-color: white"
       >
-        <div class="row">
+        <!-- <div class="row">
           <h1>{{ houseToDetail.houseTitle }}</h1>
-          <b-button
-            style="color: red; background-color: white"
-            variant="link"
-            @click="addCarrotZzim"
-            v-if="!isZzimCarrot && !isOwn"
-            ><b-icon icon="heart"></b-icon
-          ></b-button>
-        </div>
+          <button>찜하기</button>
+        </div> -->
         <div class="row">
           <div class="col detail-image">
             <Carousel :images="houseToDetail.itemImgList" />

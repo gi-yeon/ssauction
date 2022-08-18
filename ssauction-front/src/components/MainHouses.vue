@@ -19,6 +19,10 @@
           </div>
           <div><button @click="like">찜하기</button></div>
         </div>
+        <div class="row" v-if="!isSelling">
+          <div>{{ this.hot.houseDesc }}</div>
+        </div>
+        <!-- <div><button @click="like">찜하기</button></div> -->
       </div>
     </div>
   </div>
