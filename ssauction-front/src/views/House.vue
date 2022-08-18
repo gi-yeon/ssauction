@@ -5,7 +5,7 @@
     <br />
     <br />
     <div class="row">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">경매방 이름</h4>
       </div>
       <div class="col-2">
@@ -22,7 +22,7 @@
     </div>
     <div class="date">
       <div class="row house-input">
-        <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+        <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
           <h4 align="right">경매 일시</h4>
         </div>
         <div class="col-6 data">
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">매물 이름</h4>
       </div>
       <div class="col-8 data">
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">모델 번호</h4>
       </div>
       <div class="col-8 data">
@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">카테고리</h4>
       </div>
 
@@ -295,7 +295,7 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">매물상태</h4>
       </div>
       <div class="col-8 data">
@@ -306,24 +306,23 @@
           style="margin-bottom: 0.5rem"
         /> -->
         <div class="form-group">
-        <select
-          v-model="item.itemQuality"
-          class="form-control"
-          type="text"
-          style="margin-bottom: 0.5rem"
-          id="exampleFormControlSelect1">
-
-          <option>S</option>
-          <option>A</option>
-          <option>B</option>
-          <option>C</option>
-
-        </select>
+          <select
+            v-model="item.itemQuality"
+            class="form-control"
+            type="text"
+            style="margin-bottom: 0.5rem"
+            id="exampleFormControlSelect1"
+          >
+            <option>S</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
         </div>
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">매물설명</h4>
       </div>
       <div class="col-8 data">
@@ -336,21 +335,21 @@
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">시작가격</h4>
       </div>
       <div class="col-8 data">
         <input
           v-model="item.itemStartPrice"
           class="form-control"
-          type="text"
+          type="number"
           required
           style="margin-bottom: 0.5rem"
         />
       </div>
     </div>
     <div class="row house-input">
-      <div class="col-4 label" style="margin-top:auto; margin-bottom:auto;">
+      <div class="col-4 label" style="margin-top: auto; margin-bottom: auto">
         <h4 align="right">사진</h4>
       </div>
       <div class="col-2 data">
@@ -585,7 +584,7 @@ textarea:focus {
   padding: 20px;
   border: 0px solid grey;
   border-radius: 5px;
-  width: 630px;
+  width: 650px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 

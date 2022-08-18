@@ -1,12 +1,16 @@
 <template>
-  <div class="container">
+<div>
+  <div class="container" style="position:relative" >
     <div class="clipping-container">
-      <div class="pages" :style="{ left: currentLeft }">
-        <div v-for="index in images" :key="index">
-          <div class="card page">
-            <div class="card-body">
+      <div class="pages" :style="{ left: currentLeft }" >
+        <div v-for="index in images" :key="index" >
+
+          <div class="card page" >
+            <div style="margin:auto;">
               <div>
                 <img
+                 class="imgResize"
+                 style="margin-left:auto; margin-right:auto;"
                   v-bind:src="'data:image/png;base64,' + index.img"
                   @click="clickimg"
                 />
@@ -14,7 +18,8 @@
               </div>
             </div>
           </div>
-          hello
+          </div>
+
         </div>
       </div>
     </div>
@@ -27,10 +32,10 @@
       </span>
     </div>
     <div>
-      <button @click="backwardPage">←</button>
-      <button @click="forwardPage">→</button>
+      <button class="btn-arrow2" @click="backwardPage">←</button>&nbsp;&nbsp;
+      <button class="btn-arrow2" @click="forwardPage">→</button>
     </div>
-  </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -45,6 +50,12 @@ export default defineComponent({
       pageWidth: 200,
     };
   },
+
+  mounted() {
+    console.log("carousel")
+    console.log(this.images)
+  },
+
   methods: {
     forwardPage() {
       console.log(this.totalPage);
@@ -77,6 +88,8 @@ export default defineComponent({
       const vm = this;
       vm.totalPage =
         vm.images?.length == null ? vm.totalPage : vm.images?.length;
+      console.log("totalPage");
+      console.log(vm.totalPage);
     },
   },
   computed: {
@@ -98,6 +111,7 @@ export default defineComponent({
 .pages {
   display: flex;
   /* ここにtransitionをつけることでpagesのleftを変更した場合にアニメーションさせることができる */
+  /* 이 트랜지션은 페이지를 왼쪽으로 넘길때 애니메이션 효과가 나타나도록 합니다 */
   transition: left 0.5s ease;
   position: absolute;
   left: 0;
@@ -105,7 +119,7 @@ export default defineComponent({
 .page {
   width: 200px;
   height: 200px;
-  background-color: aqua;
+  background-color: white;
   border: 1px solid white;
   box-sizing: border-box;
 }
@@ -124,6 +138,32 @@ export default defineComponent({
   display: inline-block;
 }
 .dot-current {
-  background-color: skyblue;
+  background-color: rgba(255, 169, 165, 0.549);
 }
+
+.imgTag {
+  display: block;
+  margin: auto;
+}
+.imgResize {
+  width: 100%;
+  height: 100%;
+}
+
+.btn-arrow2{
+  background-color: #f8e6e0;
+  color: #6e6e6e;
+  position: relative;
+  border: none;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  margin-top: 10px;
+}
+
+
 </style>

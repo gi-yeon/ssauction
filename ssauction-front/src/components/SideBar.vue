@@ -39,21 +39,14 @@
       <span>찜 목록</span>
     </el-menu-item> -->
 
-    <el-menu-item index="4" style="height:80px;">
-      <router-link to="house"
-        ><img src="@\assets\imgs\auction.png" alt="MakeHouse" class="icon"
-      /></router-link>&nbsp;
-      <span>경매방</span>
-    </el-menu-item>
-
-    <el-menu-item index="5" style="height: 80px">
-      <router-link to="/board"
+    <el-menu-item index="4" style="height: 80px">
+      <router-link to="/house"
         ><img
-          src="@\assets\imgs\board.png"
-          alt="Board"
-          class="icon4" /></router-link
+          src="@\assets\imgs\auction.png"
+          alt="MakeHouse"
+          class="icon" /></router-link
       >&nbsp;
-      <span>게시판</span>
+      <span>경매방</span>
     </el-menu-item>
 
     <el-menu-item index="6" style="height: 80px">

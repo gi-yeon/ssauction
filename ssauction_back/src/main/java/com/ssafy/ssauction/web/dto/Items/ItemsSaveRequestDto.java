@@ -56,6 +56,7 @@ public class ItemsSaveRequestDto {
                 .itemDealStatus(itemDealStatus)
                 .itemStartPrice(itemStartPrice)
                 .seller(seller)
+                .itemDesc(itemDesc)
                 .build();
     }
 }

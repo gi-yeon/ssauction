@@ -4,29 +4,26 @@
     <br />
     <div v-show="user.isLogin">
       <br />
+      <!-- 수정 모달 -->
       <b-modal
         id="modal-3"
         scrollable
-        title="Update item"
+        title="물품 수정하기"
         size="lg"
         v-model="isHide"
       >
         <div class="flex m-10">
-          <draggable
-            class="dragArea list-group w-full"
-            v-model="updateImgs"
-            @change="log"
-          >
+          <draggable class="dragArea d-flex" v-model="updateImgs" @change="log">
             <div
-              class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center"
+              class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center d-flex"
               v-for="(element, idx) in updateImgs"
               :key="element"
             >
               <img
-                class="imgTag"
+                class="imgTag imgResize"
                 v-bind:src="'data:image/png;base64,' + element.img"
               />
-              <button @click="deleteImgs(idx)">delete</button>
+              <button class="btn_delete" @click="deleteImgs(idx)">X</button>
             </div>
           </draggable>
         </div>
@@ -58,70 +55,311 @@
             style="margin-bottom: 0.5rem; margin-left: 0.5rem"
           />
         </div>
-        {{ updateImgs }}
-        <p class="my-4">Hello from modal!</p>
-        <label>item name</label>
+        <label class="formLabel">경매방 이름</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.houseTitle"
+        />
         <br />
-        <input type="text" :value="info.itemName" />
-        {{ info.itemName }}
         <br />
-        <label>item model number</label>
+        <label class="formLabel">매물 이름</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.itemName"
+        />
         <br />
-        <input type="text" :value="info.modelNo" />
-        {{ info.modelNo }}
         <br />
-        <label>item start price</label>
+        <label class="formLabel">모델 번호</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.modelNo"
+        />
         <br />
-        <input type="text" :value="info.startPrice" />
-        {{ info.startPrice }}
         <br />
-        <label>item register time</label>
+
+        <div class="row">
+          <label class="formLabel col-2">카테고리</label>&nbsp;&nbsp;
+          <div class="box2 col-8 align-left" style="margin-bottom=1rem ">
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr1"
+                value="전자기기"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr1">전자기기</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr2"
+                value="생활가전"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr2">생활가전</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr3"
+                value="가구/인테리어"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr3">가구/인테리어</label>
+            </div>
+            <br />
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr4"
+                value="생활/주방"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr4">생활/주방</label>
+            </div>
+
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr5"
+                value="여성명품"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr5">여성명품</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr6"
+                value="여성의류/신발"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr6">여성의류/신발</label>
+            </div>
+            <br />
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr7"
+                value="여성잡화"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr7">여성잡화</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr8"
+                value="뷰티/미용"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr8">뷰티/미용</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr9"
+                value="남성명품"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr9">남성명품</label>
+            </div>
+            <br />
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr10"
+                value="남성의류/신발"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr10">남성의류/신발</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr11"
+                value="남성잡화"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr11">남성잡화</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr12"
+                value="스포츠/레저"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr12">스포츠/레저</label>
+            </div>
+            <br />
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr13"
+                value="취미/게임/음반"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr13"
+                >취미/게임/음반</label
+              >
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr14"
+                value="도서"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr14">도서</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr15"
+                value="티켓/입장권"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr15">티켓/입장권</label>
+            </div>
+            <br />
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr16"
+                value="상품권/교환권"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr16">상품권/교환권</label>
+            </div>
+
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr17"
+                value="유아동"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr17">유아동</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr18"
+                value="가공식품"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr18">가공식품</label>
+            </div>
+            <br />
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr19"
+                value="반려동물용품"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr19">반려동물용품</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr20"
+                value="식물"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr20">식물</label>
+            </div>
+            <div class="form-check2 form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="ctgr21"
+                value="기타물품"
+                v-model="ctgr.ctgrName"
+              />
+              <label class="form-check-label" for="ctgr21">기타물품</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- <input class="customInput" style="margin-bottom=1rem" type="text" v-model="info.category" /> -->
         <br />
-        <input type="text" :value="info.regTime" />
-        {{ info.regTime }}
         <br />
-        <label>item auction time</label>
+        <label class="formLabel">시작 가격</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.startPrice"
+        />
         <br />
-        <input type="text" :value="info.auctionTime" />
-        {{ info.auctionTime }}
         <br />
-        <label>item deal status</label>
+        <label class="formLabel">경매 시각</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.auctionTime"
+        />
         <br />
-        <input type="text" :value="info.dealStatus" />
-        {{ info.dealStatus }}
         <br />
-        <label>item describtion</label>
+        <label class="formLabel">판매 상태</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.dealStatus"
+        />
         <br />
-        <input type="text" :value="info.desc" />
-        {{ info.desc }}
-        <template v-slot:footer="{ cancel }">
-          <b-button @click="cancel" variant="danger" data-baz="buz"
-            >delete
-          </b-button>
-          <b-button @click="updateProfile()" variant="primary" data-baz="buz"
-            >Update
-          </b-button>
-        </template>
+        <br />
+        <label class="formLabel">상품 설명</label>&nbsp;&nbsp;
+        <input
+          class="customInput"
+          style="margin-bottom=1rem"
+          type="text"
+          v-model="info.desc"
+        />
+        <b-button class="btn_pink5" @click="cancel()" data-baz="buz"
+          >삭제하기
+        </b-button>
+        <b-button class="btn_yellow5" @click="updateProfile()" data-baz="buz"
+          >수정하기
+        </b-button>
       </b-modal>
-      
+
       <div class="box" style="margin: 10px">
-        <div
-          class="p-2"
-          style="padding: 0.5rem; padding-bottom: 0rem"
-        >
+        <div class="p-2" style="padding: 0.5rem; padding-bottom: 0rem">
           <!-- <h4 class="card-title" style="display: inline-block">기본 정보</h4> -->
           <br />
           <div class="row">
             <div class="col-sm-4" style="text-align: center">
-              <!-- <div class="card"> -->
-              <!-- <div
-                  class="card-body"
-                  style="
-                    padding: 0.5rem;
-                    padding-bottom: 0rem;
-                    text-align: center;
-                  "
-                > -->
               <div class="img-container">
                 <img
                   class="userImgContainer"
@@ -134,10 +372,7 @@
             </div>
             <div class="col-sm-8">
               <div>
-                <div
-                  
-                  style="padding: 0.5rem; padding-bottom: 0.5rem"
-                >
+                <div style="padding: 0.5rem; padding-bottom: 0.5rem">
                   <div class="row">
                     <div
                       class="col-sm-6"
@@ -276,147 +511,115 @@
       </div>
       <br />
 
-<p>
-  <button class="togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#sellingItem" aria-expanded="false" aria-controls="sellingItem">
-    판매 내역
-  </button>&nbsp; &nbsp;
-  <button class="togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#purchasedItem" aria-expanded="false" aria-controls="purchasedItem">
-    구매 내역
-  </button>
-</p>
-
-
-<div class="collapse" id="sellingItem" style="margin-top: 20px;">
-  <div class="box" style="margin: 10px">
-        <div
-          class="p-2"
-          style="padding: 0.5rem; padding-bottom: 0rem"
+      <p>
+        <button
+          class="togglebtn"
+          type="button"
+          data-bs-target="#sellingItem"
+          aria-expanded="false"
+          aria-controls="sellingItem"
+          @click="toSellingItem"
         >
-          <h4 class="card-title">판매 내역</h4>
-          <br />
-          <div class="row">
-            <div
-              v-b-modal.modal-1
-              class="col-sm-3"
-              v-for="index in sellItem"
-              :key="index"
-              @click="getItemDetail(index)"
-            >
-            <!-- 판매물품 모달 -->
-              <b-modal scrollable id="modal-1" title="판매 물품" size="lg">
-                <Carousel :images="images" />
-                <br />
-                <h3>매물 이름 : {{ info.itemName }}</h3>
-                <br />
-                모델 번호 : {{ info.modelNo }}
-                <br />
-                시작 가격 : {{ info.startPrice }}원
-                <br />
-                경매 일시 : {{ index.item.auctionTime.substr(0, 10) }} {{ index.item.auctionTime.substr(11, 5) }}
-                <br />
-                매물 상태 : {{ info.dealStatus }}
-                <br />
-                매물 설명 : {{ info.desc }}
-                <template v-slot:footer="{ ok }">
-                  <b-button
-                    v-b-modal.modal-3
-                    @click="ok"
-                    data-baz="buz"
-                    >수정하기</b-button
-                  >
-                </template>
-              </b-modal>
-              <div>
-                <div style="margin: 10px">
-                  <div
-                    
-                    style="padding: 0.5rem; padding-bottom: 0rem"
-                  >
-                    <div class="sell-container text-align:left">
-                      <img
-                        class="sellImgContainer"
-                        v-bind:src="
-                          'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
-                        "
-                      />
-                      <br>
-                      {{ index.item.itemName }}  {{ index.item.startPrice }}원
-                      <br>
-                      {{ index.item.regTime.substr(0, 10) }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-  </div>
-</div>
-&nbsp; &nbsp;
-<div class="collapse" id="purchasedItem">
-  <div class="box" style="margin: 10px">
-        <div style="padding: 0.5rem; padding-bottom: 0rem">
-          <h4 class="card-title">구매 내역</h4>
-          <br />
-          <div class="row">
-            <div
-              v-b-modal.modal-2
-              class="col-sm-3"
-              v-for="index in buyItem"
-              :key="index"
-              @click="getItemDetail(index)"
-            >
-              <b-modal
-                scrollable
-                id="modal-2"
-                title="Purchased item"
-                ok-title="update"
-                size="lg"
+          판매 내역</button
+        >&nbsp; &nbsp;
+        <button
+          class="togglebtn"
+          type="button"
+          data-bs-target="#purchasedItem"
+          aria-expanded="false"
+          aria-controls="purchasedItem"
+          @click="toPurchasedItem"
+        >
+          구매 내역
+        </button>
+      </p>
+
+      <div id="sellingItem" style="margin-top: 20px" v-show="isSell">
+        <div class="box" style="margin: 10px">
+          <div class="p-2" style="padding: 0.5rem; padding-bottom: 0rem">
+            <h4 class="card-title">판매 내역</h4>
+            <br />
+            <div class="row">
+              <div
+                v-b-modal.modal-1
+                class="col-sm-3"
+                v-for="index in sellItem"
+                :key="index"
+                @click="getItemDetail(index)"
               >
-                <Carousel :images="images" />
-                <p class="my-4">Hello from modal2!</p>
-                <br />
-                {{ info.itemName }}
-                <br />
-                {{ info.modelNo }}
-                <br />
-                {{ info.startPrice }}
-                <br />
-                {{ info.regTime }}
-                <br />
-                {{ info.auctionTime }}
-                <br />
-                {{ info.dealStatus }}
-                <br />
-                {{ info.desc }}
-                <template v-slot:footer="{ ok }">
-                  <b-button
-                    v-b-modal.modal-3
-                    @click="ok"
-                    variant="primary"
-                    data-baz="buz"
-                    >Update</b-button
-                  >
-                </template>
-              </b-modal>
-              <div>
-                <div >
-                  <div
-                    
-                    style="padding: 0.5rem; padding-bottom: 0rem"
-                  >
-                    <div class="sell-container">
-                      <img
-                        class="sellImgContainer"
-                        v-bind:src="
-                          'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
-                        "
-                      />
+                <!-- 판매 물품 모달 -->
+                <b-modal scrollable id="modal-1" title="판매 물품" size="lg">
+                  <div>
+                    <div style="text-align: center">
+                      <Carousel :images="images" />
+                    </div>
+                    <br />
+
+                    <div>
                       <br />
-                      {{ index.item.itemName }}
                       <br />
-                      {{ index.item.startPrice }}원 /
-                      {{ index.item.regTime.substr(0, 10) }}
+                      <label class="formLabel">경매방 이름</label>&nbsp;&nbsp;{{
+                        info.houseTitle
+                      }}
+                      <br />
+                      <label class="formLabel">매물 이름</label>&nbsp;&nbsp;{{
+                        info.itemName
+                      }}
+                      <br />
+                      <label class="formLabel">모델 번호</label>&nbsp;&nbsp;{{
+                        info.modelNo
+                      }}
+                      <br />
+                      <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{
+                        info.ctgrList
+                      }}
+                      <br />
+                      <label class="formLabel">시작 가격</label>&nbsp;&nbsp;{{
+                        info.startPrice
+                      }}원
+                      <br />
+                      <label class="formLabel">경매 일시</label>&nbsp;&nbsp;{{
+                        index.item.auctionTime.substr(0, 10)
+                      }}
+                      {{ index.item.auctionTime.substr(11, 5) }}
+                      <br />
+                      <label class="formLabel">판매 상태</label>&nbsp;&nbsp;{{
+                        info.dealStatus
+                      }}
+                      <br />
+                      <label class="formLabel">매물 설명</label>&nbsp;&nbsp;{{
+                        info.desc
+                      }}
+                      <br />
+                    </div>
+                  </div>
+
+                  <template v-slot:footer="{ ok }">
+                    <b-button
+                      class="btn_pink5"
+                      v-b-modal.modal-3
+                      @click="ok"
+                      data-baz="buz"
+                      >수정하기</b-button
+                    >
+                  </template>
+                </b-modal>
+                <div>
+                  <div style="margin: 10px">
+                    <div style="padding: 0.5rem; padding-bottom: 0rem">
+                      <div class="sell-container text-align:left">
+                        <img
+                          class="sellImgContainer"
+                          v-bind:src="
+                            'data:image/png;base64,' +
+                            index.itemImgs[getItemImgsIdx(index)].img
+                          "
+                        />
+                        <br />
+                        {{ index.item.itemName }} {{ index.item.startPrice }}원
+                        <br />
+                        {{ index.item.regTime.substr(0, 10) }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -424,12 +627,101 @@
             </div>
           </div>
         </div>
-  </div>
-</div>
+      </div>
+      &nbsp; &nbsp;
+      <div v-show="isPurchased">
+        <div id="purchasedItem">
+          <div class="box" style="margin: 10px">
+            <div style="padding: 0.5rem; padding-bottom: 0rem">
+              <h4 class="card-title">구매 내역</h4>
+              <br />
+              <div class="row">
+                <div
+                  v-b-modal.modal-2
+                  class="col-sm-3"
+                  v-for="index in buyItem"
+                  :key="index"
+                  @click="getItemDetail(index)"
+                >
+                  <!-- 구매 물품 모달 -->
+                  <b-modal
+                    scrollable
+                    id="modal-2"
+                    title="구매 물품"
+                    ok-title="update"
+                    size="lg"
+                  >
+                    <div>
+                      <div style="text-align: center">
+                        <Carousel :images="images" />
+                      </div>
+                      <br />
 
+                      <div>
+                        <br />
+                        <br />
+                        <label class="formLabel">경매방 이름</label
+                        >&nbsp;&nbsp;{{ info.houseTitle }}
+                        <br />
+                        <label class="formLabel">매물 이름</label>&nbsp;&nbsp;{{
+                          info.itemName
+                        }}
+                        <br />
+                        <label class="formLabel">모델 번호</label>&nbsp;&nbsp;{{
+                          info.modelNo
+                        }}
+                        <br />
+                        <label class="formLabel">카테고리</label>&nbsp;&nbsp;{{
+                          info.ctgrList
+                        }}
+                        <br />
+                        <label class="formLabel">시작 가격</label>&nbsp;&nbsp;{{
+                          info.startPrice
+                        }}원
+                        <br />
+                        <label class="formLabel">경매 일시</label>&nbsp;&nbsp;{{
+                          index.item.auctionTime.substr(0, 10)
+                        }}
+                        {{ index.item.auctionTime.substr(11, 5) }}
+                        <br />
+                        <label class="formLabel">판매 상태</label>&nbsp;&nbsp;{{
+                          info.dealStatus
+                        }}
+                        <br />
+                        <label class="formLabel">매물 설명</label>&nbsp;&nbsp;{{
+                          info.desc
+                        }}
+                        <br />
+                      </div>
+                    </div>
+                  </b-modal>
+                  <div>
+                    <div>
+                      <div style="padding: 0.5rem; padding-bottom: 0rem">
+                        <div class="sell-container">
+                          <img
+                            class="sellImgContainer"
+                            v-bind:src="
+                              'data:image/png;base64,' +
+                              index.itemImgs[getItemImgsIdx(index)].img
+                            "
+                          />
+                          <br />
+                          {{ index.item.itemName }}
+                          <br />
+                          {{ index.item.startPrice }}원 /
+                          {{ index.item.regTime.substr(0, 10) }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-
   </div>
 </template>
 
@@ -470,6 +762,11 @@ export default defineComponent({
       dragging: true,
       isHide: false,
       addImages: [],
+      isSell: false,
+      isPurchased: false,
+      ctgr: {
+        ctgrName: [],
+      },
     };
   },
 
@@ -481,6 +778,15 @@ export default defineComponent({
   },
 
   methods: {
+    toSellingItem() {
+      this.isSell = true;
+      this.isPurchased = false;
+    },
+    toPurchasedItem() {
+      this.isSell = false;
+      this.isPurchased = true;
+    },
+
     deleteImg(index) {
       this.addImages.splice(index, 1);
       console.log(this.$refs.addImage);
@@ -558,6 +864,13 @@ export default defineComponent({
       this.updateImgs.splice(idx, 1);
       console.log(this.delImgs);
     },
+    cancel: async function () {
+      await axios.delete("/houses/" + this.info.houseNo).then(({ data }) => {
+        console.log(data);
+        alert("삭제 완료");
+        this.isHide = false;
+      });
+    },
     updateProfile: async function () {
       const deleteArr = [];
       for (let no of this.delImgs) {
@@ -573,29 +886,40 @@ export default defineComponent({
       const deletejson = JSON.stringify({ indexs: deleteArr });
       const sortjson = JSON.stringify({ indexs: idxs });
       const infojson = JSON.stringify(this.info);
+      const ctgrjson = JSON.stringify(this.ctgr);
       console.log(infojson);
       console.log(deletejson);
       console.log(sortjson);
+      console.log(ctgrjson);
       const deleteblob = new Blob([deletejson], { type: "application/json" });
       const sortblob = new Blob([sortjson], { type: "application/json" });
+      const infoblob = new Blob([infojson], { type: "application/json" });
+      const ctgrblob = new Blob([ctgrjson], { type: "application/json" });
       // html의 form 태그를 이용해 submit하면 formData 객체와 multipart/form-data 형식으로 전달된다.
       // form 태그를 이용하고 있지 않지만 이용한 것처럼 요청하기 위해 새 formData 객체를 만든다.
       let formData = new FormData();
       formData.append("deleteDto", deleteblob);
       formData.append("sortDto", sortblob);
-
-      for (let img of this.addImages) {
-        console.log(img);
-        formData.append("files", img);
+      formData.append("houseUpdateDto", infoblob);
+      formData.append("ctgrDto", ctgrblob);
+      const file = new File(["foo"], "foo.txt", {
+        type: "text/plain",
+      });
+      if (this.addImages != 0) {
+        for (let img of this.addImages) {
+          console.log(img);
+          formData.append("files", img);
+        }
+      } else {
+        formData.append("files", file);
       }
-
       await axios
         .put("/houses/update/" + this.info.houseNo, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then(({ data }) => {
           console.log(data);
-          alert("사진 수정 완료");
+          alert("수정 완료");
           this.isHide = false;
         });
     },
@@ -668,15 +992,6 @@ export default defineComponent({
   margin: auto;
 }
 
-.box {
-  margin-left: 0px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  margin-right: 10px;
-  padding: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
 .togglebtn {
   width: 100px;
   height: 50px;
@@ -685,7 +1000,7 @@ export default defineComponent({
   border-radius: 45px;
   color: rgb(94, 94, 94);
   text-align: center;
-  font-size : 18px; 
+  font-size: 18px;
 }
 
 .labelbutton {
@@ -696,4 +1011,89 @@ export default defineComponent({
   text-align: center;
 }
 
+.btn_delete {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background-color: rgb(221, 221, 221);
+  border-radius: 45px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.imgResize {
+  width: 80%;
+  height: 80%;
+}
+
+.btn_pink5 {
+  width: 100px;
+  height: 45px;
+  border: 0;
+  background-color: rgb(255, 170, 165);
+  border-radius: 45px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow5 {
+  width: 100px;
+  height: 45px;
+  border: 0;
+  background-color: rgb(255, 211, 182);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.formLabel {
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 50px;
+  width: 130px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.customInput {
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 50px;
+  width: 400px;
+  border: solid;
+  border-width: medium;
+  border-color: grey;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.box2 {
+  margin-left: 0px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding: 5px;
+  border: solid;
+  border-width: medium;
+  border-color: grey;
+  border-radius: 5px;
+  width: 370px;
+}
+
+.form-check2 {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.form-check-input {
+  margin-top: 0;
+  margin-right: 0.5rem;
+  height: 1.8rem;
+  /* background-color: rgb(255, 211, 182); */
+  border: solid grey;
+  background-color: white;
+  width: 30px;
+  height: 30px;
+}
 </style>

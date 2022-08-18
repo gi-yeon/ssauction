@@ -6,5 +6,5 @@ module.exports = defineConfig({
   //   proxy: "http://localhost:8080",
   // },
   transpileDependencies: true,
-  // lintOnSave: false,
+  lintOnSave: false,
 });

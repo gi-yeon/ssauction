@@ -1,3 +1,5 @@
+// BoardDetail.vue
+
 <template>
   <div>
     <input
@@ -32,12 +34,15 @@
         <button class="btn_yellow">목록</button>
       </router-link>
     </div>
-    <board-comment-item
-      style="margin-top: 20px"
-      v-for="(comment, index) in state.comments"
-      :key="index"
-      v-bind="comment"
-    ></board-comment-item>
+    <div class="comment">
+      <board-comment-item
+        style="text-align: left"
+        v-for="(comment, index) in state.comments"
+        :key="index"
+        v-bind="comment"
+      ></board-comment-item>
+    </div>
+
     <div>
       <textarea
         style="margin-top: 20px"
@@ -48,7 +53,7 @@
         v-model="state.commentContent"
       ></textarea
       >&nbsp;&nbsp;
-      <button class="btn_pink2" @click="registerComment">댓글 달기</button>
+      <button class="btn_pink2" @click="registerComment">✉</button>
     </div>
     <div></div>
   </div>
@@ -66,6 +71,10 @@ export default {
   components: {
     BoardCommentItem,
   },
+  mounted() {
+    this.state.userNo = this.$store.getters["user/userNo"];
+  },
+
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -79,6 +88,7 @@ export default {
       comments: [],
       commentContent: "",
       isWriter: Boolean,
+      // hasComment: Boolean,
     });
 
     const ModifyArticle = () => {
@@ -118,9 +128,15 @@ export default {
       state.boardNo = data.board.boardNo;
       state.boardTitle = data.board.boardTitle;
       state.boardContent = data.board.boardContent;
-      state.userNo = data.board.userNo;
       state.userNickname = data.board.userNickname;
       state.comments = data.board.comments;
+
+      // console.log(state.comments.length)
+
+      // if(state.comments.length > 0){
+      //   state.hasComment = true;
+      //   console.log(state.hasComment)
+      // }
 
       if (state.userNo != null && data.board.userNo == state.userNo)
         state.isWriter = true;
@@ -171,13 +187,16 @@ textarea:focus {
 }
 
 .btn_pink2 {
-  width: 80px;
+  margin-bottom: 20px;
+  width: 60px;
   height: 40px;
   border: 0;
   background-color: rgba(255, 169, 165, 0.7);
   border-radius: 10px;
   color: rgb(94, 94, 94);
   text-align: center;
+  position: relative;
+  bottom: 40px;
 }
 
 .btn_yellow {
@@ -188,5 +207,16 @@ textarea:focus {
   border-radius: 10px;
   color: rgb(94, 94, 94);
   text-align: center;
+}
+
+.comment {
+  width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  padding: 20px;
+  /* background-color: rgba(158, 158, 158, 0.212); */
+  border: none;
+  border-radius: 10px;
 }
 </style>

@@ -4,6 +4,7 @@ import com.ssafy.ssauction.domain.items.Items;
 import com.ssafy.ssauction.domain.items.ItemsRepository;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.domain.users.UsersRepository;
+import com.ssafy.ssauction.web.dto.Houses.HouseUpdateRequestDto;
 import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
 import com.ssafy.ssauction.web.dto.userImages.UserImgsSaveRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,14 @@ public class ItemsService {
     @Transactional
     public void delete(Long itemNo) {
         itemsRepository.deleteById(itemNo);
+    }
+
+    @Transactional
+    public void update(Items item, HouseUpdateRequestDto houseDto) {
+        item.setItemDealStatus(houseDto.getDealStatus());
+        item.setItemDesc(houseDto.getDesc());
+        item.setItemModelNo(houseDto.getModelNo());
+        item.setItemStartPrice(houseDto.getStartPrice());
+        item.setItemName(houseDto.getItemName());
     }
 }

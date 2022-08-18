@@ -378,18 +378,21 @@ public class UsersController {
     @GetMapping("/token")
     public ResponseEntity<Map<String, Object>> getCookieToken(HttpServletRequest req, HttpServletResponse res) {
         Map<String, Object> map = new HashMap<>();
+        map.put("accessToken", null);
+        map.put("refreshToken", null);
         HttpStatus status = null;
         res.setHeader("Access-Control-Allow-Headers", "Content-Type");
         res.setHeader("Access-Control-Allow-Origin", "*");
         //token 추출해서 map에 넣어준다.
         Cookie[] list = req.getCookies();
+        if(list != null){
         for (Cookie cookie : list) {
             if (cookie.getName().equals("accessToken")) {
-                map.put("accessToken", cookie.getValue());
+                map.replace("accessToken", cookie.getValue());
             } else if (cookie.getName().equals("refreshToken")) {
-                map.put("refreshToken", cookie.getValue());
+                map.replace("refreshToken", cookie.getValue());
             }
-        }
+        }}
         status = HttpStatus.ACCEPTED;
 
         return new ResponseEntity<>(map, status);

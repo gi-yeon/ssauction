@@ -95,13 +95,14 @@
               <el-tabs type="border-card">
                 <el-tab-pane label="채팅"
                   ><div id="chat-history">
-                    <chat-message
-                      class="chat-message"
-                      v-for="(m, index) in messageHistory"
-                      :key="index"
-                      :sender="m.sender"
-                      :message="m.message"
-                    /></div
+                    <el-scrollbar max-height="13rem"
+                      ><chat-message
+                        class="chat-message"
+                        v-for="(m, index) in messageHistory"
+                        :key="index"
+                        :sender="m.sender"
+                        :message="m.message"
+                    /></el-scrollbar></div
                 ></el-tab-pane>
                 <el-tab-pane label="참여자">
                   <div id="participant-list">
@@ -121,7 +122,7 @@
                 </el-tab-pane>
               </el-tabs>
             </div>
-            <div class="row mb-1" id="chat-control-panel">
+            <div class="mb-1" id="chat-control-panel">
               <el-select
                 v-model="toWhisper"
                 placeholder="메시지를 보낼 상대를 선택하세요"
@@ -134,6 +135,9 @@
                   :value="sub.stream.connection"
                 />
               </el-select>
+              <!-- <button class="btn btn-primary" @click="resetToWhisper">
+                모두에게
+              </button> -->
             </div>
             <div class="input-group" id="chat-input">
               <textarea
@@ -286,7 +290,7 @@
                   {{ index + 1 + "위" }}
                 </div>
                 <div style="display: inline-block; padding: 0.5em">
-                  {{ bidder.bidder }}
+                  {{ bidder.sender }}
                 </div>
                 <div style="display: inline-block; padding: 0.5em">
                   {{ formatMoney(bidder.priceToBid) }}
@@ -566,6 +570,11 @@ export default {
         });
     },
 
+    // css 작업용
+    // joinSession() {
+    //   this.sessionCamera = true;
+    // },
+
     // 세션 연결
     joinSession(userName) {
       this.myUserName = userName;
@@ -754,8 +763,8 @@ export default {
             let publisher = this.OVCamera.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              publishAudio: this.isAudioOn, // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: this.isVideoOn, // Whether you want to start publishing with your video enabled or not
               resolution: "640x480", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
@@ -870,6 +879,13 @@ export default {
           console.log();
         });
     },
+    // css 수정용
+    // submitMessage() {
+    //   this.appendMessage({
+    //     sender: this.myUserName + "이(가) 모두에게",
+    //     message: this.message,
+    //   });
+    // },
 
     // 채팅 보내기
     submitMessage() {
@@ -905,6 +921,11 @@ export default {
         });
       this.message = null;
     },
+
+    // css용
+    // appendMessage(message) {
+    //   this.messageHistory.push(message);
+    // },
 
     // 채팅 받기
     appendMessage(event) {
@@ -1024,6 +1045,12 @@ export default {
       this.openBid = !this.openBid;
     },
 
+    // css 작업용
+    // leaveSession(reason) {
+    //   console.log(reason);
+    //   this.sessionCamera = false;
+    // },
+
     leaveSession(reason) {
       this.closeModal();
       console.log("leaveSession");
@@ -1056,9 +1083,9 @@ export default {
             console.log();
           });
         this.message = null;
+        this.finishAuctionFromHost();
       }
 
-      this.finishAuctionFromHost();
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (this.sessionCamera) this.sessionCamera.disconnect();
 
@@ -1174,6 +1201,10 @@ export default {
         type: this.mySessionId + "/setstarttime",
       });
     },
+    // resetToWhisper() {
+    //   this.toWhisper = null;
+    //   console.log(this.toWhisper);
+    // },
   },
 };
 </script>
@@ -1195,6 +1226,11 @@ export default {
 .chat-message {
   color: black;
 }
+
+.participant-name {
+  color: black;
+}
+
 .bid-modal {
   position: fixed;
   z-index: 999;
@@ -1231,7 +1267,7 @@ export default {
 }
 
 #session-chat-panel {
-  height: 60%;
+  height: 50%;
 }
 
 #session-chat-history {

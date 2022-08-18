@@ -10,23 +10,26 @@
       >
         <div class="" style="width: 50%">
           <div class="m-5">
-            <label class="m-3">방 이름</label>
+            <button class="btn btn-light m-3 py-1" style="width: 10rem;" disabled>방 이름</button>
             <h1>{{ sessionName }}</h1>
           </div>
-          <div class="m-5 row">
-            <label class="my-3">이름</label>
+          <div class="m-5">
+            <button class="btn btn-light my-3 py-1" style="width: 10rem;" disabled>닉네임</button>
             <input
-              placeholder="다른 사람들에게 보여질 이름을 입력하세요(최대 10글자)"
+              placeholder="다른 사람들에게 보여질 닉네임을 입력하세요(최대 10글자)"
               v-model="myUserName"
               class="form-control"
+              style="text-align: center;"
               type="text"
               maxlength="10"
               required
             />
+          <p class="my-3 invalid-input-text" v-if="!isValidUsername">닉네임을 입력하세요</p>
+          <p class="my-3 invalid-input-text" style="color: greenyellow;" v-if="isValidUsername">사용 가능한 닉네임입니다</p>
           </div>
           <div class="session-setting">
             <div
-              class="session-btn btn-toggle-audio m-5"
+              class="session-btn btn-toggle-audio m-4"
               @click="$emit('toggleAudio')"
             >
               <div v-if="isAudioOn" style="color: green">
@@ -66,7 +69,7 @@
               </div>
             </div>
             <div
-              class="session-btn btn-toggle-camera m-5"
+              class="session-btn btn-toggle-camera m-4"
               @click="$emit('toggleVideo')"
             >
               <div v-if="isVideoOn" style="color: green">
@@ -106,16 +109,13 @@
           </div>
           <div class="text-center">
             <button
-              class="btn btn-lg btn-success"
+              class="btn btn-lg btn-success mx-3"
               @click="$emit('joinSession', myUserName)"
               :disabled="!isValidUsername"
             >
               입장하기
             </button>
-            <p class="m-3 invalid-input-text" v-if="!isValidUsername">
-              닉네임을 입력하세요
-            </p>
-            <button class="btn btn-lg btn-success" @click="backToMain">
+            <button class="btn btn-lg btn-success mx-3" @click="backToMain">
               돌아가기
             </button>
           </div>
