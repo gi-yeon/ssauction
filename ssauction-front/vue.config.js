@@ -1,6 +1,6 @@
 const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
-  publicPath: "./",
+  publicPath: "",
   // devServer: {
   //   port: 8083,
   //   proxy: "http://localhost:8080",
