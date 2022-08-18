@@ -11,7 +11,6 @@ import House from "@/views/House.vue";
 import Profile from "@/views/Profile.vue";
 import Like from "@/views/Like.vue";
 import Settings from "@/views/Settings.vue";
-import ProfileUpdate from "@/views/ProfileUpdate.vue";
 import Sessions from "@/views/Sessions.vue";
 import PwdUpdate from "@/views/PwdUpdate.vue";
 import DeleteUser from "@/views/DeleteUser.vue";
@@ -67,11 +66,6 @@ const routes = [
     path: "/sessions",
     name: "Sessions",
     component: Sessions,
-  },
-  {
-    path: "/profile/update",
-    name: "ProfileUpdate",
-    component: ProfileUpdate,
   },
   {
     path: "/pwdUpdate",

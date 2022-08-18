@@ -16,19 +16,6 @@
 
     <div class="row" id="comming-soon-container">
       <div class="my-3" style="height: 20%">
-        <!-- <div class="wave2">
-          <span>C</span>
-          <span>O</span>
-          <span>M</span>
-          <span>I</span>
-          <span>N</span>
-          <span>G</span>
-          <span>&nbsp;</span>
-          <span>S</span>
-          <span>O</span>
-          <span>O</span>
-          <span>N</span>
-        </div> -->
         <input
           class="searchInput"
           type="string"
@@ -42,14 +29,14 @@
       </div>
 
       <div style="height: 60%">
-        <div class="card">
+        <div>
           <div class="card-body">
             <div class="row">
               <main-houses
-                v-for="(hot, index) in hotDeals"
-                :key="index"
+                v-for="(hot,index) in hotDeals"
+                :key="hot"
                 :hot="hot"
-                @click="toggleDetail(hot)"
+                @click="toggleDetail(index)"
               />
             </div>
           </div>
@@ -79,32 +66,26 @@
       <div
         v-if="showModal"
         class="detail-modal"
-        style="text-align: center; background-color: white"
       >
-        <!-- <div class="row">
-          <h1>{{ houseToDetail.houseTitle }}</h1>
-          <button>찜하기</button>
-        </div> -->
-        <div class="row">
-          <div class="col detail-image">
+        <div>
+          <div class="detail-image" style="text-align:center">
             <Carousel :images="houseToDetail.itemImgList" />
           </div>
-          <div class="col detail-info">
-            <div>경매 정보 : {{ houseToDetail.house.houseDesc }}</div>
-            <div>
-              경매 시작 시간 :
-              {{ getAuctionStartTime(houseToDetail.house.houseAucTime) }}
-            </div>
-            <div>물품명 : {{ houseToDetail.item.itemName }}</div>
-            <div>물품 설명 : {{ houseToDetail.item.itemDesc }}</div>
-            <div>모델명 : {{ houseToDetail.item.itemModelNo }}</div>
-            <div>품질 : {{ houseToDetail.item.itemQuality }}</div>
-            <div>시작가 : {{ houseToDetail.item.itemStartPrice }}</div>
+          <br>
+          <div class="detail-info" style="text-align:center">
+            <h3>{{ houseToDetail.item.itemName }}</h3>
+
+            <h4>{{ getAuctionStartTime(houseToDetail.house.houseAucTime) }} 시작</h4>
+
           </div>
         </div>
-        <div class="row"><button @click="joinSession">입장</button></div>
+        <br>
+
         <div class="row">
-          <button @click="toggleDetail(houseToDetail)">닫기</button>
+          <button class="btn_pink6" @click="joinSession">입장</button></div>
+        
+        <div class="row" style="margin-top:0.5rem">
+          <button class="btn_yellow6" @click="toggleDetail(houseToDetail)">닫기</button>
         </div>
       </div>
     </Teleport>
@@ -177,13 +158,13 @@ export default {
             this.hotDeals.splice(4);
           }
           // 페이지네이션을 위한 코드
-
           // this.totalElements = response.data.list.totalElements;
           // this.totalPages = response.data.list.totalPages;
           // this.numberOfElements = response.data.list.numberOfElements;
           // this.isPagingFirst = response.data.list.first;
           // this.isPagingLast = response.data.list.last;
           // this.isPagingEmpty = response.data.list.empty;
+          console.log("hotdeals")
           console.log(this.hotDeals);
         });
     },
@@ -195,7 +176,7 @@ export default {
       console.log(house);
       this.showModal = !this.showModal;
 
-      this.houseToDetail = house;
+      this.houseToDetail = this.hotDeals[house];
       this.$store.dispatch(
         "session/setSessionId",
         this.houseToDetail.house.houseNo
@@ -361,6 +342,7 @@ export default {
   align-items: center;
 }
 .detail-modal {
+  padding:2rem;
   position: fixed;
   z-index: 999;
   top: 50%;
@@ -368,6 +350,7 @@ export default {
   transform: translate(-50%, -50%);
   background-color: white;
   width: auto;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 .searchInput {
   margin-left: 5px;
@@ -385,5 +368,34 @@ export default {
   border-color: skyblue;
   background-color: rgb(153, 197, 255);
   border-radius: 5px;
+}
+
+.box {
+  margin-left: 0px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn_pink6 {
+  width: 80px;
+  height: 30px;
+  border: 0;
+  background-color: rgb(255, 170, 165);
+  border-radius: 45px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow6 {
+  width: 80px;
+  height: 30px;
+  border: 0;
+  background-color: rgb(255, 211, 182);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  text-align: center;
 }
 </style>
