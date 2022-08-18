@@ -4,6 +4,7 @@ import com.ssafy.ssauction.domain.categories.Categories;
 import com.ssafy.ssauction.domain.houses.Houses;
 import com.ssafy.ssauction.domain.itemImgs.ItemImgs;
 import com.ssafy.ssauction.domain.items.Items;
+import com.ssafy.ssauction.domain.resultOrders.ResultOrders;
 import com.ssafy.ssauction.domain.users.Users;
 import com.ssafy.ssauction.service.Items.ItemsService;
 import com.ssafy.ssauction.service.categories.CategoriesService;
@@ -12,10 +13,7 @@ import com.ssafy.ssauction.service.itemImg.ItemImgsService;
 import com.ssafy.ssauction.service.storage.StorageService;
 import com.ssafy.ssauction.service.users.UsersService;
 import com.ssafy.ssauction.web.dto.Houses.*;
-import com.ssafy.ssauction.web.dto.Items.ItemInfoResponseDto;
-import com.ssafy.ssauction.web.dto.Items.ItemsResponseDto;
-import com.ssafy.ssauction.web.dto.Items.ItemsSaveRequestDto;
-import com.ssafy.ssauction.web.dto.Items.SellItemResponseDto;
+import com.ssafy.ssauction.web.dto.Items.*;
 import com.ssafy.ssauction.web.dto.categories.CategoriesLoadRequestDto;
 import com.ssafy.ssauction.web.dto.itemImg.*;
 import lombok.RequiredArgsConstructor;
@@ -76,8 +74,10 @@ public class HousesController {
         }
 
         //구매 중인 아이템 정보 가져오는 것도 판매랑 같음
-        List<ItemInfoResponseDto> buyList = new ArrayList<>();
-        for (Items item : user.getPurchaseItems()) {
+        List<ItemResultInfoResponseDto> buyList = new ArrayList<>();
+        List<ResultOrders> resultOrdersList = user.getResults();
+        for (ResultOrders result : resultOrdersList) {
+            Items item = result.getHouse().getItem();
             int imgSize = item.getImages().size();
             ImgInfo[] imgs=new ImgInfo[imgSize];
             for (int i = 0; i < imgSize; i++) {
@@ -103,13 +103,15 @@ public class HousesController {
                     isNull = true;
             }
             if (!isNull)
-                buyList.add(new ItemInfoResponseDto(SellItemResponseDto.builder().item(item).house(item.getHouse()).build(),
-                        imgs));
+                buyList.add(new ItemResultInfoResponseDto(SellItemResponseDto.builder().item(item).house(item.getHouse()).build(),
+                        imgs, result));
         }
 
         MyHouseResponseDto resDto = new MyHouseResponseDto(sellList, buyList);                  //보낼 데이터를 Dto로 감싸주기
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(resDto);        //보내기
     }
+
+
 
     @PutMapping("/update/{houseNo}")
     public ResponseEntity<String> updateHouse(@PathVariable Long houseNo,
