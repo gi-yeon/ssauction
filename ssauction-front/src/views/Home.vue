@@ -53,23 +53,9 @@
               />
             </div>
           </div>
-          <!-- <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-          </nav> -->
+
           <div class="example-pagination-block">
-            <!-- <el-pagination
-              layout="prev, pager, next"
-              :current-page="houseCurrentPage"
-              :total="totalPages"
-            /> -->
+
           </div>
         </div>
       </div>
@@ -79,33 +65,37 @@
       <div
         v-if="showModal"
         class="detail-modal"
-        style="text-align: center; background-color: white"
       >
-        <!-- <div class="row">
-          <h1>{{ houseToDetail.houseTitle }}</h1>
-          <button>찜하기</button>
-        </div> -->
-        <div class="row">
-          <div class="col detail-image">
-            <Carousel :images="houseToDetail.itemImgList" />
+        <div>
+          <div class="detail-image" style="text-align:center">
+            <img
+              class="sellImgContainer"
+              v-bind:src="
+              'data:image/png;base64,' +
+              houseToDetail.itemImgList[0].img"/>
           </div>
-          <div class="col detail-info">
-            <div>경매 정보 : {{ houseToDetail.house.houseDesc }}</div>
-            <div>
-              경매 시작 시간 :
-              {{ getAuctionStartTime(houseToDetail.house.houseAucTime) }}
-            </div>
-            <div>물품명 : {{ houseToDetail.item.itemName }}</div>
-            <div>물품 설명 : {{ houseToDetail.item.itemDesc }}</div>
-            <div>모델명 : {{ houseToDetail.item.itemModelNo }}</div>
-            <div>품질 : {{ houseToDetail.item.itemQuality }}</div>
-            <div>시작가 : {{ houseToDetail.item.itemStartPrice }}</div>
+          <br>
+          <div class="detail-info">
+            <h3 style="text-align:center">{{ houseToDetail.item.itemName }}</h3>
+
+            <h5 style="text-align:left">모델 번호 : {{ houseToDetail.item.itemModelNo }}</h5>
+            <!-- <h4>{{ houseToDetail.item.ctgrList }}</h4> -->
+            <h5 style="text-align:left">시작 가격 : {{ houseToDetail.item.itemStartPrice }}</h5>
+            <h5 style="text-align:left">매물 설명 : {{ houseToDetail.item.itemDesc }}</h5>
+<hr>
+            <h4 style="text-align:center">{{ getAuctionStartTime(houseToDetail.house.houseAucTime) }} 시작</h4>
+
           </div>
+        
+        <br>
+
+          <div class="row">
+          <button class="btn_pink6" @click="joinSession">입장</button></div>
+        
+          <div class="row" style="margin-top:0.5rem">
+          <button class="btn_yellow6" @click="toggleDetail(houseToDetail)">닫기</button>
         </div>
-        <div class="row"><button @click="joinSession">입장</button></div>
-        <div class="row">
-          <button @click="toggleDetail(houseToDetail)">닫기</button>
-        </div>
+      </div>
       </div>
     </Teleport>
   </div>
@@ -316,6 +306,7 @@ export default {
   align-items: center;
 }
 .detail-modal {
+  padding:2rem;
   position: fixed;
   z-index: 999;
   top: 50%;
@@ -323,6 +314,7 @@ export default {
   transform: translate(-50%, -50%);
   background-color: white;
   width: auto;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 .searchInput {
   margin-left: 5px;
@@ -340,5 +332,34 @@ export default {
   border-color: skyblue;
   background-color: rgb(153, 197, 255);
   border-radius: 5px;
+}
+
+.box {
+  margin-left: 0px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn_pink6 {
+  width: 80px;
+  height: 30px;
+  border: 0;
+  background-color: rgb(255, 170, 165);
+  border-radius: 45px;
+  color: rgb(94, 94, 94);
+  text-align: center;
+}
+
+.btn_yellow6 {
+  width: 80px;
+  height: 30px;
+  border: 0;
+  background-color: rgb(255, 211, 182);
+  border-radius: 20px;
+  color: rgb(94, 94, 94);
+  text-align: center;
 }
 </style>

@@ -88,6 +88,7 @@ export default {
       comments: [],
       commentContent: "",
       isWriter: Boolean,
+      // hasComment: Boolean,
     });
 
     const ModifyArticle = () => {
@@ -129,6 +130,13 @@ export default {
       state.boardContent = data.board.boardContent;
       state.userNickname = data.board.userNickname;
       state.comments = data.board.comments;
+
+      // console.log(state.comments.length)
+
+      // if(state.comments.length > 0){
+      //   state.hasComment = true;
+      //   console.log(state.hasComment)
+      // }
 
       if (state.userNo != null && data.board.userNo == state.userNo)
         state.isWriter = true;
