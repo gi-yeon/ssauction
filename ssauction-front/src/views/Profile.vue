@@ -336,7 +336,7 @@
                       <img
                         class="sellImgContainer"
                         v-bind:src="
-                          'data:image/png;base64,' + index.itemImgs[0].img
+                          'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
                         "
                       />
                       <br>
@@ -409,7 +409,7 @@
                       <img
                         class="sellImgContainer"
                         v-bind:src="
-                          'data:image/png;base64,' + index.itemImgs[0].img
+                          'data:image/png;base64,' + index.itemImgs[getItemImgsIdx(index)].img
                         "
                       />
                       <br />
