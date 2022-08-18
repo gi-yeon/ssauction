@@ -174,7 +174,6 @@ export default {
           // this.isPagingFirst = response.data.list.first;
           // this.isPagingLast = response.data.list.last;
           // this.isPagingEmpty = response.data.list.empty;
-          console.log(this.hotDeals);
         });
     },
     setHouseSearchOption(option) {
@@ -283,50 +282,6 @@ export default {
 .wave1 span:nth-of-type(9) {
   animation-delay: 0.9s;
 }
-.wave2 span {
-  font-size: 35px;
-  color: rgb(40, 40, 200);
-  position: relative;
-  animation: anime_textup 1.5s infinite;
-}
-
-.wave2 span:nth-of-type(1) {
-  animation-delay: 0.1s;
-}
-
-.wave2 span:nth-of-type(2) {
-  animation-delay: 0.2s;
-}
-
-.wave2 span:nth-of-type(3) {
-  animation-delay: 0.3s;
-}
-
-.wave2 span:nth-of-type(4) {
-  animation-delay: 0.4s;
-}
-
-.wave2 span:nth-of-type(5) {
-  animation-delay: 0.5s;
-}
-.wave2 span:nth-of-type(6) {
-  animation-delay: 0.6s;
-}
-.wave2 span:nth-of-type(7) {
-  animation-delay: 0.7s;
-}
-.wave2 span:nth-of-type(8) {
-  animation-delay: 0.8s;
-}
-.wave2 span:nth-of-type(9) {
-  animation-delay: 0.9s;
-}
-.wave2 span:nth-of-type(10) {
-  animation-delay: 1s;
-}
-.wave1 span:nth-of-type(11) {
-  animation-delay: 1.1s;
-}
 
 #hotdeal-container {
   margin: 10px;
@@ -365,7 +320,7 @@ export default {
   margin-left: 5px;
   margin-right: 5px;
   height: 40px;
-  width: 400px;
+  /* width: 400px; */
   border: solid;
   border-width: thin;
   border-color: rgb(153, 197, 255);

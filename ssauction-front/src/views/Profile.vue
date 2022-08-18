@@ -561,7 +561,6 @@
                     >
                   </template>
                 </b-modal>
-
                 <div>
                   <div style="margin: 10px">
                     <div style="padding: 0.5rem; padding-bottom: 0rem">

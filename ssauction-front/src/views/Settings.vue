@@ -178,6 +178,7 @@ export default {
       randCode: null,
       smsCode: "",
       returnValue: {},
+      isChanged: false,
     };
   },
 
@@ -235,7 +236,7 @@ export default {
           .put("/users/profile/info/" + this.userNo, JSON.stringify(obj))
           .then(() => {
             this.$store.dispatch("user/getUpdateInfo", this.userNickname);
-            alert("회원 정보가 변경되었습니다.");
+            this.isChanged = true;
           })
           .catch(({ data }) => {
             console.log(data);
@@ -255,12 +256,15 @@ export default {
             },
           })
           .then(() => {
-            alert("회원 정보가 변경되었습니다.");
-            this.$router.push("/");
+            this.isChanged = true;
           })
           .catch(({ data }) => {
             console.log(data);
           });
+      }
+      if (this.isChanged) {
+        alert("회원 정보가 변경되었습니다.");
+        this.$router.push("/");
       }
       //바뀐 것이 없다면
       else if (
