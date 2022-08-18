@@ -134,15 +134,6 @@ public class HousesController {
             itemImgsService.updateMain(img, i==0?true:false);
             System.out.println(""+i+" "+img.getImgNo()+" "+img.getIsMain());
         }
-        private Long itemNo;
-        private Long houseNo;
-        private String itemName;
-        private int startPrice;
-        private String modelNo;
-        private Timestamp regTime;
-        private Timestamp auctionTime;
-        private DealStatus dealStatus;
-        private String desc;
         for (MultipartFile file : files) {
             // FileUpload 관련 설정
             if (file != null && !file.isEmpty()) {                          //  file 데이터가 유효하다면,
