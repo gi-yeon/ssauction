@@ -7,6 +7,7 @@ import com.ssafy.ssauction.domain.items.Quality;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
