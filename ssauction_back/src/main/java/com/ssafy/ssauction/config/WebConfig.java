@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
-                .allowedOrigins("https://i7a806.p.ssafy.io/","https://i7a806.p.ssafy.io/ssauction")
+                .allowedOrigins("https:///","https://") // URL 삭제
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE", "HEAD")
                 .allowedHeaders("*");
     }

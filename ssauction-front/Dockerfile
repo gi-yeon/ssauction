@@ -9,8 +9,8 @@ RUN mkdir -p /var/www
 # host pc의 현재경로의 dist 폴더를 workdir 의 빌드 결과가 들어갈 폴더로 복사
 ADD ./dist /var/www
 
-# 80 포트 오픈
-EXPOSE 80
+# 포트 오픈
+EXPOSE 
 
 # container 실행 시 자동으로 실행할 command. nginx 시작함
 CMD ["nginx", "-g", "daemon off;"]

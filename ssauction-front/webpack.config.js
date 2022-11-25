@@ -24,7 +24,7 @@ module.exports = {
       ],
       rules: [
         {
-          test: /\.styl$/,      // 이 정규식에 해당하는 파일이 아래의 loader에 따라 처리된다.
+          test: /\.styl$/,      // 이 정규식에 해당하는 파일이 아래의 loader에 따라 처리됩니다.
           use: [
             {
               loader: "style-loader", // creates style nodes from JS strings

@@ -817,8 +817,8 @@ export default {
 
       // $refs.subscribersCamera 배열을 선형순회하는 건 오래 걸리므로
       // 인덱스를 통해 접근하는 방법을 생각해봤지만,
-      // v-for에 refs를 적용해 만들어진 배열이 원본 배열의 순서를 보장하지 않으므로
-      // 일단 포기..
+      // v-for에 refs를 적용해 만들어진 배열이 원본 배열의 순서를 보장하지 않으므로 불가능
+      // 구현 보류
       if (
         this.$refs.subscribersCamera &&
         this.$refs.subscribersCamera.length > 0

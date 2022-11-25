@@ -27,7 +27,6 @@
 import { reactive } from "vue";
 import axios from "@/utils/axios";
 import { useRouter } from "vue-router";
-// npm install universal-cookie
 import { useStore } from "vuex";
 import { mapState } from "vuex";
 

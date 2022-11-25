@@ -64,7 +64,6 @@ import axios from "@/utils/axios";
 import { reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import BoardCommentItem from "@/components/Board/item/BoardCommentItem";
-// npm install universal-cookie
 
 export default {
   name: "BoardDetail",

@@ -1,5 +1,4 @@
 import { createWebHistory, createRouter } from "vue-router";
-// import { useCookies } from "vue3-cookies";
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Signup from "@/views/Signup.vue";

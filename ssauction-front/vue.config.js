@@ -2,8 +2,8 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   publicPath: "",
   // devServer: {
-  //   port: 8083,
-  //   proxy: "http://localhost:8080",
+  //   port: 삭제,
+  //   proxy: "로컬 주소 삭제",
   // },
   transpileDependencies: true,
   lintOnSave: false,

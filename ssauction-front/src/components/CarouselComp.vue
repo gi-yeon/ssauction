@@ -110,7 +110,6 @@ export default defineComponent({
 }
 .pages {
   display: flex;
-  /* ここにtransitionをつけることでpagesのleftを変更した場合にアニメーションさせることができる */
   /* 이 트랜지션은 페이지를 왼쪽으로 넘길때 애니메이션 효과가 나타나도록 합니다 */
   transition: left 0.5s ease;
   position: absolute;

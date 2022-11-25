@@ -1,6 +1,6 @@
 FROM openjdk:11-jdk
 
-LABEL maintainer="giyeon3145@gmail.com"
+LABEL maintainer="maintainer 이메일 개인정보 삭제"
 
 EXPOSE 8080
 
